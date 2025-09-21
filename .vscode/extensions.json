@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "mrmlnc.vscode-postcss-sorting",
+    "dbaeumer.vscode-eslint",
+  ]
+}
