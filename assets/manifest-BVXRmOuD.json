@@ -8,7 +8,7 @@
       "type": "image/svg"
     }
   ],
-  "start_url": ".",
+  "start_url": "/cofre",
   "display": "standalone",
   "theme_color": "black",
   "background_color": "black"
