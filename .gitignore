@@ -3,7 +3,7 @@ logs
 *.log
 npm-debug.log*
 
-
+dist
 node_modules
 dist-ssr
 *.local
