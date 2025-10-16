@@ -1,9 +1,11 @@
 export type Content = {
-  data: string,
+  createdAt: string,
   id: string,
   length: number,
+  name: string,
+  data?: string,
+  secret: string,
   starred: boolean,
-  createdAt: string,
 }
 
 type Collection<T extends { id: string }> = Map<T['id'], T>

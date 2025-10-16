@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect } from 'react'
+import React, { type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import './Modal.css'
 
@@ -11,7 +11,7 @@ export type ModalProps = {
 export function Modal(props: ModalProps) {
   const { children, open = false, onClose } = props
 
-  useEffect(() => {
+  React.useEffect(() => {
     const handleEsc = (event: KeyboardEventInit) => {
       if (event.key === 'Escape' || event.keyCode === 27) {
         onClose()
@@ -20,27 +20,19 @@ export function Modal(props: ModalProps) {
 
     window.addEventListener('keydown', handleEsc)
 
-    if (open && window.innerHeight < document.body.scrollHeight) {
-      document.body.classList.add('noscroll')
-    }
-
     return () => {
       window.removeEventListener('keydown', handleEsc)
-
-      if (document.body.getElementsByClassName('Modal').length === 0) {
-        document.body.classList.remove('noscroll')
-      }
     }
   }, [open, onClose])
 
   if (open === false) return null
 
   return createPortal(
-    <div className="Modal" onClick={onClose}>
+    <dialog className="Modal" open={open} onClick={onClose}>
       <div className="content" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
-    </div>,
+    </dialog>,
     document.body
   )
 }

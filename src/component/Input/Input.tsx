@@ -1,6 +1,6 @@
 import React from 'react'
 import type { InputHTMLAttributes, ReactNode } from 'react'
-import { cls } from '../../lib/classes'
+import { cls } from '../../lib/classNames'
 import './Input.css'
 
 export type InputPasswordProps = InputHTMLAttributes<HTMLInputElement>

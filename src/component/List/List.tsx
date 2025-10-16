@@ -1,12 +1,12 @@
 import React from 'react'
 import { ContentContext } from '../ContentProvider/ContentProvider'
-import { cls } from '../../lib/classes'
+import { cls } from '../../lib/classNames'
 import { IconMenu } from '../Icon/Icon'
-import type { Content } from '../../lib/data-layer'
-import './List.css'
+import type { Content } from '../../lib/dataLayer'
 import { useModal } from '../Modal/Modal.hook'
 import { AddSecret } from '../AddSecret/AddSecret'
 import { Modal } from '../Modal/Modal'
+import './List.css'
 
 type ItemProps = {
   value: Content,
@@ -30,10 +30,12 @@ function Item(props: ItemProps) {
   const toggleShow = () => setShowValue(!show)
 
   const classes = cls('Item', [content.starred, 'starred'])
+  const nameValue = content.name ?? content.id
+  const secretValue = content.secret ?? content.data
 
   const [text, value, classNameContent] = show
-    ? ['hide', content.data, 'show-value']
-    : ['show', content.data.replaceAll(/./g, '*'), '']
+    ? ['hide', secretValue, 'show-value']
+    : ['show', secretValue.replaceAll(/./g, '*'), '']
 
   return <>
     <li className={classes}>
@@ -41,7 +43,7 @@ function Item(props: ItemProps) {
         <IconMenu />
       </button>
       <span className={`content ${classNameContent}`}>
-        <span className='name'>{content.id}</span>
+        <span className='name'>{nameValue}</span>
         <span className='value'>{value}</span>
       </span>
       <button className='show' type='button' onClick={toggleShow}>

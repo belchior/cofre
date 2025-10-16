@@ -1,7 +1,8 @@
 import React from 'react'
+import type { Content } from '../../lib/dataLayer'
 import { IconAddSecret, IconStar } from '../Icon/Icon'
 import { Input } from '../Input/Input'
-import type { Content } from '../../lib/data-layer'
+import { isUniqueId, uniqueId } from '../../lib/crypto'
 import './AddSecret.css'
 
 export type AddSecretProps = {
@@ -12,7 +13,7 @@ export type AddSecretProps = {
 
 type AddSecretForm = HTMLFormElement & {
   readonly elements: HTMLFormControlsCollection & {
-    id: HTMLInputElement,
+    name: HTMLInputElement,
     secret: HTMLInputElement,
     starred: HTMLInputElement,
   }
@@ -24,15 +25,18 @@ export function AddSecret(props: AddSecretProps) {
 
   const handleSubmit = (event: React.FormEvent<AddSecretForm>) => {
     event.preventDefault()
-    const id = event.currentTarget.elements.id.value
-    const data = event.currentTarget.elements.secret.value
+    const id = content && isUniqueId(content.id) ? content.id : uniqueId()
+    const name = event.currentTarget.elements.name.value
+    const secret = event.currentTarget.elements.secret.value
     const starred = Boolean(event.currentTarget.elements.starred.defaultChecked)
 
     const newContent: Content = {
+      data: undefined,
       createdAt: new Date().toISOString(),
-      data,
+      secret,
       id,
-      length: data.length,
+      name,
+      length: secret.length,
       starred,
     }
 
@@ -52,8 +56,11 @@ export function AddSecret(props: AddSecretProps) {
     : ['Adicionar as favoritos', undefined]
 
   const [hasContent, label, submitText] = content
-    ? [true, content.id, 'atualizar senha']
+    ? [true, 'Atualizar senha', 'atualizar senha']
     : [false, 'Nova senha', 'adicionar senha']
+
+  const nameValue = content?.name ?? content?.id
+  const secretValue = content?.secret ?? content?.data
 
   return (
     <form className='AddSecret' onSubmit={handleSubmit}>
@@ -62,15 +69,15 @@ export function AddSecret(props: AddSecretProps) {
         autoComplete='off'
         autoFocus
         className='input-name'
-        defaultValue={content?.id}
-        id='id'
+        defaultValue={nameValue}
+        id='name'
         label='name'
-        name='id'
+        name='name'
         type='text'
       />
       <Input
         className='input-secret'
-        defaultValue={content?.data}
+        defaultValue={secretValue}
         id='secret'
         label='secret'
         name='secret'

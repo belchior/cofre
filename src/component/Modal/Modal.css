@@ -1,12 +1,19 @@
 .Modal {
   align-items: start;
   background-color: rgba(0,0,0,0.7);
-  bottom: 0;
+  border: 0;
+  color: currentColor;
   display: grid;
+  height: 100vh;
   justify-items: center;
   left: 0;
+  padding: 0;
   position: fixed;
-  right: 0;
   top: 0;
+  width: 100vw;
   z-index: 300;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
 }

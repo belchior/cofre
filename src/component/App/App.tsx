@@ -1,13 +1,13 @@
 import React from 'react'
+import type { Content } from '../../lib/dataLayer'
+import { AddSecret } from '../AddSecret/AddSecret'
 import { ContentContext } from '../ContentProvider/ContentProvider'
-import { List } from '../List/List'
-import { Input } from '../Input/Input'
 import { IconAddSecret, IconGear, IconSearch } from '../Icon/Icon'
-import type { Content } from '../../lib/data-layer'
-import './App.css'
+import { Input } from '../Input/Input'
+import { List } from '../List/List'
 import { Modal } from '../Modal/Modal'
 import { useModal } from '../Modal/Modal.hook'
-import { AddSecret } from '../AddSecret/AddSecret'
+import './App.css'
 
 function App() {
   const { contents, addContent } = React.useContext(ContentContext)
@@ -25,7 +25,7 @@ function App() {
   }
 
   const filteredContent = textSearch !== ''
-    ? contents.filter((item) => item.id.includes(textSearch))
+    ? contents.filter((item) => item.name.toLowerCase().includes(textSearch.toLowerCase()))
     : contents
 
   filteredContent.sort((a, b) => {
@@ -33,8 +33,8 @@ function App() {
       if (a.starred) return -1
       if (b.starred) return 1
     }
-    if (a.id < b.id) return -1
-    if (a.id > b.id) return 1
+    if (a.name < b.name) return -1
+    if (a.name > b.name) return 1
     return 0
   })
 
@@ -65,6 +65,10 @@ function App() {
       <Modal open={isOpen} onClose={closeModal}>
         <AddSecret onSubmit={handleSubmit} />
       </Modal>
+
+      <footer className='Footer'>
+        <span className='version'>v0.1.1</span>
+      </footer>
     </>
   )
 }
