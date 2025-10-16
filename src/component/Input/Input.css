@@ -1,0 +1,56 @@
+.Input {
+  display: grid;
+  grid-template-areas: "label message" "inputBox inputBox";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+
+  label {
+    font-size: small;
+    grid-area: label;
+    margin-bottom: 0.25rem;
+  }
+
+  .message {
+    font-size: small;
+    grid-area: message;
+    justify-self: flex-end;
+    margin-bottom: 0.25rem;
+  }
+
+  .inputBox {
+    border: 1px solid #fff;
+    border-radius: var(--border-radius);
+    column-gap: 1rem;
+    display: grid;
+    grid-area: inputBox;
+    grid-auto-flow: column;
+    padding: 1rem;
+    width: 100%;
+
+    &.with-icon {
+      grid-template-columns: min-content 1fr;
+    }
+
+    &.password {
+      grid-template-columns: 1fr min-content;
+    }
+  }
+
+  input {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    display: inline-block;
+    width: 100%;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  .show-password {
+    padding: 0.3rem 0;
+    text-align: center;
+    width: 3rem
+  }
+}

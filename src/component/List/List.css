@@ -1,0 +1,66 @@
+.Item {
+  border: 1px solid transparent;
+  border-bottom-color: var(--border-color);
+  display: grid;
+  grid-template-areas:
+    "star content show"
+    "star content show";
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: 1fr 1fr;
+  height: 5rem;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background-color: var(--bg-2);
+  }
+  &.starred {
+    background-color: rgba(74, 148, 80, 0.05);
+    border-left-color: var(--color-3);
+  }
+  &.starred:hover {
+    background-color: rgba(74, 148, 80, 0.1);
+  }
+
+  .star {
+    align-content: center;
+    border-radius: 0;
+    display: grid;
+    grid-area: star;
+    justify-content: center;
+    margin-right: 0.5rem;
+    padding: 0;
+    width: 3rem;
+  }
+
+  .content {
+    display: grid;
+    grid-area: content;
+    grid-auto-flow: row;
+
+    .name {
+      align-content: flex-end;
+    }
+    .value {
+      font-size: smaller;
+    }
+
+    &.show-value {
+      .name {
+        font-size: smaller;
+      }
+      .value {
+        font-size: larger;
+      }
+    }
+  }
+
+  .show {
+    align-content: center;
+    border-radius: 0;
+    display: grid;
+    grid-area: show;
+    justify-content: center;
+    padding: 0;
+    width: 4rem;
+  }
+}
