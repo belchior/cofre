@@ -1,0 +1,11 @@
+{
+  "css.lint.duplicateProperties": "error",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "postcssSorting.config": {
+    "properties-order": "alphabetical",
+  },
+}
