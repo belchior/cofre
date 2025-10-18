@@ -1,8 +1,10 @@
 import React from 'react'
 import type { Content } from '../../lib/dataLayer'
+import type { ParseContext } from 'zod/v4/core'
 import { IconAddSecret, IconStar } from '../Icon/Icon'
 import { Input } from '../Input/Input'
 import { isUniqueId, uniqueId } from '../../lib/crypto'
+import { isValidContent } from './validation'
 import './AddSecret.css'
 
 export type AddSecretProps = {
@@ -22,11 +24,12 @@ type AddSecretForm = HTMLFormElement & {
 export function AddSecret(props: AddSecretProps) {
   const { content } = props
   const [favorite, setFavorite] = React.useState(Boolean(content?.starred))
+  const [formErrors, setFormErrors] = React.useState()
 
   const handleSubmit = (event: React.FormEvent<AddSecretForm>) => {
     event.preventDefault()
     const id = content && isUniqueId(content.id) ? content.id : uniqueId()
-    const name = event.currentTarget.elements.name.value
+    const name = event.currentTarget.elements.name.value.trim()
     const secret = event.currentTarget.elements.secret.value
     const starred = Boolean(event.currentTarget.elements.starred.defaultChecked)
 
@@ -40,7 +43,9 @@ export function AddSecret(props: AddSecretProps) {
       starred,
     }
 
-    props.onSubmit(newContent)
+    const result = isValidContent(newContent)
+    if (result.success === false) setFormErrors(result.error)
+    // props.onSubmit(newContent)
   }
 
   const handleRemove = () => {
@@ -62,6 +67,13 @@ export function AddSecret(props: AddSecretProps) {
   const nameValue = content?.name ?? content?.id
   const secretValue = content?.secret ?? content?.data
 
+  console.log('formErrors', formErrors)
+
+  const nameMessage = formErrors?.find(item => item.path.at(0) === 'name')?.message
+  console.log('nameMessage', nameMessage)
+
+
+
   return (
     <form className='AddSecret' onSubmit={handleSubmit}>
       <label className='label'>{label}</label>
@@ -74,6 +86,7 @@ export function AddSecret(props: AddSecretProps) {
         label='name'
         name='name'
         type='text'
+        message={nameMessage}
       />
       <Input
         className='input-secret'

@@ -22,7 +22,8 @@
   "dependencies": {
     "modern-normalize": "^3.0.1",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/css": "^0.11.1",
