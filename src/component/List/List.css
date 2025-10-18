@@ -8,7 +8,9 @@
   grid-template-columns: min-content 1fr min-content;
   grid-template-rows: 1fr 1fr;
   height: 5rem;
+    position: relative;
   transition: background 0.3s ease;
+
 
   &:hover {
     background-color: var(--bg-2);
@@ -18,7 +20,7 @@
     border-left-color: var(--color-3);
   }
   &.starred:hover {
-    background-color: rgba(74, 148, 80, 0.1);
+    background-color: rgba(74, 148, 80, 0.3);
   }
 
   .star {
@@ -27,30 +29,43 @@
     display: grid;
     grid-area: star;
     justify-content: center;
-    margin-right: 0.5rem;
     padding: 0;
-    width: 3rem;
+    width: 3.5rem;
   }
 
   .content {
+    border-radius: 0;
     display: grid;
     grid-area: content;
     grid-auto-flow: row;
-
-    .name {
-      align-content: flex-end;
-    }
-    .value {
-      font-size: smaller;
-    }
+    grid-template-areas:
+      "name copied"
+      "secret copied";
+    grid-template-columns: 1fr min-content;
+    padding: 0 1rem;
 
     &.show-value {
       .name {
         font-size: smaller;
       }
-      .value {
+      .secret {
         font-size: larger;
       }
+    }
+
+    .name {
+      align-content: flex-end;
+      grid-area: name;
+    }
+    .secret {
+      font-size: smaller;
+      grid-area: secret;
+    }
+    .copied {
+      align-self: center;
+      /* font-size: smaller; */
+      grid-area: copied;
+      justify-self: center;
     }
   }
 
