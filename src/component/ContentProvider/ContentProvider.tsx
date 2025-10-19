@@ -1,5 +1,5 @@
 import React, { createContext, type PropsWithChildren } from 'react'
-import * as dataLayer from '../../lib/dataLayer'
+import * as dataLayer from '../../lib/storage'
 
 type ContentContext = {
   contents: dataLayer.Content[]

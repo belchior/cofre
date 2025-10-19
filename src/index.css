@@ -44,37 +44,37 @@ button {
   padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   text-align: left;
   transition: background 0.3s ease;
-}
-.button:hover,
-button:hover {
-  background-color: rgba(255,255,255,0.1);
-}
 
-.button>.Icon,
-button>.Icon {
-  margin-right: 0.25rem;
-  vertical-align: middle;
-}
+  &:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+  &:active {
+    background-color: rgba(255,255,255,0.2);
+  }
 
-.button.b-r,
-button.b-r {
-  align-items: center;
-  border-radius: 50%;
-  display: inline-grid;
-  height: 40px;
-  justify-content: center;
-  padding: 0;
-  width: 40px;
-}
-.button.b-r>.Icon,
-button.b-r>.Icon {
-  margin-right: 0;
-  vertical-align: middle;
-}
+  &.b-r {
+    align-items: center;
+    border-radius: 50%;
+    display: inline-grid;
+    height: 40px;
+    justify-content: center;
+    padding: 0;
+    width: 40px;
 
-.button.b-w,
-button.b-w {
-  border: 1px solid #a1a1a1;
+    & > .Icon {
+      margin-right: 0;
+      vertical-align: middle;
+    }
+  }
+
+  &.b-w {
+    border: 1px solid #a1a1a1;
+  }
+
+  & > .Icon {
+    margin-right: 0.25rem;
+    vertical-align: middle;
+  }
 }
 
 h2 {

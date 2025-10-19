@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Content } from '../../lib/dataLayer'
+import type { Content } from '../../lib/storage'
 import { AddSecret } from '../AddSecret/AddSecret'
 import { ContentContext } from '../ContentProvider/ContentProvider'
 import { IconAddSecret, IconGear, IconSearch } from '../Icon/Icon'
@@ -63,11 +63,11 @@ function App() {
       </main>
 
       <Modal open={isOpen} onClose={closeModal}>
-        <AddSecret onSubmit={handleSubmit} />
+        <AddSecret onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
 
       <footer className='Footer'>
-        <span className='version'>v0.1.1</span>
+        <span className='version'>v0.1.2</span>
       </footer>
     </>
   )

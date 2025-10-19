@@ -34,6 +34,11 @@ export function loadContent(): Content[] {
   return [...data.values()]
 }
 
+export function isNameBeenUsed(name: Content['name']) {
+  const content = loadContent().find(item => item.name.toLowerCase() === name.toLowerCase())
+  return Boolean(content)
+}
+
 export function saveContents(contents: Content[]) {
   setCollection('contents', listToMap(contents))
 }

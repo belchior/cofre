@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Content } from '../../lib/dataLayer'
+import type { Content } from '../../lib/storage'
 import { AddSecret } from '../AddSecret/AddSecret'
 import { ContentContext } from '../ContentProvider/ContentProvider'
 import { IconMenu } from '../Icon/Icon'
@@ -40,8 +40,8 @@ function Item(props: ItemProps) {
   const secretValue = content.secret ?? content.data
 
   const [text, value] = show
-    ? ['hide', secretValue]
-    : ['show', secretValue.replaceAll(/./g, '*')]
+    ? ['esconder', secretValue]
+    : ['mostrar', secretValue.replaceAll(/./g, '*')]
 
   return <>
     <li className={classes}>
@@ -51,7 +51,7 @@ function Item(props: ItemProps) {
       <button className={classesContent} type='button' onClick={handleContent}>
         <span className='name'>{nameValue}</span>
         <span className='secret'>{value}</span>
-        {copied && <span className='copied'>copied</span>}
+        {copied && <span className='copied'>copiado</span>}
       </button>
       <button className='show' type='button' onClick={toggleShow}>
         {text}
@@ -59,7 +59,12 @@ function Item(props: ItemProps) {
     </li>
 
     <Modal open={isOpen} onClose={closeModal}>
-      <AddSecret content={content} onSubmit={handleSubmit} onRemove={handleRemove} />
+      <AddSecret
+        content={content}
+        onCancel={closeModal}
+        onRemove={handleRemove}
+        onSubmit={handleSubmit}
+      />
     </Modal>
   </>
 }
