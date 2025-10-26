@@ -27,7 +27,7 @@ a:visited {
 body {
   background-color: var(--bg-1);
   color: var(--color-0);
-  font-size: medium;
+  font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: var(--line-height);
@@ -40,7 +40,6 @@ button {
   border-radius: var(--border-radius);
   color: var(--color-0);
   display: inline-block;
-  font-size: small;
   padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   text-align: left;
   transition: background 0.3s ease;
@@ -73,7 +72,6 @@ button {
 
   & > .Icon {
     margin-right: 0.25rem;
-    vertical-align: middle;
   }
 }
 

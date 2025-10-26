@@ -49,11 +49,17 @@ function App() {
 
       <menu className='Menu'>
         <li>
-          <Input icon={<IconSearch />} onChange={handleTextSearch} autoFocus autoComplete='off' />
+          <Input
+            autoComplete='off'
+            autoFocus
+            icon={<IconSearch />}
+            onChange={handleTextSearch}
+            title='Busque segredos por nome'
+          />
         </li>
         <li className='actions'>
-          <button type="button" onClick={openModal}>
-            <IconAddSecret /> Adicionar senha
+          <button type="button" onClick={openModal} title='adicionar segredo'>
+            <IconAddSecret /> Adicionar segredo
           </button>
         </li>
       </menu>

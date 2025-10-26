@@ -35,25 +35,25 @@ function Item(props: ItemProps) {
   const toggleShow = () => setShowValue(!show)
 
   const classes = cls('Item', [content.starred, 'starred'])
-  const classesContent = cls('content', [show, 'show-value'])
+  const classesContent = cls('content', [show, 'showing'])
   const nameValue = content.name ?? content.id
   const secretValue = content.secret ?? content.data
 
   const [text, value] = show
-    ? ['esconder', secretValue]
-    : ['mostrar', secretValue.replaceAll(/./g, '*')]
+    ? ['hide', secretValue]
+    : ['show', secretValue.replaceAll(/./g, '*')]
 
   return <>
     <li className={classes}>
-      <button className='star' type="button" onClick={openModal}>
+      <button className='star' type="button" onClick={openModal} title='menu do item'>
         <IconMenu />
       </button>
-      <button className={classesContent} type='button' onClick={handleContent}>
+      <button className={classesContent} type='button' onClick={handleContent} title='click para copiar o segredo'>
         <span className='name'>{nameValue}</span>
         <span className='secret'>{value}</span>
         {copied && <span className='copied'>copiado</span>}
       </button>
-      <button className='show' type='button' onClick={toggleShow}>
+      <button className='show' type='button' onClick={toggleShow} title={`click para ${text} o segredo`}>
         {text}
       </button>
     </li>

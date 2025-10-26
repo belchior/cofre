@@ -35,6 +35,19 @@
     &.password {
       grid-template-columns: 1fr min-content;
     }
+
+    &.view {
+      border-color: transparent;
+
+      span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      span.hide {
+        text-overflow: clip;
+      }
+    }
   }
 
   input {

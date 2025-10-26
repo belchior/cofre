@@ -1,5 +1,6 @@
 {
   "css.lint.duplicateProperties": "error",
+  "css.lint.emptyRules": "error",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
