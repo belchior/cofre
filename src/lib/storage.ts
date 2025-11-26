@@ -1,3 +1,4 @@
+import * as crypto from './crypto'
 
 export type CustomField = {
   name: string,
@@ -20,6 +21,7 @@ type Collection<T extends { id: string }> = Map<T['id'], T>
 
 type Store = {
   'contents': Collection<Content>,
+  'keyiv': string,
 }
 
 type StoreKey = keyof Store
@@ -49,4 +51,21 @@ export function isNameBeenUsed(name: Content['name']) {
 
 export function saveContents(contents: Content[]) {
   setCollection('contents', listToMap(contents))
+}
+
+export async function loadKeyIv() {
+  const text = localStorage.getItem('keyiv')
+
+  if (text == null) {
+    const keyiv = await crypto.init()
+    await saveKeyIv(keyiv)
+    return keyiv
+  }
+
+  return crypto.deserializeKeyIv(text)
+}
+
+export async function saveKeyIv(keyiv: crypto.KeyIv) {
+  const text = await crypto.serializeKeyIv(keyiv)
+  return localStorage.setItem('keyiv', text)
 }

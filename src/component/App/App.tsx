@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Content } from '../../lib/storage'
 import { AddSecret } from '../AddSecret/AddSecret'
-import { ContentContext } from '../ContentProvider/ContentProvider'
+import { ContentContext } from '../Provider/ContentProvider'
 import { IconAdd, IconGear, IconSearch } from '../Icon/Icon'
 import { Input } from '../Input/Input'
 import { List } from '../List/List'
@@ -10,7 +10,7 @@ import { useModal } from '../Modal/Modal.hook'
 import './App.css'
 
 function App() {
-  const { contents, addContent } = React.useContext(ContentContext)
+  const { contents, addContent } = React.use(ContentContext)
   const [textSearch, changeTextSearch] = React.useState('')
   const { isOpen, openModal, closeModal } = useModal()
 
@@ -73,7 +73,7 @@ function App() {
       </Modal>
 
       <footer className='Footer'>
-        <span className='version'>v0.1.0</span>
+        <span className='version'>v0.2.0</span>
       </footer>
     </>
   )

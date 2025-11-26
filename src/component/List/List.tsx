@@ -1,12 +1,12 @@
 import React from 'react'
+import * as clipboard from '../../lib/clipboard'
 import type { Content } from '../../lib/storage'
 import { AddSecret } from '../AddSecret/AddSecret'
-import { ContentContext } from '../ContentProvider/ContentProvider'
+import { ContentContext } from '../Provider/ContentProvider'
 import { IconMenu } from '../Icon/Icon'
 import { Modal } from '../Modal/Modal'
 import { cls } from '../../lib/classNames'
 import { useModal } from '../Modal/Modal.hook'
-import * as clipboard from '../../lib/clipboard'
 import './List.css'
 
 type ItemProps = {
@@ -17,9 +17,10 @@ type ItemProps = {
 
 function Item(props: ItemProps) {
   const { copied, content, onCopy } = props
-  const [show, setShowValue] = React.useState(false)
+
+  const [show, setShow] = React.useState(false)
   const { isOpen, openModal, closeModal } = useModal()
-  const { updateContent, removeContent } = React.useContext(ContentContext)
+  const { removeContent, updateContent } = React.use(ContentContext)
 
   const handleContent = () => {
     clipboard.writeText(content.secret)
@@ -32,14 +33,13 @@ function Item(props: ItemProps) {
   const handleRemove = (newContent: Content) => {
     removeContent(newContent.id)
   }
-  const toggleShow = () => setShowValue(!show)
+  const toggleShow = () => setShow(!show)
 
   const classes = cls('Item', [content.starred, 'starred'])
   const classesContent = cls('content', [show, 'showing'])
-
   const [text, value] = show
     ? ['hide', content.secret]
-    : ['show', content.secret.replaceAll(/./g, '*')]
+    : ['show', '*'.repeat(content.length)]
 
   return <>
     <li className={classes}>

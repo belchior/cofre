@@ -1,0 +1,50 @@
+import React, { createContext, type PropsWithChildren } from 'react'
+import * as dataLayer from '../../lib/storage'
+import * as crypto from '../../lib/crypto'
+
+/* eslint-disable no-unused-vars */
+export type ICryptoContext = {
+  init: boolean,
+  encrypt: (plainText: string) => Promise<string>
+  decrypt: (secretAsText: string) => Promise<string>
+}
+/* eslint-enable no-unused-vars */
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const CryptoContext = createContext<ICryptoContext>({
+  init: false,
+  encrypt: () => Promise.resolve(''),
+  decrypt: () => Promise.resolve(''),
+})
+
+export function CryptoProvider(props: PropsWithChildren) {
+  const [keyiv, setKeyiv] = React.useState<crypto.KeyIv>()
+
+  const contextValue = {
+    init: keyiv != null,
+    encrypt: async (message: string) => {
+      if (keyiv == null) return ''
+      return crypto.encrypt(keyiv, message)
+    },
+    decrypt: async (message: string) => {
+      if (keyiv == null) return ''
+      return crypto.decrypt(keyiv, message)
+    },
+  }
+
+  React.useEffect(() => {
+    if (keyiv == null) {
+      (async () => {
+        const newKeyIv = await dataLayer.loadKeyIv()
+        setKeyiv(newKeyIv)
+      })()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <CryptoContext value={contextValue}>
+      {props.children}
+    </CryptoContext>
+  )
+}
