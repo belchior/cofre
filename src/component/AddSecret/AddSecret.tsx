@@ -3,7 +3,7 @@ import type { ZodSafeParseError } from 'zod'
 import type { Content, CustomField } from '../../lib/storage'
 import * as clipboard from '../../lib/clipboard'
 import { IconCopy, IconMinus, IconStar } from '../Icon/Icon'
-import { Checkbox, Input } from '../Input/Input'
+import { Checkbox, Input } from '../Input'
 import { uniqueId } from '../../lib/crypto'
 import { validateContent, validateContentProp, validateField, type Field } from './validation'
 import './AddSecret.css'
@@ -16,6 +16,7 @@ type CustomFieldProps = {
 function CustomFieldForm(props: CustomFieldProps) {
   const { notAllowed } = props
 
+  const [showForm, setShowForm] = React.useState(false)
   const initialValue = { name: '', isSecret: false }
   const [field, setField] = React.useState<Field>(initialValue)
   const [errorMessage, setErrorMessage] = React.useState({ name: '' })
@@ -59,6 +60,16 @@ function CustomFieldForm(props: CustomFieldProps) {
     props.onSubmit(newField)
     setField(initialValue);
     (inputRef.current as unknown as HTMLInputElement).focus()
+  }
+
+  const toggleShowForm = () => setShowForm(prev => !prev)
+
+  if (showForm === false) {
+    return (
+      <button type='button' className='CustomFieldForm' onClick={toggleShowForm}>
+        <span className='label'>Novo campo</span>
+      </button>
+    )
   }
 
   return (

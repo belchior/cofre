@@ -1,0 +1,62 @@
+.Switch {
+  --height: 2rem;
+  --pd: 2px;
+  --b-r: calc(var(--height) / 2);
+  --circle-width: calc(var(--height) - var(--pd) * 4);
+  --width: calc(var(--circle-width) * 2 + var(--pd) * 4);
+
+  input {
+    visibility: hidden;
+  }
+
+  input + label {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    padding: var(--pd);
+    width: var(--width);
+    height: var(--height);
+    background-color: var(--color-2);
+    border-radius: var(--b-r);
+    transition: background 0.3s;
+  }
+
+  input + label:before,
+  input + label:after {
+    display: block;
+    position: absolute;
+    content: "";
+  }
+
+  input + label:before {
+    top: var(--pd);
+    left: var(--pd);
+    bottom: var(--pd);
+    right: var(--pd);
+    background-color: #fff;
+    border-radius: var(--b-r);
+    transition: background 0.3s;
+  }
+
+  input + label:after {
+    top: calc(var(--pd) * 2);
+    left: calc(var(--pd) * 2);
+    bottom: calc(var(--pd) * 2);
+    width: var(--circle-width);
+    background-color: var(--color-2);
+    border-radius: 50%;
+    transition: margin 0.3s, background 0.3s;
+  }
+
+  input:checked + label {
+    background-color: var(--color-3);
+  }
+
+  input:checked + label:after {
+    margin-left: var(--circle-width);
+    background-color: var(--color-3);
+  }
+}
+

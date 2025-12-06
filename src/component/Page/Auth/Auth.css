@@ -1,0 +1,12 @@
+.PinAuth {
+  align-content: start;
+  align-items: center;
+  display: grid;
+  grid-auto-flow: row;
+  justify-items: center;
+  padding-top: 10rem;
+
+  h2 {
+    text-align: center;
+  }
+}
