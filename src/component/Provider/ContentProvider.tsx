@@ -22,7 +22,7 @@ export const ContentContext = React.createContext<ContentContext>({
   updateContent: () => { },
 })
 
-async function encDecContents(encDec: ICryptoContext['encrypt'] | ICryptoContext['decrypt'], contents: dataLayer.Content[]) {
+async function encDecContents(encDec: ICryptoContext['encrypt'] | ICryptoContext['decrypt'], contents: readonly dataLayer.Content[]) {
   return Promise.all(contents.map(async (content) => {
     const secret = await encDec(content.secret)
 

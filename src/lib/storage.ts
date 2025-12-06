@@ -1,4 +1,5 @@
 import * as crypto from './crypto'
+import { deepFreeze } from './deepFreeze'
 
 export type CustomField = {
   name: string,
@@ -39,9 +40,9 @@ function listToMap(contents: Content[]) {
   return new Map(contents.map((item) => [item.id, item]))
 }
 
-export function loadContent(): Content[] {
+export function loadContent() {
   const data = getCollection('contents')
-  return [...data.values()]
+  return deepFreeze([...data.values()])
 }
 
 export function isNameBeenUsed(name: Content['name']) {
