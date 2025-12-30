@@ -1,0 +1,29 @@
+.Settings {
+  .row {
+    display: grid;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+    grid-template-columns: 1fr min-content;
+    grid-template-areas: "a b" "c b";
+    align-items: center;
+    margin-top: 1rem;
+    
+    h3 {
+      grid-area: a;
+      margin: 0;
+    }
+    .Switch {
+      grid-area: b;
+    }
+    p {
+      grid-area: c;
+    }
+  }
+
+  .actions {
+    margin-top: 2rem;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+  }
+}

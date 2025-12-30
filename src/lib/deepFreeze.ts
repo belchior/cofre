@@ -1,4 +1,4 @@
-export function deepFreeze<T extends object>(object: T) {
+export const deepFreeze = <T extends object>(object: T) => {
   const propNames = Reflect.ownKeys(object)
 
   for (const name of propNames) {
@@ -12,3 +12,6 @@ export function deepFreeze<T extends object>(object: T) {
 
   return Object.freeze(object)
 }
+
+// prevents the prototype pollution
+deepFreeze(deepFreeze)

@@ -1,15 +1,17 @@
 import React from 'react'
-import type { Content } from '../../lib/storage'
-import { AddSecret } from '../AddSecret/AddSecret'
-import { ContentContext } from '../Provider/ContentProvider'
-import { IconAdd, IconGear, IconSearch } from '../Icon/Icon'
-import { Input } from '../Input/Input'
-import { List } from '../List/List'
-import { Modal } from '../Modal/Modal'
-import { useModal } from '../Modal/Modal.hook'
-import './App.css'
+import type { Content } from '../../../lib/storage'
+import { AddSecret } from '../../AddSecret/AddSecret'
+import { ContentContext } from '../../Provider/ContentProvider'
+import { Footer } from '../../App/Footer'
+import { Header } from '../../App/Header'
+import { IconAdd, IconSearch } from '../../Icon/Icon'
+import { Input } from '../../Input/Input'
+import { List } from '../../List/List'
+import { Modal } from '../../Modal/Modal'
+import { useModal } from '../../Modal/Modal.hook'
+import './Home.css'
 
-function App() {
+export function Home() {
   const { contents, addContent } = React.use(ContentContext)
   const [textSearch, changeTextSearch] = React.useState('')
   const { isOpen, openModal, closeModal } = useModal()
@@ -40,12 +42,7 @@ function App() {
 
   return (
     <>
-      <header className='Header'>
-        <h1>Cofre</h1>
-        <button type="button" className='b-r'>
-          <IconGear />
-        </button>
-      </header>
+      <Header />
 
       <menu className='Menu'>
         <li>
@@ -72,11 +69,7 @@ function App() {
         <AddSecret onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
 
-      <footer className='Footer'>
-        <span className='version'>v0.2.0</span>
-      </footer>
+      <Footer />
     </>
   )
 }
-
-export default App

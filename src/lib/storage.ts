@@ -18,11 +18,18 @@ export type Content = {
   starred: boolean,
 }
 
+export type ISettings = Readonly<{
+  enablePinAuth: boolean,
+  enableBiometricAuth: boolean,
+  pin?: string,
+}>
+
 type Collection<T extends { id: string }> = Map<T['id'], T>
 
 type Store = {
   'contents': Collection<Content>,
   'keyiv': string,
+  'settings': ISettings,
 }
 
 type StoreKey = keyof Store
@@ -40,18 +47,14 @@ function listToMap(contents: Content[]) {
   return new Map(contents.map((item) => [item.id, item]))
 }
 
-export function loadContent() {
-  const data = getCollection('contents')
-  return deepFreeze([...data.values()])
-}
-
 export function isNameBeenUsed(name: Content['name']) {
   const content = loadContent().find(item => item.name.toLowerCase() === name.toLowerCase())
   return Boolean(content)
 }
 
-export function saveContents(contents: Content[]) {
-  setCollection('contents', listToMap(contents))
+export function loadContent() {
+  const data = getCollection('contents')
+  return deepFreeze([...data.values()])
 }
 
 export async function loadKeyIv() {
@@ -66,7 +69,41 @@ export async function loadKeyIv() {
   return crypto.deserializeKeyIv(text)
 }
 
+export async function loadSettings(): Promise<ISettings> {
+  const cipherText = localStorage.getItem('settings')
+
+  if (cipherText == null) {
+    const defaultSett: ISettings = {
+      enablePinAuth: false,
+      enableBiometricAuth: false,
+      pin: undefined,
+    }
+    await saveSettings(defaultSett)
+    return defaultSett
+  }
+
+  const keyiv = await loadKeyIv()
+  const text = await crypto.decrypt(keyiv, cipherText)
+  const sett = JSON.parse(text)
+  return deepFreeze(sett)
+}
+
+export function loadSession() {
+  return sessionStorage.getItem('session')
+}
+
+export function saveContents(contents: Content[]) {
+  setCollection('contents', listToMap(contents))
+}
+
 export async function saveKeyIv(keyiv: crypto.KeyIv) {
   const text = await crypto.serializeKeyIv(keyiv)
   return localStorage.setItem('keyiv', text)
+}
+
+export async function saveSettings(sett: ISettings) {
+  const text = JSON.stringify(sett)
+  const keyiv = await loadKeyIv()
+  const encSett = await crypto.encrypt(keyiv, text)
+  localStorage.setItem('settings', encSett)
 }

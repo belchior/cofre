@@ -1,0 +1,26 @@
+.InputPin {
+  border-radius: var(--border-radius);
+  display: grid;
+  column-gap: 1rem;
+  grid-auto-flow: row;
+  justify-content: space-between;
+  max-width: 14rem;
+  grid-template-areas: "a a a a";
+
+  label {
+    grid-area: a;
+    font-size: small;
+    margin-bottom: 0.25rem;
+  }
+
+  .Input {
+    .inputBox {
+      padding: 0.5rem;
+    }
+
+    input {
+      appearance: textfield;
+      text-align: center;
+    }
+  }
+}

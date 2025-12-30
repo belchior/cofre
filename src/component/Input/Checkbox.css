@@ -1,0 +1,17 @@
+.Checkbox {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-rows: min-content;
+
+  label {
+    font-size: small;
+    margin-bottom: 0.25rem;
+  }
+
+  input[type="checkbox"] {
+    align-self: center;
+    height: 1.5rem;
+    justify-self: left;
+    width: 1.5rem;
+  }
+}
