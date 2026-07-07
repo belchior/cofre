@@ -79,6 +79,10 @@ button {
   }
 }
 
+h1 {
+  font-size: x-large;
+  margin: 0 0 1rem 0;
+}
 h2 {
   font-size: larger;
   margin: 0 0 1rem 0;

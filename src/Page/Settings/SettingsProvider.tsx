@@ -1,10 +1,9 @@
 import React, { type PropsWithChildren } from 'react'
 import * as storage from '../../lib/storage'
 
-type SettingsContext = {
+export type SettingsContext = {
   init: boolean,
   settings?: storage.ISettings,
-  // eslint-disable-next-line no-unused-vars
   saveSettings: (sett: storage.ISettings) => void
 }
 
@@ -29,7 +28,7 @@ export function SettingsProvider(props: PropsWithChildren) {
   }
 
   React.useEffect(() => {
-    // initialize settings config
+    // load settings from storage or initialize settings config
     if (sett == null) {
       (async () => {
         const newSett = await storage.loadSettings()
@@ -39,12 +38,9 @@ export function SettingsProvider(props: PropsWithChildren) {
     }
 
     // keep settings in sync with the storage
-    if (sett != null) {
-      (async () => {
-        await storage.saveSettings(sett)
-      })()
-      return
-    }
+    (async () => {
+      await storage.saveSettings(sett)
+    })()
   }, [sett])
 
   return (

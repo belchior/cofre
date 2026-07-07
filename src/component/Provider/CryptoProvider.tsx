@@ -2,13 +2,11 @@ import React, { createContext, type PropsWithChildren } from 'react'
 import * as storage from '../../lib/storage'
 import * as crypto from '../../lib/crypto'
 
-/* eslint-disable no-unused-vars */
 export type ICryptoContext = {
   init: boolean,
   encrypt: (plainText: string) => Promise<string>
   decrypt: (secretAsText: string) => Promise<string>
 }
-/* eslint-enable no-unused-vars */
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const CryptoContext = createContext<ICryptoContext>({

@@ -1,6 +1,8 @@
 import { Link } from 'react-router'
 import { IconGear } from '../Icon/Icon'
 
+import './Header.css'
+
 export function Header() {
   return <>
     <header className='Header'>

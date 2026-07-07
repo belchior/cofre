@@ -3,7 +3,6 @@ import * as dataLayer from '../../lib/storage'
 import * as crypto from './CryptoProvider'
 import type { ICryptoContext } from './CryptoProvider'
 
-/* eslint-disable no-unused-vars */
 type ContentContext = {
   contents: dataLayer.Content[]
   addContent: (contents: dataLayer.Content) => void
@@ -11,7 +10,6 @@ type ContentContext = {
   setContents: React.Dispatch<React.SetStateAction<dataLayer.Content[] | undefined>>,
   updateContent: (id: dataLayer.Content['id'], contents: dataLayer.Content) => void
 }
-/* eslint-enable no-unused-vars */
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const ContentContext = React.createContext<ContentContext>({
@@ -72,6 +70,7 @@ export function ContentProvider(props: PropsWithChildren) {
    * Keeps the app state in sync with localStorage state
   */
   React.useEffect(() => {
+    // load content from localStorage to display at UI
     if (init === true && contents == null) {
       (async () => {
         const decryptedContents = await encDecContents(decrypt, dataLayer.loadContent())
@@ -79,6 +78,7 @@ export function ContentProvider(props: PropsWithChildren) {
       })()
     }
 
+    // save at localStorage the content updated by the user
     if (init === true && Array.isArray(contents) === true) {
       (async () => {
         const encryptedContents = await encDecContents(encrypt, contents)

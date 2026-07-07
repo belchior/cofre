@@ -1,13 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router'
-import { Auth } from './component/Page/Auth/Auth'
 import { ContentProvider } from './component/Provider/ContentProvider'
 import { CryptoProvider } from './component/Provider/CryptoProvider'
-import { Home } from './component/Page/Home/Home'
+import { GetStarted } from './Page/GetStarted/GetStarted'
+import { Home } from './Page/Home/Home'
+import { Login } from './Page/Login/Login'
 import { ProtectRoute } from './component/App/ProtectRoute'
-import { Settings } from './component/Page/Settings/Settings'
-import { SettingsProvider } from './component/Provider/SettingsProvider'
+import { Settings } from './Page/Settings/Settings'
+import { SettingsProvider } from './Page/Settings/SettingsProvider'
 import './main.css'
 
 createRoot(document.getElementById('root')!).render(
@@ -16,7 +17,12 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           {/* public pages */}
-          <Route path="/cofre/auth" element={<Auth />} />
+          <Route path="/cofre/get-started" element={
+            <SettingsProvider>
+              <GetStarted />
+            </SettingsProvider>
+          } />
+          <Route path="/cofre/login" element={<Login />} />
 
           {/* protected pages */}
           <Route element={<ProtectRoute />}>
