@@ -3,7 +3,8 @@
   align-items: center;
   display: grid;
   grid-auto-flow: row;
-  padding-top: 5rem;
+  padding-top: 3rem;
+  margin: 0 1rem;
 
   li {
     display: grid;

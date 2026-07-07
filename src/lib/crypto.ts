@@ -91,7 +91,7 @@ export async function deserializeKeyIv(text: string): Promise<KeyIv> {
 
 export async function encrypt(keyiv: KeyIv, plainText: string, additionalData?: string) {
   const encodedText = serde.encoding(plainText)
-  const encodedData = additionalData ? serde.encoding(additionalData) : undefined
+  const encodedData = additionalData ? serde.encoding(additionalData) : new TextEncoder().encode()
   const cipherText = await window.crypto.subtle.encrypt(
     { name: ALGORITHM_ID, iv: keyiv.iv, additionalData: encodedData },
     keyiv.key,
@@ -102,7 +102,7 @@ export async function encrypt(keyiv: KeyIv, plainText: string, additionalData?: 
 
 export async function decrypt(keyiv: KeyIv, secretAsText: string, additionalData?: string) {
   const cipherText = serde.deserializeBuffer(secretAsText)
-  const encodedData = additionalData ? serde.encoding(additionalData) : undefined
+  const encodedData = additionalData ? serde.encoding(additionalData) : new TextEncoder().encode()
   const buf = await window.crypto.subtle.decrypt(
     { name: ALGORITHM_ID, iv: keyiv.iv, additionalData: encodedData },
     keyiv.key,
