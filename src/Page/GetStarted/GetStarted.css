@@ -1,0 +1,31 @@
+.GetStarted {
+  align-content: start;
+  align-items: center;
+  display: grid;
+  grid-auto-flow: row;
+  padding-top: 5rem;
+
+  li {
+    display: grid;
+    grid-template-areas: "a b" "c c" "d d" "e e";
+    margin-bottom: 2rem;
+
+    h2 {
+      grid-area: a;
+    }
+    .Switch {
+      grid-area: b;
+      justify-self: end;
+    }
+    p {
+      grid-area: c;
+    }
+    .Pin {
+      grid-area: d;
+    }
+    .ConfirmationPin {
+      grid-area: e;
+      margin-top: 1rem;
+    }
+  }
+}

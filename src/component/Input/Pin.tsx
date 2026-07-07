@@ -1,17 +1,27 @@
 import React from 'react'
 import { Input } from './Input'
 import './Pin.css'
+import { cls } from '../../lib/classNames'
 
 type InputPinProps = {
-  // eslint-disable-next-line no-unused-vars
   onSubmit: (pin: string) => void,
-  circularFocus?: boolean,
   autoFocus?: boolean,
+  circularFocus?: boolean,
+  className?: string,
   label?: string,
+  message?: string,
   pin?: string,
 }
 export function InputPin(props: InputPinProps) {
-  const { onSubmit, label, autoFocus = false, circularFocus = false, pin = '' } = props
+  const {
+    onSubmit,
+    className,
+    label,
+    message,
+    autoFocus = false,
+    circularFocus = false,
+    pin = '',
+  } = props
 
   const [nextFocus, setFocus] = React.useState(0)
   const inputRefs = [
@@ -20,6 +30,8 @@ export function InputPin(props: InputPinProps) {
     React.useRef<HTMLInputElement>(null),
     React.useRef<HTMLInputElement>(null),
   ]
+
+  const classes = cls('InputPin', className)
 
   const handleChange = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const elem = event.currentTarget
@@ -51,8 +63,9 @@ export function InputPin(props: InputPinProps) {
   }, [nextFocus])
 
   return <>
-    <div className='InputPin'>
+    <div className={classes}>
       {label && <label htmlFor='digit-0'>{label}</label>}
+      {message && <span className="message">{message}</span>}
       {inputRefs.map((ref, index) => {
         const name = `digit-${index}`
         const defaultValue = pin.at(index)

@@ -52,7 +52,7 @@ const serde = deepFreeze({
   },
 })
 
-function initializationVector() {
+export function initializationVector() {
   return window.crypto.getRandomValues(new Uint8Array(BYTE_LENGTH))
 }
 

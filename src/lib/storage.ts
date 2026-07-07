@@ -107,3 +107,7 @@ export async function saveSettings(sett: ISettings) {
   const encSett = await crypto.encrypt(keyiv, text)
   localStorage.setItem('settings', encSett)
 }
+
+export function saveSession(session: string) {
+  return sessionStorage.setItem('session', session)
+}
