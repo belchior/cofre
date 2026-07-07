@@ -14,6 +14,7 @@ function View(props: ViewProps) {
   const [state, setState] = React.useState({
     authMethod: '',
     pin: '',
+    confirmationMessage: '',
   })
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +43,10 @@ function View(props: ViewProps) {
         enableBiometricAuth: false,
         pin: state.pin,
       })
+      return
     }
+
+    setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
   }
 
   return <main className='GetStarted'>
@@ -71,6 +75,7 @@ function View(props: ViewProps) {
               className='ConfirmationPin'
               label='Confirme seu PIN'
               onSubmit={handleConfirmationPinSubmit}
+              message={state.confirmationMessage}
             />
           )}
         </>}

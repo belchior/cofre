@@ -4,7 +4,7 @@
     row-gap: 0.5rem;
     column-gap: 1rem;
     grid-template-columns: 1fr min-content;
-    grid-template-areas: "a b" "c b";
+    grid-template-areas: "a b" "c b" "d d" "e e";
     align-items: center;
     margin-top: 1rem;
     
@@ -17,6 +17,13 @@
     }
     p {
       grid-area: c;
+    }
+    .Pin {
+      grid-area: d;
+    }
+    .ConfirmationPin {
+      grid-area: e;
+      margin-top: 1rem;
     }
   }
 

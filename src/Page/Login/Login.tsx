@@ -14,7 +14,7 @@ function PinAuth() {
     const isValid = await auth.isPinValid(pin)
 
     if (isValid === false) {
-      setMessage(() => 'Invalid PIN')
+      setMessage(() => 'PIN inválido')
       return
     }
 
