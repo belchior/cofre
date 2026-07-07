@@ -65,7 +65,6 @@ export function InputPin(props: InputPinProps) {
   return <>
     <div className={classes}>
       {label && <label htmlFor='digit-0'>{label}</label>}
-      {message && <span className="message">{message}</span>}
       {inputRefs.map((ref, index) => {
         const name = `digit-${index}`
         const defaultValue = pin.at(index)
@@ -85,6 +84,7 @@ export function InputPin(props: InputPinProps) {
           />
         )
       })}
+      {message && <span className="message">{message}</span>}
     </div>
   </>
 }

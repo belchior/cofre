@@ -13,6 +13,10 @@ type PinAuthProps = {
 
 export function PinAuth(props: PinAuthProps) {
   const { onSubmit, sett } = props
+  const [state, setState] = React.useState({
+    pin: '',
+    confirmationMessage: '',
+  })
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const elem = event.currentTarget
@@ -21,7 +25,17 @@ export function PinAuth(props: PinAuthProps) {
   }
 
   const handlePinSubmit = (pin: string) => {
-    onSubmit({ ...sett, pin })
+    setState(prev => ({ ...prev, pin, confirmationMessage: '' }))
+  }
+
+  const handleConfirmationPinSubmit = (confirmationPin: string) => {
+    if (confirmationPin == state.pin) {
+      setState(prev => ({ ...prev, confirmationMessage: '' }))
+      onSubmit({ ...sett, pin: state.pin })
+      return
+    }
+
+    setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
   }
 
   return <>
@@ -36,12 +50,21 @@ export function PinAuth(props: PinAuthProps) {
       defaultChecked={sett.enablePinAuth}
     />
 
-    {sett.enablePinAuth && (
+    {sett.enablePinAuth && <>
       <InputPin
+        className='Pin'
         label='Insira seu PIN'
         onSubmit={handlePinSubmit}
         pin={sett.pin}
       />
-    )}
+      {state.pin != '' && (
+        <InputPin
+          className='ConfirmationPin'
+          label='Confirme seu PIN'
+          onSubmit={handleConfirmationPinSubmit}
+          message={state.confirmationMessage}
+        />
+      )}
+    </>}
   </>
 }
