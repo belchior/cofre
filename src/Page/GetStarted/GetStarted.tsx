@@ -33,7 +33,6 @@ function View(props: ViewProps) {
 
   const handlePinSubmit = (pin: string) => {
     setState(prev => ({ ...prev, pin: pin }))
-    console.log('handlePinSubmit', pin)
   }
 
   const handleConfirmationPinSubmit = (confirmationPin: string) => {
