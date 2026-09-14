@@ -3,13 +3,25 @@
   align-items: center;
   display: grid;
   grid-auto-flow: row;
-  padding-top: 3rem;
   margin: 0 1rem;
+  padding-top: 3rem;
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  ul {
+    margin-bottom: 2rem;
+  }
 
   li {
     display: grid;
     grid-template-areas: "a b" "c c" "d d" "e e";
     margin-bottom: 2rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     h2 {
       grid-area: a;
@@ -21,6 +33,9 @@
     p {
       grid-area: c;
     }
+    p.webAuthn {
+      grid-area: d;
+    }
     .Pin {
       grid-area: d;
     }
@@ -28,5 +43,13 @@
       grid-area: e;
       margin-top: 1rem;
     }
+  }
+
+  .message {
+    color: var(--color-4);
+    margin-bottom: 2rem;
+  }
+  .saveSettings {
+    justify-self: end;
   }
 }

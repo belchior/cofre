@@ -1,5 +1,6 @@
-import * as crypto from './crypto'
 import { deepFreeze } from './deepFreeze'
+import * as crypto from './crypto'
+import * as serde from './serde'
 
 export type CustomField = {
   name: string,
@@ -18,10 +19,16 @@ export type Content = {
   starred: boolean,
 }
 
+export type CredentialDescriptor = {
+  id: ArrayBuffer;
+  transports?: AuthenticatorTransport[];
+  type: PublicKeyCredentialType;
+}
 export type ISettings = Readonly<{
   enablePinAuth: boolean,
   enableBiometricAuth: boolean,
   pin?: string,
+  credential?: CredentialDescriptor,
 }>
 
 type Collection<T extends { id: string }> = Map<T['id'], T>
@@ -56,6 +63,9 @@ export function loadContent() {
   const data = getCollection('contents')
   return deepFreeze([...data.values()])
 }
+export function saveContents(contents: Content[]) {
+  setCollection('contents', listToMap(contents))
+}
 
 export async function loadKeyIv() {
   const text = localStorage.getItem('keyiv')
@@ -68,6 +78,20 @@ export async function loadKeyIv() {
 
   return crypto.deserializeKeyIv(text)
 }
+export async function saveKeyIv(keyiv: crypto.KeyIv) {
+  const text = await crypto.serializeKeyIv(keyiv)
+  return localStorage.setItem('keyiv', text)
+}
+
+export function loadSession() {
+  return sessionStorage.getItem('session')
+}
+export function removeSession() {
+  return sessionStorage.removeItem('session')
+}
+export function saveSession(session: string) {
+  return sessionStorage.setItem('session', session)
+}
 
 export async function loadSettings(): Promise<ISettings> {
   const cipherText = localStorage.getItem('settings')
@@ -77,6 +101,7 @@ export async function loadSettings(): Promise<ISettings> {
       enablePinAuth: false,
       enableBiometricAuth: false,
       pin: undefined,
+      credential: undefined,
     }
     await saveSettings(defaultSett)
     return defaultSett
@@ -85,29 +110,27 @@ export async function loadSettings(): Promise<ISettings> {
   const keyiv = await loadKeyIv()
   const text = await crypto.decrypt(keyiv, cipherText)
   const sett = JSON.parse(text)
+  if (sett.credential) {
+    sett.credential.id = serde.deserializeBuffer(sett.credential.id)
+  }
+
   return deepFreeze(sett)
 }
-
-export function loadSession() {
-  return sessionStorage.getItem('session')
-}
-
-export function saveContents(contents: Content[]) {
-  setCollection('contents', listToMap(contents))
-}
-
-export async function saveKeyIv(keyiv: crypto.KeyIv) {
-  const text = await crypto.serializeKeyIv(keyiv)
-  return localStorage.setItem('keyiv', text)
-}
-
 export async function saveSettings(sett: ISettings) {
-  const text = JSON.stringify(sett)
+  let text
+  if (sett.credential) {
+    text = JSON.stringify({
+      ...sett,
+      credential: {
+        ...sett.credential,
+        id: serde.serializeBuffer(sett.credential.id),
+      },
+    })
+  } else {
+    text = JSON.stringify(sett)
+  }
+
   const keyiv = await loadKeyIv()
   const encSett = await crypto.encrypt(keyiv, text)
   localStorage.setItem('settings', encSett)
-}
-
-export function saveSession(session: string) {
-  return sessionStorage.setItem('session', session)
 }

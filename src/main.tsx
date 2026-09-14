@@ -22,7 +22,11 @@ createRoot(document.getElementById('root')!).render(
               <GetStarted />
             </SettingsProvider>
           } />
-          <Route path="/cofre/login" element={<Login />} />
+          <Route path="/cofre/login" element={
+            <SettingsProvider>
+              <Login />
+            </SettingsProvider>
+          } />
 
           {/* protected pages */}
           <Route element={<ProtectRoute />}>

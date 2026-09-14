@@ -4,17 +4,28 @@ import { SettingsContext } from '../Settings/SettingsProvider'
 import { useNavigate } from 'react-router'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
+import * as webAuthn from '../../lib/webauthn'
 
 import './GetStarted.css'
 
 type ViewProps = {
-  onSubmit: (sett: storage.ISettings) => void,
+  message?: React.ReactNode,
+  onChange: (sett: Partial<storage.ISettings>) => void,
+  onSubmit: () => void,
 }
 function View(props: ViewProps) {
-  const [state, setState] = React.useState({
-    authMethod: '',
-    pin: '',
+  const [state, setState] = React.useState<{
+    authMethods: Set<string>,
+    confirmationMessage: string,
+    credential?: storage.CredentialDescriptor,
+    pin: string,
+    isPinConfirmed: boolean,
+  }>({
+    authMethods: new Set(),
     confirmationMessage: '',
+    credential: undefined,
+    pin: '',
+    isPinConfirmed: false,
   })
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,30 +34,47 @@ function View(props: ViewProps) {
     const authName = elem.name
     const isChecked = elem.checked
 
+    if (authOptions.includes(authName) === false) return
+
     setState(prev => {
-      if (authOptions.includes(authName) === false) return prev
-      if (authName !== state.authMethod && isChecked === true) return { ...prev, authMethod: authName }
-      return isChecked
-        ? { ...prev, authMethod: authName }
-        : { ...prev, authMethod: '' }
+      if (isChecked) {
+        prev.authMethods.add(authName)
+      } else {
+        prev.authMethods.delete(authName)
+      }
+      return { ...prev, authMethods: new Set(prev.authMethods) }
+    })
+
+    props.onChange({
+      [authName]: isChecked,
     })
   }
 
-  const handlePinSubmit = (pin: string) => {
+  const handlePinChange = (pin: string) => {
     setState(prev => ({ ...prev, pin: pin }))
   }
 
-  const handleConfirmationPinSubmit = (confirmationPin: string) => {
-    if (confirmationPin == state.pin) {
-      props.onSubmit({
-        enablePinAuth: true,
-        enableBiometricAuth: false,
-        pin: state.pin,
-      })
+  const handleConfirmationPin = (confirmationPin: string) => {
+    if (confirmationPin !== state.pin) {
+      setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
       return
     }
 
-    setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
+    const sett: Partial<storage.ISettings> = {
+      enablePinAuth: true,
+      pin: state.pin,
+    }
+    props.onChange(sett)
+  }
+
+  const handleWebAuthnCreation = async () => {
+    const credential = await webAuthn.createCredential()
+    const sett: Partial<storage.ISettings> = {
+      enableBiometricAuth: true,
+      credential: webAuthn.credentialDescritor(credential),
+    }
+
+    props.onChange(sett)
   }
 
   return <main className='GetStarted'>
@@ -60,21 +88,21 @@ function View(props: ViewProps) {
         </p>
         <Switch
           name='enablePinAuth'
-          checked={state.authMethod === 'enablePinAuth'}
+          checked={state.authMethods.has('enablePinAuth')}
           onChange={handleSwitchChange}
         />
-        {state.authMethod === 'enablePinAuth' && <>
+        {state.authMethods.has('enablePinAuth') && <>
           <InputPin
             className='Pin'
             label='Insira seu PIN'
-            onSubmit={handlePinSubmit}
+            onSubmit={handlePinChange}
             pin={state.pin}
           />
           {state.pin !== '' && (
             <InputPin
               className='ConfirmationPin'
               label='Confirme seu PIN'
-              onSubmit={handleConfirmationPinSubmit}
+              onSubmit={handleConfirmationPin}
               message={state.confirmationMessage}
             />
           )}
@@ -89,38 +117,65 @@ function View(props: ViewProps) {
         </p>
         <Switch
           name='enableBiometricAuth'
-          checked={state.authMethod === 'enableBiometricAuth'}
+          checked={state.authMethods.has('enableBiometricAuth')}
           onChange={handleSwitchChange}
         />
+        {state.authMethods.has('enableBiometricAuth') && <>
+          <p className='webAuthn mb-0'>
+            <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
+          </p>
+        </>}
       </li>
     </ul>
+    {props.message && <p className='message'>{props.message}</p>}
+    <button type='button' className='saveSettings' onClick={props.onSubmit}>salvar</button>
   </main>
 }
 
 export function GetStarted() {
   const context = React.use(SettingsContext)
   const navigate = useNavigate()
+  const [sett, setSettings] = React.useState(context.settings)
+  const [message, setMessage] = React.useState<string>()
 
-  const handleSubmit = async (sett: storage.ISettings) => {
-    context.saveSettings(sett)
+  const handleChange = async (partialSett: Partial<storage.ISettings>) => {
+    setSettings(prevSett => {
+      return { ...prevSett, ...partialSett } as storage.ISettings
+    })
+  }
 
-    if (sett.enablePinAuth === true && sett.pin != null) {
-      await auth.addSession(sett.pin)
+  const handleSubmit = () => {
+    const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
+    if (sett == null || selectedAuthMethod === false) {
+      setMessage(() => 'Selecione uma forma de autenticação')
+      return
     }
+    if (sett.enableBiometricAuth && sett.credential == null) {
+      setMessage(() => 'É necessário criar uma chave de acesso')
+      return
+    }
+    if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
+      setMessage(() => 'É necessário criar um PIN')
+      return
+    }
+    context.saveSettings(sett)
   }
 
   React.useEffect(() => {
     (async () => {
-      // If the user has a valid session he should be redirected to settings page
+      // If the user has a valid settings and session he should be redirected to home page
       const hasSession = await auth.isSessionValid()
+
       if (hasSession) {
-        navigate('/cofre/settings', { replace: true })
+        navigate('/cofre', { replace: true })
         return
       }
 
       // If the user has a valid settings but has no session he should be redirected to the login page
-      const hasValidSettings = context.settings?.enableBiometricAuth === true
-        || context.settings?.enablePinAuth === true
+      const hasValidSettings = [
+        context.settings?.enableBiometricAuth,
+        context.settings?.enablePinAuth,
+      ].includes(true)
       if (hasValidSettings) {
         navigate('/cofre/login', { replace: true })
         return
@@ -128,5 +183,5 @@ export function GetStarted() {
     })()
   })
 
-  return <View onSubmit={handleSubmit} />
+  return <View onChange={handleChange} onSubmit={handleSubmit} message={message} />
 }
