@@ -1,11 +1,12 @@
 import { deepFreeze } from './deepFreeze'
+import * as serde from './serde'
 
 export function uniqueId() {
   return window.crypto.randomUUID()
 }
 
-export function isUniqueId(id: string) {
-  return Boolean(id.match(/^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/))
+export function randomByteArray(byteLength: number) {
+  return window.crypto.getRandomValues(new Uint8Array(byteLength))
 }
 
 const ALGORITHM_ID = 'AES-GCM'
@@ -15,44 +16,24 @@ const EXTRACTABLE = true
 const FORMAT = 'raw'
 const KEY_USAGES = deepFreeze(['encrypt', 'decrypt'] as const)
 
-const serde = deepFreeze({
-  encoding(message: string) {
-    const enc = new TextEncoder()
-    return enc.encode(message)
-  },
+function serializeIv(iv: Uint8Array<ArrayBuffer>) {
+  return iv.toString()
+}
 
-  decoding(buf: ArrayBuffer) {
-    const enc = new TextDecoder()
-    return enc.decode(buf)
-  },
+function deserializeIv(text: string) {
+  return new Uint8Array(text.split(',').map(Number))
+}
 
-  serializeBuffer(buf: ArrayBuffer) {
-    return new Uint8Array(buf).toString()
-  },
+async function serializeKey(key: CryptoKey) {
+  return serde.serializeBuffer(await window.crypto.subtle.exportKey(FORMAT, key))
+}
 
-  deserializeBuffer(text: string) {
-    return new Uint8Array(text.split(',').map(Number)).buffer
-  },
+async function deserializeKey(text: string) {
+  const buf = serde.deserializeBuffer(text)
+  return await window.crypto.subtle.importKey(FORMAT, buf, ALGORITHM_PARAMS, EXTRACTABLE, KEY_USAGES)
+}
 
-  serializeIv(iv: Uint8Array<ArrayBuffer>) {
-    return iv.toString()
-  },
-
-  deserializeIv(text: string) {
-    return new Uint8Array(text.split(',').map(Number))
-  },
-
-  async serializeKey(key: CryptoKey) {
-    return this.serializeBuffer(await window.crypto.subtle.exportKey(FORMAT, key))
-  },
-
-  async deserializeKey(text: string) {
-    const buf = this.deserializeBuffer(text)
-    return await window.crypto.subtle.importKey(FORMAT, buf, ALGORITHM_PARAMS, EXTRACTABLE, KEY_USAGES)
-  },
-})
-
-export function initializationVector() {
+function initializationVector() {
   return window.crypto.getRandomValues(new Uint8Array(BYTE_LENGTH))
 }
 
@@ -78,14 +59,14 @@ export async function init(): Promise<KeyIv> {
 }
 
 export async function serializeKeyIv(keyiv: KeyIv) {
-  return `${await serde.serializeKey(keyiv.key)}.${serde.serializeIv(keyiv.iv)}`
+  return `${await serializeKey(keyiv.key)}.${serializeIv(keyiv.iv)}`
 }
 
 export async function deserializeKeyIv(text: string): Promise<KeyIv> {
   const [key, iv] = text.split('.')
   return {
-    key: await serde.deserializeKey(key),
-    iv: serde.deserializeIv(iv),
+    key: await deserializeKey(key),
+    iv: deserializeIv(iv),
   }
 }
 

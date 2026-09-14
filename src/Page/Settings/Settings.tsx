@@ -1,16 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
+import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
-import { PinAuth, type PinAuthData } from './PinAuth'
+import { PinAuth } from './PinAuth'
 import { SettingsContext } from './SettingsProvider'
 import * as storage from '../../lib/storage'
 
 import './Settings.css'
 
 type ViewProps = {
-  onSubmitPinAuth: (data: PinAuthData) => void,
-  handleSave: () => void,
+  message?: React.ReactNode,
+  onChange: (data: Partial<storage.ISettings>) => void,
+  onSubmit: () => void,
   sett: storage.ISettings,
 }
 
@@ -22,13 +24,18 @@ function View(props: ViewProps) {
 
       <ul>
         <li className='row'>
-          <PinAuth onSubmit={props.onSubmitPinAuth} sett={props.sett} />
+          <PinAuth onChange={props.onChange} sett={props.sett} />
+        </li>
+        <li className='row'>
+          <BiometricAuth onChange={props.onChange} sett={props.sett} />
         </li>
       </ul>
 
+      {props.message && <p className='message'>{props.message}</p>}
+
       <div className='actions'>
         <Link to='/cofre' className='button'>voltar</Link>
-        <button type='button' onClick={props.handleSave}>salvar</button>
+        <button type='button' onClick={props.onSubmit}>salvar</button>
       </div>
     </main>
     <Footer />
@@ -37,30 +44,45 @@ function View(props: ViewProps) {
 
 export function Settings() {
   const context = React.use(SettingsContext)
-  const [state, setState] = React.useState(context.settings)
+  const [sett, setSettings] = React.useState(context.settings)
+  const [message, setMessage] = React.useState<string>()
+  const navigate = useNavigate()
 
-  const onSubmitPinAuth = (data: PinAuthData) => {
-    setState(prev => {
-      if (prev == null) return
-      return { ...prev, ...data }
+  const handleChange = (newSett: Partial<storage.ISettings>) => {
+    setSettings(prevSett => {
+      if (prevSett == null) return
+      return { ...prevSett, ...newSett }
     })
   }
 
-  const handleSave = () => {
-    if (state) {
-      context.saveSettings(state)
+  const handleSubmit = () => {
+    const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
+    if (sett == null || selectedAuthMethod === false) {
+      setMessage(() => 'Selecione uma forma de autenticação')
+      return
     }
+    if (sett.enableBiometricAuth && sett.credential == null) {
+      setMessage(() => 'É necessário criar uma chave de acesso')
+      return
+    }
+    if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
+      setMessage(() => 'É necessário criar um PIN')
+      return
+    }
+    context.saveSettings(sett)
+    navigate('/cofre', { replace: true })
   }
 
   React.useEffect(() => {
-    setState(context.settings)
+    setSettings(context.settings)
   }, [context.settings])
 
-  if (state == null) return null
+  if (sett == null) return null
 
   return <View
-    handleSave={handleSave}
-    onSubmitPinAuth={onSubmitPinAuth}
-    sett={state}
+    message={message}
+    onChange={handleChange}
+    onSubmit={handleSubmit}
+    sett={sett}
   />
 }

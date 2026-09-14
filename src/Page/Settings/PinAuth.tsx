@@ -2,17 +2,12 @@ import React from 'react'
 import { InputPin, Switch } from '../../component/Input'
 import * as storage from '../../lib/storage'
 
-export type PinAuthData = {
-  enablePinAuth: boolean,
-  pin?: string,
-}
 type PinAuthProps = {
   sett: storage.ISettings
-  onSubmit: (data: PinAuthData) => void
+  onChange: (data: Partial<storage.ISettings>) => void
 }
 
 export function PinAuth(props: PinAuthProps) {
-  const { onSubmit, sett } = props
   const [state, setState] = React.useState({
     pin: '',
     confirmationMessage: '',
@@ -21,47 +16,46 @@ export function PinAuth(props: PinAuthProps) {
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const elem = event.currentTarget
     const enablePinAuth = elem.name === 'enablePinAuth' && elem.checked
-    onSubmit({ ...sett, enablePinAuth })
+    props.onChange({ enablePinAuth })
   }
 
-  const handlePinSubmit = (pin: string) => {
+  const handlePinChange = (pin: string) => {
     setState(prev => ({ ...prev, pin, confirmationMessage: '' }))
   }
 
-  const handleConfirmationPinSubmit = (confirmationPin: string) => {
-    if (confirmationPin == state.pin) {
-      setState(prev => ({ ...prev, confirmationMessage: '' }))
-      onSubmit({ ...sett, pin: state.pin })
+  const handlePinConfirmation = (pinConfirmation: string) => {
+    if (pinConfirmation !== state.pin) {
+      setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
       return
     }
-
-    setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
+    setState(prev => ({ ...prev, confirmationMessage: '' }))
+    props.onChange({ pin: state.pin })
   }
 
   return <>
     <h3>Autenticação via PIN</h3>
     <p>
-      Habilitando autenticação via PIN ao iniciar uma sessão será
+      Habilitando autenticação por PIN ao iniciar uma sessão será
       solicitado um identificador de 4 dígitos.
     </p>
     <Switch
       name='enablePinAuth'
       onChange={handleSwitchChange}
-      defaultChecked={sett.enablePinAuth}
+      defaultChecked={props.sett.enablePinAuth}
     />
 
-    {sett.enablePinAuth && <>
+    {props.sett.enablePinAuth && <>
       <InputPin
         className='Pin'
         label='Insira seu PIN'
-        onSubmit={handlePinSubmit}
-        pin={sett.pin}
+        onSubmit={handlePinChange}
+        pin={props.sett.pin}
       />
       {state.pin != '' && (
         <InputPin
           className='ConfirmationPin'
           label='Confirme seu PIN'
-          onSubmit={handleConfirmationPinSubmit}
+          onSubmit={handlePinConfirmation}
           message={state.confirmationMessage}
         />
       )}

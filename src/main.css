@@ -106,6 +106,10 @@ ul, menu {
   color: var(--color-1);
 }
 
+.mb-0 {
+  margin-bottom: 0;
+}
+
 .small {
   font-size: small;
   line-height: var(--line-height-small);
