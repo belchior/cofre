@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#222222" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="last-version" content="0.4.2" />
+  <meta name="last-version" content="0.4.3" />
 
   <link rel="icon" type="image/svg+xml" sizes="any" href="/cofre/assets/logo-CfAe2EfG.svg" />
   <link rel="icon" type="image/svg+xml" sizes="128x128" href="/cofre/assets/logo-CfAe2EfG.svg" />
@@ -16,13 +16,13 @@
   <link rel="manifest" href="/cofre/assets/manifest-CprHcssV.json" />
 
   <script type="module" >
-    if (import.meta.env?.PROD) {
+    (() => {
       let vs = window.localStorage.getItem('version')
       if (vs == null) {
         vs = document.querySelector('meta[name="last-version"]').content
         window.localStorage.setItem('version', vs)
       }
-      document.querySelector('span.version').textContent = vs
+      if (location.hostname === 'localhost') return
       const s = document.createElement('script')
       s.type = 'module'
       s.crossOrigin = true
@@ -33,7 +33,7 @@
       st.crossOrigin = true
       st.href = `/cofre/assets/index-${vs}.css`
       document.head.appendChild(st)
-    } 
+    })()
   </script>
   
   
