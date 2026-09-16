@@ -1,6 +1,6 @@
 {
   "name": "cofre",
-  "version": "0.0.1",
+  "version": "0.4.3",
   "description": "Guardas as coisas importantes",
   "main": "index.js",
   "repository": {
@@ -16,6 +16,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "./scripts/postbuild.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },
