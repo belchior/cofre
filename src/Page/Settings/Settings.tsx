@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router'
+import { AutoUpdate } from './AutoUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
@@ -21,13 +22,15 @@ function View(props: ViewProps) {
     <Header />
     <main className='Main Settings'>
       <h2>Configurações</h2>
-
       <ul>
         <li className='row'>
           <PinAuth onChange={props.onChange} sett={props.sett} />
         </li>
         <li className='row'>
           <BiometricAuth onChange={props.onChange} sett={props.sett} />
+        </li>
+        <li className='row'>
+          <AutoUpdate onChange={props.onChange} sett={props.sett} />
         </li>
       </ul>
 

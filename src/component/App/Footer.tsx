@@ -1,7 +1,8 @@
 export function Footer() {
+  // TODO add the current version of the app
   return <>
     <footer className='Footer'>
-      <span className='version'>v0.4.1</span>
+      <span className='version'></span>
     </footer >
   </>
 }

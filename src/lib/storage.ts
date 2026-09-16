@@ -27,6 +27,7 @@ export type CredentialDescriptor = {
 export type ISettings = Readonly<{
   enablePinAuth: boolean,
   enableBiometricAuth: boolean,
+  enableAutoUpdate: boolean,
   pin?: string,
   credential?: CredentialDescriptor,
 }>
@@ -100,6 +101,7 @@ export async function loadSettings(): Promise<ISettings> {
     const defaultSett: ISettings = {
       enablePinAuth: false,
       enableBiometricAuth: false,
+      enableAutoUpdate: true,
       pin: undefined,
       credential: undefined,
     }
@@ -133,4 +135,26 @@ export async function saveSettings(sett: ISettings) {
   const keyiv = await loadKeyIv()
   const encSett = await crypto.encrypt(keyiv, text)
   localStorage.setItem('settings', encSett)
+}
+
+export type AppVersions = {
+  lastVersion: string,
+  version: string,
+}
+export function loadVersions(): AppVersions {
+  const lastVersion = document.querySelector<HTMLMetaElement>('meta[name="last-version"]')!.content
+  const version = window.localStorage.getItem('version')!
+
+  return {
+    lastVersion,
+    version,
+  }
+}
+export function updateVersions(versions: AppVersions): AppVersions {
+  window.localStorage.setItem('version', versions.lastVersion)!
+
+  return {
+    lastVersion: versions.lastVersion,
+    version: versions.lastVersion,
+  }
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Footer } from '../../component/App/Footer'
 import { InputPin } from '../../component/Input'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { useNavigate } from 'react-router'
@@ -8,11 +9,12 @@ import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
 
 import './Login.css'
+import { updateAppVersionIfNeed } from '../Settings/AutoUpdate'
 
 function usedAuthMethods(sett?: storage.ISettings) {
   if (sett == null) return []
   return Object.entries(sett)
-    .filter(([key, value]) => key.startsWith('enable') && value === true)
+    .filter(([key, value]) => key.endsWith('Auth') && value === true)
     .map(([key]) => key)
 }
 
@@ -107,6 +109,10 @@ export function Login() {
         navigate('/cofre/get-started', { replace: true })
         return
       }
+
+      if (context.settings) {
+        updateAppVersionIfNeed(context.settings)
+      }
     })()
   })
 
@@ -124,5 +130,6 @@ export function Login() {
         )}
       </div>
     </main>
+    <Footer />
   </>
 }

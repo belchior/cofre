@@ -44,8 +44,10 @@ button {
   display: inline-block;
   padding: 0.5rem 0.75rem 0.5rem 0.5rem;
   text-align: left;
+  text-transform: uppercase;
   transition: background 0.3s ease;
   font-weight: bolder;
+  font-size: small;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 
   &:hover {

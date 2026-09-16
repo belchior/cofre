@@ -1,4 +1,5 @@
 import React from 'react'
+import { Footer } from '../../component/App/Footer'
 import { InputPin, Switch } from '../../component/Input'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { useNavigate } from 'react-router'
@@ -77,59 +78,62 @@ function View(props: ViewProps) {
     props.onChange(sett)
   }
 
-  return <main className='GetStarted'>
-    <h1>Selecione um método de autenticação</h1>
-    <ul>
-      <li>
-        <h2>Autenticação via PIN</h2>
-        <p>
-          Habilitando autenticação por PIN ao iniciar uma sessão será
-          solicitado um identificador de 4 dígitos.
-        </p>
-        <Switch
-          name='enablePinAuth'
-          checked={state.authMethods.has('enablePinAuth')}
-          onChange={handleSwitchChange}
-        />
-        {state.authMethods.has('enablePinAuth') && <>
-          <InputPin
-            className='Pin'
-            label='Insira seu PIN'
-            onSubmit={handlePinChange}
-            pin={state.pin}
-          />
-          {state.pin !== '' && (
-            <InputPin
-              className='ConfirmationPin'
-              label='Confirme seu PIN'
-              onSubmit={handleConfirmationPin}
-              message={state.confirmationMessage}
-            />
-          )}
-        </>}
-      </li>
-      <li>
-        <h2>Autenticação via Biometria</h2>
-        <p>
-          Habilitando autenticação por Biometria ao iniciar uma sessão será
-          solicitado identificação por digital através do gerenciador de
-          biometria do seu dispositivo.
-        </p>
-        <Switch
-          name='enableBiometricAuth'
-          checked={state.authMethods.has('enableBiometricAuth')}
-          onChange={handleSwitchChange}
-        />
-        {state.authMethods.has('enableBiometricAuth') && <>
-          <p className='webAuthn mb-0'>
-            <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
+  return <>
+    <main className='GetStarted'>
+      <h1>Selecione um método de autenticação</h1>
+      <ul>
+        <li>
+          <h2>Autenticação via PIN</h2>
+          <p>
+            Habilitando autenticação por PIN ao iniciar uma sessão será
+            solicitado um identificador de 4 dígitos.
           </p>
-        </>}
-      </li>
-    </ul>
-    {props.message && <p className='message'>{props.message}</p>}
-    <button type='button' className='saveSettings' onClick={props.onSubmit}>salvar</button>
-  </main>
+          <Switch
+            name='enablePinAuth'
+            checked={state.authMethods.has('enablePinAuth')}
+            onChange={handleSwitchChange}
+          />
+          {state.authMethods.has('enablePinAuth') && <>
+            <InputPin
+              className='Pin'
+              label='Insira seu PIN'
+              onSubmit={handlePinChange}
+              pin={state.pin}
+            />
+            {state.pin !== '' && (
+              <InputPin
+                className='ConfirmationPin'
+                label='Confirme seu PIN'
+                onSubmit={handleConfirmationPin}
+                message={state.confirmationMessage}
+              />
+            )}
+          </>}
+        </li>
+        <li>
+          <h2>Autenticação via Biometria</h2>
+          <p>
+            Habilitando autenticação por Biometria ao iniciar uma sessão será
+            solicitado identificação por digital através do gerenciador de
+            biometria do seu dispositivo.
+          </p>
+          <Switch
+            name='enableBiometricAuth'
+            checked={state.authMethods.has('enableBiometricAuth')}
+            onChange={handleSwitchChange}
+          />
+          {state.authMethods.has('enableBiometricAuth') && <>
+            <p className='webAuthn mb-0'>
+              <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
+            </p>
+          </>}
+        </li>
+      </ul>
+      {props.message && <p className='message'>{props.message}</p>}
+      <button type='button' className='saveSettings' onClick={props.onSubmit}>salvar</button>
+    </main>
+    <Footer />
+  </>
 }
 
 export function GetStarted() {
@@ -160,6 +164,16 @@ export function GetStarted() {
     }
     context.saveSettings(sett)
   }
+
+  React.useEffect(() => {
+    setSettings(prev => {
+      if (context.settings == null) return prev
+      return {
+        ...context.settings,
+        ...prev,
+      } as storage.ISettings
+    })
+  }, [context.settings, setSettings])
 
   React.useEffect(() => {
     (async () => {
