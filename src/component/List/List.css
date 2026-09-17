@@ -1,11 +1,12 @@
 .Item {
-  border: solid transparent;
+  border: 0 solid transparent;
   border-bottom-color: var(--border-color);
-  border-width: 0 0 0.08rem 0.08rem;
+  border-bottom-width: var(--border-width);
+  border-left-width: var(--border-width);
   display: grid;
   grid-template-areas:
-    "star content show"
-    "star content show";
+    "menu content show"
+    "menu content show";
   grid-template-columns: min-content 1fr min-content;
   grid-template-rows: 1fr 1fr;
   height: 5rem;
@@ -23,14 +24,13 @@
     background-color: rgba(74, 148, 80, 0.3);
   }
 
-  .star {
+  .menu {
     align-content: center;
     border-radius: 0;
     display: grid;
-    grid-area: star;
+    grid-area: menu;
     justify-content: center;
-    padding: 0;
-    width: 3.5rem;
+    padding: 0 0.5rem;
   }
 
   .content {
@@ -43,6 +43,7 @@
       "secret copied";
     grid-template-columns: 1fr min-content;
     padding: 0 1rem;
+    text-transform: none;
 
     &.showing {
       .name {
@@ -81,7 +82,6 @@
     display: grid;
     grid-area: show;
     justify-content: center;
-    padding: 0;
-    width: 4rem;
+    padding: 0 1rem;
   }
 }

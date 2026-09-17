@@ -44,7 +44,7 @@ function Item(props: ItemProps) {
 
   return <>
     <li className={classes}>
-      <button className='star' type="button" onClick={openModal} title={t('item_menu')}>
+      <button className='menu' type="button" onClick={openModal} title={t('item_menu')}>
         <IconMenu />
       </button>
       <button className={classesContent} type='button' onClick={handleContent} title={t('click_for_copy_secret')}>
