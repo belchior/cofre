@@ -1,5 +1,6 @@
 import React from 'react'
 import { Switch } from '../../component/Input'
+import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
 
 function hasUpdate(arg?: storage.AppVersions) {
@@ -55,10 +56,8 @@ export function AppUpdate(props: AppUpdateProps) {
   const showLastUpdate = props.sett.enableAutoUpdate === false && hasUpdate(state)
 
   return <>
-    <h3>Atualização da app</h3>
-    <p>
-      Receber atualizações de forma automática
-    </p>
+    <h3>{t('app_updates')}</h3>
+    <p>{t('receive_updates_auto')}</p>
     <Switch
       name='enableAutoUpdate'
       onChange={handleSwitchChange}
@@ -66,10 +65,10 @@ export function AppUpdate(props: AppUpdateProps) {
     />
 
     <div>
-      {state?.version && <span><br />Versão atual <span className='marked'>{state.version}</span></span>}
+      {state?.version && <span><br />{t('current_version')} <span className='marked'>{state.version}</span></span>}
       {showLastUpdate && <>
         <br /><br />
-        Há uma versão mais recente, deseja atualizar? <button type='button' onClick={handleClickUpdate}>sim, quero atualizar</button>
+        {t('new_version_available')} <button type='button' onClick={handleClickUpdate}>{t('yes_update')}</button>
       </>}
     </div>
   </>
