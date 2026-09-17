@@ -1,8 +1,9 @@
 import React from 'react'
+import { useNavigate } from 'react-router'
 import { Footer } from '../../component/App/Footer'
 import { InputPin, Switch } from '../../component/Input'
 import { SettingsContext } from '../Settings/SettingsProvider'
-import { useNavigate } from 'react-router'
+import { t } from '../../lib/translation'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
@@ -80,13 +81,12 @@ function View(props: ViewProps) {
 
   return <>
     <main className='GetStarted'>
-      <h1>Selecione um método de autenticação</h1>
+      <h1>{t('choose_auth_method')}</h1>
       <ul>
         <li>
-          <h2>Autenticação via PIN</h2>
+          <h2>{t('auth_by_pin')}</h2>
           <p>
-            Habilitando autenticação por PIN ao iniciar uma sessão será
-            solicitado um identificador de 4 dígitos.
+            {t('auth_by_pin_desc')}
           </p>
           <Switch
             name='enablePinAuth'

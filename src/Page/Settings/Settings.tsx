@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router'
-import { AutoUpdate } from './AutoUpdate'
+import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
@@ -30,7 +30,7 @@ function View(props: ViewProps) {
           <BiometricAuth onChange={props.onChange} sett={props.sett} />
         </li>
         <li className='row'>
-          <AutoUpdate onChange={props.onChange} sett={props.sett} />
+          <AppUpdate onChange={props.onChange} sett={props.sett} />
         </li>
       </ul>
 

@@ -264,7 +264,7 @@ function Edit(props: EditProps) {
         <label>{label}</label>
         {hasContent === true && <>
           <button type='button' className='btn-remove' onClick={props.onRemove}>
-            remover
+            excluir
           </button>
         </>}
       </header>
@@ -321,7 +321,7 @@ function Edit(props: EditProps) {
           <button
             className='remove-custom-field b-r'
             onClick={handleRemoveField(field.name)}
-            title={`remover ${field.name}`}
+            title={`excluir ${field.name}`}
             type="button"
           >
             <IconMinus />
@@ -378,7 +378,7 @@ function View(props: ViewProps) {
       <header>
         <label>Detalhes de {content.name}</label>
         <button type='button' className='btn-remove' onClick={props.onRemove}>
-          remover
+          excluir
         </button>
       </header>
 

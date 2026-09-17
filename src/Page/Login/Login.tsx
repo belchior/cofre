@@ -2,6 +2,7 @@ import React from 'react'
 import { Footer } from '../../component/App/Footer'
 import { InputPin } from '../../component/Input'
 import { SettingsContext } from '../Settings/SettingsProvider'
+import { updateAppVersionIfNeed } from '../Settings/AppUpdate'
 import { useNavigate } from 'react-router'
 import * as auth from '../../lib/auth'
 import * as serde from '../../lib/serde'
@@ -9,7 +10,6 @@ import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
 
 import './Login.css'
-import { updateAppVersionIfNeed } from '../Settings/AutoUpdate'
 
 function usedAuthMethods(sett?: storage.ISettings) {
   if (sett == null) return []
@@ -62,8 +62,7 @@ function BiometricAuth(props: BiometricAuthProps) {
       props.onSubmit(id)
       return
     } catch (error) {
-      // TODO handle error properly
-      console.log('error credential:', (error as Error).message)
+      console.error('error credential:', (error as Error).message)
     }
   }
 

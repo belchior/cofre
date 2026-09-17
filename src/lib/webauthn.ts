@@ -9,7 +9,7 @@ export async function createCredential() {
           name: 'Cofre',
         },
         user: {
-          // TOD should be refined, should be stored?
+          // TODO should be refined, should be stored?
           id: crypto.randomByteArray(16),
           name: 'user@cofre.com',
           displayName: 'User Cofre',
