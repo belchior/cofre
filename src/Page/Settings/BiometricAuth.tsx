@@ -51,7 +51,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
     {props.sett.enableBiometricAuth && <p className='webAuthn mb-0'>
       {props.sett.credential == null
         ? <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
-        : <button type='button' onClick={handleWebAuthnExclusion}>remover chave de acesso</button>
+        : <button type='button' onClick={handleWebAuthnExclusion}>excluir chave de acesso</button>
       }
     </p>
     }

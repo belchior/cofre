@@ -22,11 +22,11 @@ export function updateAppVersionIfNeed(sett: storage.ISettings) {
   window.location.assign('/cofre')
 }
 
-type AutoUpdateProps = {
+type AppUpdateProps = {
   sett: storage.ISettings
   onChange: (data: Partial<storage.ISettings>) => void
 }
-export function AutoUpdate(props: AutoUpdateProps) {
+export function AppUpdate(props: AppUpdateProps) {
   const [state, setState] = React.useState<storage.AppVersions>()
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +65,12 @@ export function AutoUpdate(props: AutoUpdateProps) {
       defaultChecked={props.sett.enableAutoUpdate}
     />
 
-    {showLastUpdate && <>
-      <div>
-        <br />
+    <div>
+      {state?.version && <span><br />Versão atual <span className='marked'>{state.version}</span></span>}
+      {showLastUpdate && <>
+        <br /><br />
         Há uma versão mais recente, deseja atualizar? <button type='button' onClick={handleClickUpdate}>sim, quero atualizar</button>
-      </div>
-    </>}
+      </>}
+    </div>
   </>
 }

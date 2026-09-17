@@ -22,6 +22,7 @@
         vs = document.querySelector('meta[name="last-version"]').content
         window.localStorage.setItem('version', vs)
       }
+      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
       if (location.hostname === 'localhost') return
       const s = document.createElement('script')
       s.type = 'module'
