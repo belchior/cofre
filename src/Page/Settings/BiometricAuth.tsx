@@ -1,5 +1,6 @@
 import React from 'react'
 import { Switch } from '../../component/Input'
+import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
 
@@ -37,12 +38,8 @@ export function BiometricAuth(props: BiometricAuthProps) {
   }
 
   return <>
-    <h3>Autenticação via Biometria</h3>
-    <p>
-      Habilitando autenticação por Biometria ao iniciar uma sessão será
-      solicitado identificação por digital através do gerenciador de
-      biometria do seu dispositivo.
-    </p>
+    <h3>{t('auth_by_biometric')}</h3>
+    <p>{t('auth_by_biometric_desc')}</p>
     <Switch
       name='enableBiometricAuth'
       onChange={handleSwitchChange}
@@ -50,8 +47,8 @@ export function BiometricAuth(props: BiometricAuthProps) {
     />
     {props.sett.enableBiometricAuth && <p className='webAuthn mb-0'>
       {props.sett.credential == null
-        ? <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
-        : <button type='button' onClick={handleWebAuthnExclusion}>excluir chave de acesso</button>
+        ? <button type='button' onClick={handleWebAuthnCreation}>{t('create_access_key')}</button>
+        : <button type='button' onClick={handleWebAuthnExclusion}>{t('delete_access_key')}</button>
       }
     </p>
     }

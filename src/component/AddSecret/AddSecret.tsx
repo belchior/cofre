@@ -1,11 +1,12 @@
 import React from 'react'
 import type { ZodSafeParseError } from 'zod'
-import type { Content, CustomField } from '../../lib/storage'
-import * as clipboard from '../../lib/clipboard'
-import { IconCopy, IconMinus, IconStar } from '../Icon/Icon'
 import { Checkbox, Input } from '../Input'
+import { IconCopy, IconMinus, IconStar } from '../Icon/Icon'
+import { t } from '../../lib/translation'
 import { uniqueId } from '../../lib/crypto'
 import { validateContent, validateContentProp, validateField, type Field } from './validation'
+import * as clipboard from '../../lib/clipboard'
+import type { Content, CustomField } from '../../lib/storage'
 import './AddSecret.css'
 
 type CustomFieldProps = {
@@ -31,7 +32,7 @@ function CustomFieldForm(props: CustomFieldProps) {
 
   const handleInputBlur = () => {
     if (notAllowed.includes(field.name)) {
-      setErrorMessage(prev => ({ ...prev, name: 'nome em uso' }))
+      setErrorMessage(prev => ({ ...prev, name: t('name_in_use') }))
       return
     }
     const result = validateField(field)
@@ -42,7 +43,7 @@ function CustomFieldForm(props: CustomFieldProps) {
   const handleSubmit = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     if (notAllowed.includes(field.name)) {
-      setErrorMessage(prev => ({ ...prev, name: 'nome em uso' }))
+      setErrorMessage(prev => ({ ...prev, name: t('name_in_use') }))
       return
     }
 
@@ -67,7 +68,7 @@ function CustomFieldForm(props: CustomFieldProps) {
   if (showForm === false) {
     return (
       <button type='button' className='CustomFieldForm' onClick={toggleShowForm}>
-        <span className='label'>Novo campo</span>
+        <span className='label'>{t('new_field')}</span>
       </button>
     )
   }
@@ -76,7 +77,7 @@ function CustomFieldForm(props: CustomFieldProps) {
     <div className='CustomFieldForm'>
       <Input
         className='custom-input'
-        label='Novo campo'
+        label={t('new_field')}
         message={errorMessage.name}
         name='custom-input-1'
         onBlur={handleInputBlur}
@@ -90,14 +91,14 @@ function CustomFieldForm(props: CustomFieldProps) {
         checked={field.isSecret}
         className='custom-checkbox'
         id='custom-checkbox-1'
-        label='Segredo'
+        label={t('secret')}
         name='custom-checkbox-1'
         onChange={handleChange('isSecret')}
         type='checkbox'
       />
 
       <button type='submit' onClick={handleSubmit}>
-        adicionar
+        {t('add')}
       </button>
     </div>
   )
@@ -251,12 +252,12 @@ function Edit(props: EditProps) {
   const toggleFavorite = () => setFavorite(!favorite)
 
   const [text, color] = favorite
-    ? ['Favorito', 'var(--color-3)']
-    : ['Adicionar aos favoritos', undefined]
+    ? [t('favorite'), 'var(--color-3)']
+    : [t('add_to_favorite'), undefined]
 
   const [hasContent, label, submitText] = content
-    ? [true, 'Atualizar segredo', 'atualizar']
-    : [false, 'Novo segredo', 'adicionar segredo']
+    ? [true, t('update_secret'), t('update')]
+    : [false, t('new_secret'), t('add_secret')]
 
   return <>
     <form className='AddSecret' onSubmit={handleSubmit}>
@@ -264,7 +265,7 @@ function Edit(props: EditProps) {
         <label>{label}</label>
         {hasContent === true && <>
           <button type='button' className='btn-remove' onClick={props.onRemove}>
-            excluir
+            {t('delete')}
           </button>
         </>}
       </header>
@@ -286,7 +287,7 @@ function Edit(props: EditProps) {
           className='input-name'
           defaultValue={content?.name}
           id='name'
-          label='nome'
+          label={t('name')}
           message={errorMessage.name}
           name='name'
           onBlur={handleInputBlur}
@@ -298,7 +299,7 @@ function Edit(props: EditProps) {
           className='input-secret'
           defaultValue={content?.secret}
           id='secret'
-          label='senha'
+          label={t('secret')}
           message={errorMessage.secret}
           name='secret'
           onBlur={handleInputBlur}
@@ -321,7 +322,7 @@ function Edit(props: EditProps) {
           <button
             className='remove-custom-field b-r'
             onClick={handleRemoveField(field.name)}
-            title={`excluir ${field.name}`}
+            title={`${t('delete')} ${field.name}`}
             type="button"
           >
             <IconMinus />
@@ -336,7 +337,7 @@ function Edit(props: EditProps) {
 
       <footer>
         <button type='button' className='btn-cancel' onClick={props.onCancel}>
-          cancelar
+          {t('cancel')}
         </button>
 
         <button type='submit' className='btn-submit'>
@@ -370,15 +371,15 @@ function View(props: ViewProps) {
   }
 
   const [text, color] = content.starred
-    ? ['Favorito', 'var(--color-3)']
-    : ['Adicionar aos favoritos', undefined]
+    ? [t('favorite'), 'var(--color-3)']
+    : [t('add_to_favorite'), undefined]
 
   return <>
     <section className='AddSecret'>
       <header>
-        <label>Detalhes de {content.name}</label>
+        <label>{t('details_from')} {content.name}</label>
         <button type='button' className='btn-remove' onClick={props.onRemove}>
-          excluir
+          {t('delete')}
         </button>
       </header>
 
@@ -394,13 +395,13 @@ function View(props: ViewProps) {
             className='input-name'
             value={content.name}
             id='name'
-            label='nome'
+            label={t('name')}
             name='name'
             type='text'
             viewMode
           />
           <div className='actions'>
-            <button className='b-r btn-copy' type='button' onClick={handleCopy('name')} title='copiar'>
+            <button className='b-r btn-copy' type='button' onClick={handleCopy('name')} title={t('copy')}>
               <IconCopy />
             </button>
           </div>
@@ -411,13 +412,13 @@ function View(props: ViewProps) {
             className='input-secret'
             value={content.secret}
             id='secret'
-            label='senha'
+            label={t('secret')}
             name='secret'
             type='password'
             viewMode
           />
           <div className='actions'>
-            <button className='b-r btn-copy' type='button' onClick={handleCopy('secret')} title='copiar'>
+            <button className='b-r btn-copy' type='button' onClick={handleCopy('secret')} title={t('copy')}>
               <IconCopy />
             </button>
           </div>
@@ -435,7 +436,7 @@ function View(props: ViewProps) {
               viewMode
             />
             <div className='actions'>
-              <button className='b-r btn-copy' type='button' onClick={handleCustomFieldCopy(field.index)} title='copiar'>
+              <button className='b-r btn-copy' type='button' onClick={handleCustomFieldCopy(field.index)} title={t('copy')}>
                 <IconCopy />
               </button>
             </div>
@@ -445,11 +446,11 @@ function View(props: ViewProps) {
 
       <footer>
         <button type='button' className='btn-cancel' onClick={props.onCancel}>
-          cancelar
+          {t('cancel')}
         </button>
 
         <button type='button' className='btn-edit' onClick={props.onEdit}>
-          editar
+          {t('edit')}
         </button>
       </footer>
     </section>

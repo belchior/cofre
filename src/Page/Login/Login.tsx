@@ -2,6 +2,7 @@ import React from 'react'
 import { Footer } from '../../component/App/Footer'
 import { InputPin } from '../../component/Input'
 import { SettingsContext } from '../Settings/SettingsProvider'
+import { t } from '../../lib/translation'
 import { updateAppVersionIfNeed } from '../Settings/AppUpdate'
 import { useNavigate } from 'react-router'
 import * as auth from '../../lib/auth'
@@ -34,7 +35,7 @@ function PinAuth(props: PinAuthProps) {
     const isValid = await auth.isPinValid(pin)
 
     if (isValid === false) {
-      setMessage(() => 'PIN inválido')
+      setMessage(() => t('invalid_pin'))
       return
     }
 
@@ -44,7 +45,7 @@ function PinAuth(props: PinAuthProps) {
 
   return <>
     <p>
-      Insira seu <abbr title='Personal Identification Number'>PIN</abbr>
+      {t('enter_your')} <abbr title='Personal Identification Number'>PIN</abbr>
     </p>
     <InputPin message={message} onSubmit={handleSubmit} autoFocus circularFocus />
   </>
@@ -67,7 +68,7 @@ function BiometricAuth(props: BiometricAuthProps) {
   }
 
   return <>
-    <button type="button" className="BiometricAuth" onClick={loadCredential}>Autenticar usando biometria</button>
+    <button type="button" className="BiometricAuth" onClick={loadCredential}>{t('auth_using_biometric')}</button>
   </>
 }
 
@@ -117,7 +118,7 @@ export function Login() {
 
   return <>
     <main className='Main Login'>
-      <h2>Login</h2>
+      <h2>{t('login')}</h2>
       <div className="container">
         {context.settings?.enableBiometricAuth &&
           <BiometricAuth onSubmit={handleSubmit} sett={context.settings} />
@@ -125,7 +126,7 @@ export function Login() {
         {context.settings?.enablePinAuth && (
           onlyPinAuth(context.settings) || state.chosePinAuth
             ? <PinAuth onSubmit={handleSubmit} />
-            : <button type="button" onClick={handleClick}>Autenticar usando PIN</button>
+            : <button type="button" onClick={handleClick}>{t('auth_using_pin')}</button>
         )}
       </div>
     </main>

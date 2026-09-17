@@ -8,6 +8,7 @@ import { IconAdd, IconSearch } from '../../component/Icon/Icon'
 import { Input } from '../../component/Input/Input'
 import { List } from '../../component/List/List'
 import { Modal } from '../../component/Modal/Modal'
+import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
 import './Home.css'
 
@@ -51,12 +52,12 @@ export function Home() {
             autoFocus
             icon={<IconSearch />}
             onChange={handleTextSearch}
-            title='Busque segredos por nome'
+            title={t('search_secrets_by_name')}
           />
         </li>
         <li className='actions'>
-          <button type="button" onClick={openModal} title='adicionar segredo'>
-            <IconAdd /> Adicionar segredo
+          <button type="button" onClick={openModal} title={t('add_secret')}>
+            <IconAdd /> {t('add_secret')}
           </button>
         </li>
       </menu>

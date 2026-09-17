@@ -6,6 +6,7 @@ import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
 import { PinAuth } from './PinAuth'
 import { SettingsContext } from './SettingsProvider'
+import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
 
 import './Settings.css'
@@ -21,7 +22,7 @@ function View(props: ViewProps) {
   return <>
     <Header />
     <main className='Main Settings'>
-      <h2>Configurações</h2>
+      <h2>{t('configurations')}</h2>
       <ul>
         <li className='row'>
           <PinAuth onChange={props.onChange} sett={props.sett} />
@@ -37,8 +38,8 @@ function View(props: ViewProps) {
       {props.message && <p className='message'>{props.message}</p>}
 
       <div className='actions'>
-        <Link to='/cofre' className='button'>voltar</Link>
-        <button type='button' onClick={props.onSubmit}>salvar</button>
+        <Link to='/cofre' className='button'>{t('go_back')}</Link>
+        <button type='button' onClick={props.onSubmit}>{t('save')}</button>
       </div>
     </main>
     <Footer />
@@ -61,15 +62,15 @@ export function Settings() {
   const handleSubmit = () => {
     const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
     if (sett == null || selectedAuthMethod === false) {
-      setMessage(() => 'Selecione uma forma de autenticação')
+      setMessage(() => t('choose_auth_method'))
       return
     }
     if (sett.enableBiometricAuth && sett.credential == null) {
-      setMessage(() => 'É necessário criar uma chave de acesso')
+      setMessage(() => t('access_key_is_required'))
       return
     }
     if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
-      setMessage(() => 'É necessário criar um PIN')
+      setMessage(() => t('pin_is_required'))
       return
     }
     context.saveSettings(sett)

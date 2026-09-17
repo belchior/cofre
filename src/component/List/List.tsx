@@ -1,12 +1,13 @@
 import React from 'react'
-import * as clipboard from '../../lib/clipboard'
-import type { Content } from '../../lib/storage'
 import { AddSecret } from '../AddSecret/AddSecret'
+import { cls } from '../../lib/classNames'
 import { ContentContext } from '../Provider/ContentProvider'
 import { IconMenu } from '../Icon/Icon'
 import { Modal } from '../Modal/Modal'
-import { cls } from '../../lib/classNames'
+import { t } from '../../lib/translation'
 import { useModal } from '../Modal/Modal.hook'
+import * as clipboard from '../../lib/clipboard'
+import type { Content } from '../../lib/storage'
 import './List.css'
 
 type ItemProps = {
@@ -38,20 +39,20 @@ function Item(props: ItemProps) {
   const classes = cls('Item', [content.starred, 'starred'])
   const classesContent = cls('content', [show, 'showing'])
   const [text, value] = show
-    ? ['hide', content.secret]
-    : ['show', '*'.repeat(content.length)]
+    ? [t('hide'), content.secret]
+    : [t('show'), '*'.repeat(content.length)]
 
   return <>
     <li className={classes}>
-      <button className='star' type="button" onClick={openModal} title='menu do item'>
+      <button className='star' type="button" onClick={openModal} title={t('item_menu')}>
         <IconMenu />
       </button>
-      <button className={classesContent} type='button' onClick={handleContent} title='click para copiar o segredo'>
+      <button className={classesContent} type='button' onClick={handleContent} title={t('click_for_copy_secret')}>
         <span className='name'>{content.name}</span>
         <span className='secret'>{value}</span>
-        {copied && <span className='copied'>copiado</span>}
+        {copied && <span className='copied'>{t('copied')}</span>}
       </button>
-      <button className='show' type='button' onClick={toggleShow} title={`click para ${text} o segredo`}>
+      <button className='show' type='button' onClick={toggleShow} title={`${t('click_for')} ${text} ${t('the_secret')}`}>
         {text}
       </button>
     </li>

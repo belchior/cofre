@@ -58,7 +58,7 @@ function View(props: ViewProps) {
 
   const handleConfirmationPin = (confirmationPin: string) => {
     if (confirmationPin !== state.pin) {
-      setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
+      setState(prev => ({ ...prev, confirmationMessage: t('pin_confirmation_error') }))
       return
     }
 
@@ -96,14 +96,14 @@ function View(props: ViewProps) {
           {state.authMethods.has('enablePinAuth') && <>
             <InputPin
               className='Pin'
-              label='Insira seu PIN'
+              label={t('enter_your_pin')}
               onSubmit={handlePinChange}
               pin={state.pin}
             />
             {state.pin !== '' && (
               <InputPin
                 className='ConfirmationPin'
-                label='Confirme seu PIN'
+                label={t('confirm_your_pin')}
                 onSubmit={handleConfirmationPin}
                 message={state.confirmationMessage}
               />
@@ -111,11 +111,9 @@ function View(props: ViewProps) {
           </>}
         </li>
         <li>
-          <h2>Autenticação via Biometria</h2>
+          <h2>{t('auth_by_biometric')}</h2>
           <p>
-            Habilitando autenticação por Biometria ao iniciar uma sessão será
-            solicitado identificação por digital através do gerenciador de
-            biometria do seu dispositivo.
+            {t('auth_by_biometric_desc')}
           </p>
           <Switch
             name='enableBiometricAuth'
@@ -124,13 +122,13 @@ function View(props: ViewProps) {
           />
           {state.authMethods.has('enableBiometricAuth') && <>
             <p className='webAuthn mb-0'>
-              <button type='button' onClick={handleWebAuthnCreation}>criar chave de acesso</button>
+              <button type='button' onClick={handleWebAuthnCreation}>{t('create_access_key')}</button>
             </p>
           </>}
         </li>
       </ul>
       {props.message && <p className='message'>{props.message}</p>}
-      <button type='button' className='saveSettings' onClick={props.onSubmit}>salvar</button>
+      <button type='button' className='saveSettings' onClick={props.onSubmit}>{t('save')}</button>
     </main>
     <Footer />
   </>
@@ -151,15 +149,15 @@ export function GetStarted() {
   const handleSubmit = () => {
     const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
     if (sett == null || selectedAuthMethod === false) {
-      setMessage(() => 'Selecione uma forma de autenticação')
+      setMessage(() => t('choose_auth_method'))
       return
     }
     if (sett.enableBiometricAuth && sett.credential == null) {
-      setMessage(() => 'É necessário criar uma chave de acesso')
+      setMessage(() => t('access_key_is_required'))
       return
     }
     if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
-      setMessage(() => 'É necessário criar um PIN')
+      setMessage(() => t('pin_is_required'))
       return
     }
     context.saveSettings(sett)

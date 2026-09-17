@@ -1,5 +1,6 @@
 import React from 'react'
 import { InputPin, Switch } from '../../component/Input'
+import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
 
 type PinAuthProps = {
@@ -25,7 +26,7 @@ export function PinAuth(props: PinAuthProps) {
 
   const handlePinConfirmation = (pinConfirmation: string) => {
     if (pinConfirmation !== state.pin) {
-      setState(prev => ({ ...prev, confirmationMessage: 'Não corresponde ao valor do PIN' }))
+      setState(prev => ({ ...prev, confirmationMessage: t('pin_confirmation_error') }))
       return
     }
     setState(prev => ({ ...prev, confirmationMessage: '' }))
@@ -33,11 +34,8 @@ export function PinAuth(props: PinAuthProps) {
   }
 
   return <>
-    <h3>Autenticação via PIN</h3>
-    <p>
-      Habilitando autenticação por PIN ao iniciar uma sessão será
-      solicitado um identificador de 4 dígitos.
-    </p>
+    <h3>{t('auth_by_pin')}</h3>
+    <p>{t('auth_by_pin_desc')}</p>
     <Switch
       name='enablePinAuth'
       onChange={handleSwitchChange}
@@ -47,14 +45,14 @@ export function PinAuth(props: PinAuthProps) {
     {props.sett.enablePinAuth && <>
       <InputPin
         className='Pin'
-        label='Insira seu PIN'
+        label={t('enter_your_pin')}
         onSubmit={handlePinChange}
         pin={props.sett.pin}
       />
       {state.pin != '' && (
         <InputPin
           className='ConfirmationPin'
-          label='Confirme seu PIN'
+          label={t('confirm_your_pin')}
           onSubmit={handlePinConfirmation}
           message={state.confirmationMessage}
         />
