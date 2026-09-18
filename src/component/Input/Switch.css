@@ -1,5 +1,5 @@
 .Switch {
-  --height: 2rem;
+  --height: 1.75rem;
   --pd: 2px;
   --b-r: calc(var(--height) / 2);
   --circle-width: calc(var(--height) - var(--pd) * 4);

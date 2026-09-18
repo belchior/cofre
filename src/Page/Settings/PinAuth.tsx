@@ -44,6 +44,7 @@ export function PinAuth(props: PinAuthProps) {
 
     {props.sett.enablePinAuth && <>
       <InputPin
+        tabIndex={0}
         className='Pin'
         label={t('enter_your_pin')}
         onSubmit={handlePinChange}

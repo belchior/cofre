@@ -36,7 +36,7 @@ function Item(props: ItemProps) {
   }
   const toggleShow = () => setShow(!show)
 
-  const classes = cls('Item', [content.starred, 'starred'])
+  const classes = cls('Item', 'gluey', [content.starred, 'starred'])
   const classesContent = cls('content', [show, 'showing'])
   const [text, value] = show
     ? [t('hide'), content.secret]

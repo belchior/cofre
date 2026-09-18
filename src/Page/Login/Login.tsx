@@ -68,7 +68,7 @@ function BiometricAuth(props: BiometricAuthProps) {
   }
 
   return <>
-    <button type="button" className="BiometricAuth" onClick={loadCredential}>{t('auth_using_biometric')}</button>
+    <button type="button" className="BiometricAuth gluey" onClick={loadCredential}>{t('auth_using_biometric')}</button>
   </>
 }
 
@@ -126,7 +126,7 @@ export function Login() {
         {context.settings?.enablePinAuth && (
           onlyPinAuth(context.settings) || state.chosePinAuth
             ? <PinAuth onSubmit={handleSubmit} />
-            : <button type="button" onClick={handleClick}>{t('auth_using_pin')}</button>
+            : <button type="button" className='gluey' onClick={handleClick}>{t('auth_using_pin')}</button>
         )}
       </div>
     </main>

@@ -11,6 +11,7 @@ type InputPinProps = {
   label?: string,
   message?: string,
   pin?: string,
+  tabIndex?: number,
 }
 export function InputPin(props: InputPinProps) {
   const {
@@ -18,6 +19,7 @@ export function InputPin(props: InputPinProps) {
     className,
     label,
     message,
+    tabIndex,
     autoFocus = false,
     circularFocus = false,
     pin = '',
@@ -80,6 +82,7 @@ export function InputPin(props: InputPinProps) {
             onKeyUp={handleChange}
             // @ts-expect-error ignore
             ref={ref}
+            tabIndex={tabIndex}
             type="text"
           />
         )
