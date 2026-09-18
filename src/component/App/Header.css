@@ -1,6 +1,15 @@
 .Header {
+  align-items: center;
+  display: grid;
+  grid-area: header;
+  grid-auto-flow: column;
+  grid-template-columns: min-content min-content;
+  justify-content: space-between;
+  margin: 0 1rem;
   padding: 0.5rem 0;
+
   h1 {
+    font-size: 1.5rem;
     margin: 0;
   }
 }

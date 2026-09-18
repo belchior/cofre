@@ -1,8 +1,5 @@
-.Item {
-  border: 0 solid transparent;
-  border-bottom-color: var(--border-color);
-  border-bottom-width: var(--border-width);
-  border-left-width: var(--border-width);
+li.Item {
+  border-width: 0 0 var(--border-width) calc(var(--border-width) * 3);
   display: grid;
   grid-template-areas:
     "menu content show"
@@ -15,6 +12,17 @@
   &:hover {
     background-color: var(--bg-2);
     border-left-color: var(--bg-2);
+  }
+  &:first-of-type {
+    .show {
+      border-radius: 0 var(--border-radius) 0 0;
+    }
+  }
+
+  &:last-of-type {
+    .show {
+      border-radius: 0 0 var(--border-radius) 0;
+    }
   }
   &.starred {
     background-color: rgba(74, 148, 80, 0.05);
