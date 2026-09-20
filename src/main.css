@@ -148,6 +148,10 @@ ul, menu {
     border-bottom-color: transparent;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
   }
+
+  &:only-of-type {
+    border-radius: var(--border-radius);
+  }
 }
 
 .Main {

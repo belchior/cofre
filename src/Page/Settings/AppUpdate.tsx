@@ -56,9 +56,9 @@ export function AppUpdate(props: AppUpdateProps) {
   const showLastUpdate = props.sett.enableAutoUpdate === false && hasUpdate(state)
 
   return <>
-    <h3>{t('app_updates')}</h3>
-    <p>{t('receive_updates_auto')}</p>
     <Switch
+      title={t('app_updates')}
+      description={t('receive_updates_auto')}
       name='enableAutoUpdate'
       onChange={handleSwitchChange}
       defaultChecked={props.sett.enableAutoUpdate}
