@@ -38,9 +38,9 @@ export function BiometricAuth(props: BiometricAuthProps) {
   }
 
   return <>
-    <h3>{t('auth_by_biometric')}</h3>
-    <p>{t('auth_by_biometric_desc')}</p>
     <Switch
+      title={t('auth_by_biometric')}
+      description={t('auth_by_biometric_desc')}
       name='enableBiometricAuth'
       onChange={handleSwitchChange}
       checked={props.sett.enableBiometricAuth}

@@ -34,9 +34,9 @@ export function PinAuth(props: PinAuthProps) {
   }
 
   return <>
-    <h3>{t('auth_by_pin')}</h3>
-    <p>{t('auth_by_pin_desc')}</p>
     <Switch
+      title={t('auth_by_pin')}
+      description={t('auth_by_pin_desc')}
       name='enablePinAuth'
       onChange={handleSwitchChange}
       defaultChecked={props.sett.enablePinAuth}

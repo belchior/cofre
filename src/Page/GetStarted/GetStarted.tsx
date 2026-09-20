@@ -83,12 +83,10 @@ function View(props: ViewProps) {
     <main className='GetStarted'>
       <h1>{t('choose_auth_method')}</h1>
       <ul>
-        <li>
-          <h2>{t('auth_by_pin')}</h2>
-          <p>
-            {t('auth_by_pin_desc')}
-          </p>
+        <li className='gluey'>
           <Switch
+            title={t('auth_by_pin')}
+            description={t('auth_by_pin_desc')}
             name='enablePinAuth'
             checked={state.authMethods.has('enablePinAuth')}
             onChange={handleSwitchChange}
@@ -110,12 +108,10 @@ function View(props: ViewProps) {
             )}
           </>}
         </li>
-        <li>
-          <h2>{t('auth_by_biometric')}</h2>
-          <p>
-            {t('auth_by_biometric_desc')}
-          </p>
+        <li className='gluey'>
           <Switch
+            title={t('auth_by_biometric')}
+            description={t('auth_by_biometric_desc')}
             name='enableBiometricAuth'
             checked={state.authMethods.has('enableBiometricAuth')}
             onChange={handleSwitchChange}

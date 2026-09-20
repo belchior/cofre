@@ -1,53 +1,76 @@
 .Switch {
-  --height: 1.75rem;
+  --height: 1.5rem;
   --pd: 2px;
   --b-r: calc(var(--height) / 2);
   --circle-width: calc(var(--height) - var(--pd) * 4);
   --width: calc(var(--circle-width) * 2 + var(--pd) * 4);
+  
+  column-gap: 1rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-areas: 
+    "title input" 
+    "description input";
+  justify-content: space-between;
+  row-gap: 0.5rem;
+
+  .title {
+    grid-area: title;
+    margin: 0;
+  }
+
+  .description {
+    grid-area: description;
+    margin: 0 0 0.5rem 0;
+  }
+
+  label {
+    grid-area: input;
+  }
 
   input {
     visibility: hidden;
   }
 
   input + label {
-    display: block;
-    position: relative;
-    cursor: pointer;
-    outline: none;
-    user-select: none;
-    padding: var(--pd);
-    width: var(--width);
-    height: var(--height);
     background-color: var(--color-2);
     border-radius: var(--b-r);
+    cursor: pointer;
+    display: block;
+    height: var(--height);
+    outline: none;
+    padding: var(--pd);
+    position: relative;
     transition: background 0.3s;
+    user-select: none;
+    width: var(--width);
   }
 
   input + label:before,
   input + label:after {
+    content: "";
     display: block;
     position: absolute;
-    content: "";
   }
 
   input + label:before {
-    top: var(--pd);
-    left: var(--pd);
-    bottom: var(--pd);
-    right: var(--pd);
     background-color: #fff;
     border-radius: var(--b-r);
+    bottom: var(--pd);
+    left: var(--pd);
+    right: var(--pd);
+    top: var(--pd);
     transition: background 0.3s;
   }
 
   input + label:after {
-    top: calc(var(--pd) * 2);
-    left: calc(var(--pd) * 2);
-    bottom: calc(var(--pd) * 2);
-    width: var(--circle-width);
     background-color: var(--color-2);
     border-radius: 50%;
+    bottom: calc(var(--pd) * 2);
+    left: calc(var(--pd) * 2);
+    top: calc(var(--pd) * 2);
     transition: margin 0.3s, background 0.3s;
+    width: var(--circle-width);
   }
 
   input:checked + label {
@@ -55,8 +78,8 @@
   }
 
   input:checked + label:after {
-    margin-left: var(--circle-width);
     background-color: var(--color-3);
+    margin-left: var(--circle-width);
   }
 }
 

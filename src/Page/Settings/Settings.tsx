@@ -24,13 +24,16 @@ function View(props: ViewProps) {
     <main className='Main Settings'>
       <h2>{t('configurations')}</h2>
       <ul>
-        <li className='row'>
+        <li className='gluey'>
           <PinAuth onChange={props.onChange} sett={props.sett} />
         </li>
-        <li className='row'>
+        <li className='gluey'>
           <BiometricAuth onChange={props.onChange} sett={props.sett} />
         </li>
-        <li className='row'>
+      </ul>
+
+      <ul>
+        <li className='gluey'>
           <AppUpdate onChange={props.onChange} sett={props.sett} />
         </li>
       </ul>

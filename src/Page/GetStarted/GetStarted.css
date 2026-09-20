@@ -15,34 +15,7 @@
   }
 
   li {
-    display: grid;
-    grid-template-areas: "a b" "c c" "d d" "e e";
-    margin-bottom: 2rem;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    h2 {
-      grid-area: a;
-    }
-    .Switch {
-      grid-area: b;
-      justify-self: end;
-    }
-    p {
-      grid-area: c;
-    }
-    p.webAuthn {
-      grid-area: d;
-    }
-    .Pin {
-      grid-area: d;
-    }
-    .ConfirmationPin {
-      grid-area: e;
-      margin-top: 1rem;
-    }
+    padding: 1rem;
   }
 
   .message {
