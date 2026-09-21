@@ -62,7 +62,7 @@ export function Home() {
         </li>
       </menu>
 
-      <main className='Main Home'>
+      <main className='Home'>
         <List items={filteredContent} />
       </main>
 

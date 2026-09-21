@@ -57,11 +57,11 @@ export function AppUpdate(props: AppUpdateProps) {
 
   return <>
     <Switch
-      title={t('app_updates')}
+      defaultChecked={props.sett.enableAutoUpdate}
       description={t('receive_updates_auto')}
       name='enableAutoUpdate'
       onChange={handleSwitchChange}
-      defaultChecked={props.sett.enableAutoUpdate}
+      title={t('app_updates')}
     />
 
     <div>

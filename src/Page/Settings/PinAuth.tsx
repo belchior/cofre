@@ -35,27 +35,28 @@ export function PinAuth(props: PinAuthProps) {
 
   return <>
     <Switch
-      title={t('auth_by_pin')}
+      className='mb-1'
+      defaultChecked={props.sett.enablePinAuth}
       description={t('auth_by_pin_desc')}
       name='enablePinAuth'
       onChange={handleSwitchChange}
-      defaultChecked={props.sett.enablePinAuth}
+      title={t('auth_by_pin')}
     />
 
     {props.sett.enablePinAuth && <>
       <InputPin
-        tabIndex={0}
         className='Pin'
         label={t('enter_your_pin')}
         onSubmit={handlePinChange}
         pin={props.sett.pin}
+        tabIndex={0}
       />
       {state.pin != '' && (
         <InputPin
           className='ConfirmationPin'
           label={t('confirm_your_pin')}
-          onSubmit={handlePinConfirmation}
           message={state.confirmationMessage}
+          onSubmit={handlePinConfirmation}
         />
       )}
     </>}

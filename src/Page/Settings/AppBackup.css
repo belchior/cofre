@@ -1,0 +1,32 @@
+.ImportBackup {
+  background-color: var(--bg-1);
+  border-radius: var(--border-radius);
+  display: grid;
+  max-width: 35rem;
+  min-width: 23rem;
+  padding: 1rem 2rem;
+  row-gap: 1rem;
+  width: 100vw;
+
+  h2 {
+    grid-area: "modal-header";
+  }
+
+  .fileUpload {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: clip;
+    width: 100%;
+  }
+
+  .message {
+    color: var(--color-4);
+  }
+
+  .actions {
+    display: grid;
+    grid-area: "modal-footer";
+    grid-auto-flow: column;
+    justify-content: space-between;
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router'
+import { AppBackup } from './AppBackup'
 import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
@@ -21,7 +22,7 @@ type ViewProps = {
 function View(props: ViewProps) {
   return <>
     <Header />
-    <main className='Main Settings'>
+    <main className='Settings'>
       <h2>{t('configurations')}</h2>
       <ul>
         <li className='gluey'>
@@ -35,6 +36,12 @@ function View(props: ViewProps) {
       <ul>
         <li className='gluey'>
           <AppUpdate onChange={props.onChange} sett={props.sett} />
+        </li>
+      </ul>
+
+      <ul>
+        <li className='gluey'>
+          <AppBackup />
         </li>
       </ul>
 
