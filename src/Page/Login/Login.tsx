@@ -117,7 +117,7 @@ export function Login() {
   })
 
   return <>
-    <main className='Main Login'>
+    <main className='Login'>
       <h2>{t('login')}</h2>
       <div className="container">
         {context.settings?.enableBiometricAuth &&
