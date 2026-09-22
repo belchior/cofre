@@ -10,6 +10,19 @@
   li.gluey {
     padding: 1rem;
   }
+  
+  div.gluey {
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+
+    &:first-of-type {
+      padding-top: 0;
+    }
+
+    &:last-of-type {
+      padding-bottom: 0;
+    }
+  }
 
   .message {
     color: var(--color-4);

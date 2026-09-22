@@ -143,20 +143,14 @@ ul, menu {
   border-bottom-width: var(--border-width);
   border-radius: 0;
   width: 100%;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 
   &:first-of-type {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
-    padding-top: 0;
   }
-
   &:last-of-type {
     border-bottom-color: transparent;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-    padding-bottom: 0;
   }
-
   &:only-of-type {
     border-radius: var(--border-radius);
   }
