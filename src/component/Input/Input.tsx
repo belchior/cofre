@@ -1,6 +1,6 @@
-import React from 'react'
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import React, { type InputHTMLAttributes, type ReactNode } from 'react'
 import { cls } from '../../lib/classNames'
+import { t } from '../../lib/translation'
 import './Input.css'
 
 type InputPasswordProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -14,8 +14,8 @@ function InputPassword(props: InputPasswordProps) {
 
   const classesShow = cls([show === false, 'hide'])
   const [text, inputType] = show
-    ? ['hide', 'text']
-    : ['show', 'password']
+    ? [t('hide'), 'text']
+    : [t('show'), 'password']
 
   return <>
     {viewMode === true && <span className={classesShow}>{show ? props.value : String(props.value)?.replace(/./g, '*')}</span>}

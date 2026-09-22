@@ -56,20 +56,27 @@ export function AppUpdate(props: AppUpdateProps) {
   const showLastUpdate = props.sett.enableAutoUpdate === false && hasUpdate(state)
 
   return <>
-    <Switch
-      defaultChecked={props.sett.enableAutoUpdate}
-      description={t('receive_updates_auto')}
-      name='enableAutoUpdate'
-      onChange={handleSwitchChange}
-      title={t('app_updates')}
-    />
-
-    <div>
-      {state?.version && <span><br />{t('current_version')} <span className='marked'>{state.version}</span></span>}
-      {showLastUpdate && <>
-        <br /><br />
-        {t('new_version_available')} <button type='button' onClick={handleClickUpdate}>{t('yes_update')}</button>
-      </>}
+    <div className='gluey'>
+      <Switch
+        defaultChecked={props.sett.enableAutoUpdate}
+        description={t('receive_updates_auto')}
+        name='enableAutoUpdate'
+        onChange={handleSwitchChange}
+        title={t('app_updates')}
+      />
     </div>
+
+    {state?.version && <>
+      <div className='gluey'>
+        <p>{t('current_version')} <span className='marked'>{state.version}</span></p>
+      </div>
+    </>}
+
+    {showLastUpdate && <>
+      <div className='gluey'>
+        <p>{t('new_version_available')}</p>
+        <button type='button' onClick={handleClickUpdate}>{t('yes_update')}</button>
+      </div>
+    </>}
   </>
 }
