@@ -2,12 +2,12 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 import { Footer } from '../../component/App/Footer'
 import { InputPin, Switch } from '../../component/Input'
+import { Logo } from '../../component/Logo/Logo'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
-
 import './GetStarted.css'
 
 type ViewProps = {
@@ -81,6 +81,7 @@ function View(props: ViewProps) {
 
   return <>
     <main className='GetStarted'>
+      <Logo />
       <h1>{t('choose_auth_method')}</h1>
       <ul>
         <li className='gluey'>
