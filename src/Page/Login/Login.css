@@ -6,6 +6,10 @@
   justify-items: center;
   padding-top: 10rem;
 
+  img {
+    width: 10rem;
+    margin-bottom: 2rem;
+  }
   h2 {
     margin-bottom: 2rem;
     text-align: center;

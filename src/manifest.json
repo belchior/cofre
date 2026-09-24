@@ -3,18 +3,19 @@
   "name": "Cofre",
   "icons": [
     {
-      "src": "/cofre/logo.svg",
+      "src": "/cofre/logoIcon.svg",
       "sizes": "64x64",
-      "type": "image/svg"
+      "type": "image/svg",
+      "purpose": "maskable"
     },
     {
-      "src": "/cofre/logo.svg",
+      "src": "/cofre/logoIcon.svg",
       "sizes": "128x128",
       "type": "image/svg",
       "purpose": "maskable"
     },
     {
-      "src": "/cofre/logo.svg",
+      "src": "/cofre/logoIcon.svg",
       "sizes": "256x256",
       "type": "image/svg",
       "purpose": "maskable"
