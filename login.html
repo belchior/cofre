@@ -34,7 +34,10 @@
       st.crossOrigin = true
       st.href = `/cofre/assets/index-${vs}.css`
       document.head.appendChild(st)
-      window.location.assign('/cofre')
+
+      document.addEventListener("DOMContentLoaded", (event) => {
+        window.location.assign('/cofre/login')
+      });
     })()
   </script>
 
