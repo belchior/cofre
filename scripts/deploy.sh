@@ -1,9 +1,10 @@
 #!/bin/bash
 
-cp package.json dist/
+version="$(grep 'version' package.json | sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/')"
+pages="$(ls --directory src/Page/* | sed 's|src/Page/||' | sed -r 's/([A-Z])/-\L\1/g' | sed 's/^-//' | grep -v 'home')"
+
 git checkout -q page
 
-version="$(grep 'version' dist/package.json | sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/')"
 
 # set the last version in a meta tag at index.html
 sed -i "s/0.0.0/$version/" dist/index.html
@@ -18,8 +19,15 @@ for oldPath in dist/assets/*.{css,js}; do
   fi
 done
 
+# move files from dist directory to root 
 cp dist/assets/* assets/
 cp dist/index.html ./
+
+# recreate all pages based on home page to fix the bug that the router gets lost 
+# when the user reloads a page different from home page
+for page in $pages; do
+  cp index.html "$page.html"
+done
 
 echo "Version $version builded"
 
