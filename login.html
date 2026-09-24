@@ -27,6 +27,7 @@
       const s = document.createElement('script')
       s.type = 'module'
       s.crossOrigin = true
+      s.onload = (event) => { console.log('loaded'); window.location.assign('/cofre/login'); }
       s.src = `/cofre/assets/index-${vs}.js`
       document.head.appendChild(s)
       const st = document.createElement('link')
@@ -35,9 +36,6 @@
       st.href = `/cofre/assets/index-${vs}.css`
       document.head.appendChild(st)
 
-      document.addEventListener("DOMContentLoaded", (event) => {
-        window.location.assign('/cofre/login')
-      });
     })()
   </script>
 
