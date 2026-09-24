@@ -4,13 +4,13 @@
   display: grid;
   grid-auto-flow: row;
   justify-items: center;
-  padding-top: 10rem;
+  padding-top: 3rem;
 
-  img {
-    width: 10rem;
-    margin-bottom: 2rem;
+  .Logo {
+    margin: 0 auto 2rem auto;
   }
-  h2 {
+
+  h1 {
     margin-bottom: 2rem;
     text-align: center;
   }
