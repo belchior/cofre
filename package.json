@@ -1,6 +1,6 @@
 {
   "name": "cofre",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "description": "Guardas as coisas importantes",
   "main": "index.js",
   "repository": {
@@ -15,8 +15,8 @@
   "homepage": "https://github.com/belchior/cofre#readme",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "postbuild": "./scripts/postbuild.sh",
+    "deploy": "tsc -b && vite build",
+    "postdeploy": "./scripts/deploy.sh",
     "lint": "eslint .",
     "preview": "vite preview"
   },

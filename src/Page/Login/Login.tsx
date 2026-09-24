@@ -9,6 +9,7 @@ import * as auth from '../../lib/auth'
 import * as serde from '../../lib/serde'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
+import LogoSvg from '../../logo.svg'
 
 import './Login.css'
 
@@ -118,6 +119,7 @@ export function Login() {
 
   return <>
     <main className='Login'>
+      <img src={LogoSvg} alt='App logo' />
       <h2>{t('login')}</h2>
       <div className="container">
         {context.settings?.enableBiometricAuth &&
