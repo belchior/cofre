@@ -20,14 +20,14 @@ function View(props: ViewProps) {
     authMethods: Set<string>,
     confirmationMessage: string,
     credential?: storage.CredentialDescriptor,
-    pin: string,
     isPinConfirmed: boolean,
+    pin: string,
   }>({
     authMethods: new Set(),
     confirmationMessage: '',
     credential: undefined,
-    pin: '',
     isPinConfirmed: false,
+    pin: '',
   })
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,15 +86,16 @@ function View(props: ViewProps) {
       <ul>
         <li className='gluey'>
           <Switch
-            title={t('auth_by_pin')}
+            checked={state.authMethods.has('enablePinAuth')}
+            className='mb-1'
             description={t('auth_by_pin_desc')}
             name='enablePinAuth'
-            checked={state.authMethods.has('enablePinAuth')}
             onChange={handleSwitchChange}
+            title={t('auth_by_pin')}
           />
           {state.authMethods.has('enablePinAuth') && <>
             <InputPin
-              className='Pin'
+              className='mb-1'
               label={t('enter_your_pin')}
               onSubmit={handlePinChange}
               pin={state.pin}
@@ -111,11 +112,12 @@ function View(props: ViewProps) {
         </li>
         <li className='gluey'>
           <Switch
-            title={t('auth_by_biometric')}
+            checked={state.authMethods.has('enableBiometricAuth')}
+            className='mb-1'
             description={t('auth_by_biometric_desc')}
             name='enableBiometricAuth'
-            checked={state.authMethods.has('enableBiometricAuth')}
             onChange={handleSwitchChange}
+            title={t('auth_by_biometric')}
           />
           {state.authMethods.has('enableBiometricAuth') && <>
             <p className='webAuthn mb-0'>

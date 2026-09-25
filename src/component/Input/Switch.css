@@ -52,7 +52,7 @@
   }
 
   input + label:before {
-    background-color: #fff;
+    background-color: var(--color-0);
     border-radius: var(--b-r);
     bottom: var(--pd);
     left: var(--pd);
@@ -72,11 +72,11 @@
   }
 
   input:checked + label {
-    background-color: var(--color-3);
+    background-color: var(--color-5);
   }
 
   input:checked + label:after {
-    background-color: var(--color-3);
+    background-color: var(--color-5);
     margin-left: var(--circle-width);
   }
 }

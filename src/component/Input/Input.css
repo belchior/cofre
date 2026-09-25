@@ -19,7 +19,7 @@
   }
 
   .inputBox {
-    border: 1px solid #fff;
+    border: 1px solid var(--color-0);
     border-radius: var(--border-radius);
     column-gap: 1rem;
     display: grid;
@@ -53,7 +53,7 @@
   input {
     background-color: transparent;
     border: none;
-    color: #fff;
+    color: var(--color-0);
     display: inline-block;
     width: 100%;
 

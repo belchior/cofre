@@ -25,11 +25,11 @@ li.Item {
     }
   }
   &.starred {
-    background-color: rgba(74, 148, 80, 0.05);
+    background-color: color-mix(in srgb, transparent, var(--color-3) 25%);
     border-left-color: var(--color-3);
   }
   &.starred:hover {
-    background-color: rgba(74, 148, 80, 0.3);
+    background-color: color-mix(in srgb, transparent, var(--color-3) 30%);
   }
 
   .menu {
