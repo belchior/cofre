@@ -50,7 +50,6 @@ const dict = {
   'invalid_pin': ['invalid PIN', 'PIN inválido'],
   'is_recommended_backup_your_data': ['It is recommended to perform occasional backups to prevent accidental data loss', 'É recomendado fazer backups eventuais afim prevenir perda de dados de forma acidental'],
   'item_menu': ['item menu', 'menu do item'],
-  'loading': ['loading', 'carregando'],
   'login': ['Login', 'Login'],
   'must_agree_desc': ['Before importing, you must agree to replace the current configuration', 'Antes de importar você deve concordar em substituir a configuração atual'],
   'name_in_use': ['nome em uso', 'nome em uso'],

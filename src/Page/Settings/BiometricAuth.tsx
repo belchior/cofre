@@ -5,8 +5,8 @@ import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webauthn'
 
 type BiometricAuthProps = {
-  sett: storage.ISettings
-  onChange: (data: Partial<storage.ISettings>) => void
+  sett: storage.ISettings,
+  onChange: (data: Partial<storage.ISettings>) => void,
 }
 
 export function BiometricAuth(props: BiometricAuthProps) {
@@ -15,8 +15,10 @@ export function BiometricAuth(props: BiometricAuthProps) {
 
     if (elem.name !== 'enableBiometricAuth') return
 
-    const enableBiometricAuth = elem.checked
-    props.onChange({ enableBiometricAuth })
+    const sett: Partial<storage.ISettings> = {
+      enableBiometricAuth: elem.checked,
+    }
+    props.onChange(sett)
   }
 
   const handleWebAuthnCreation = async () => {
@@ -25,7 +27,6 @@ export function BiometricAuth(props: BiometricAuthProps) {
       enableBiometricAuth: true,
       credential: webAuthn.credentialDescritor(credential),
     }
-
     props.onChange(sett)
   }
 
@@ -39,6 +40,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
 
   return <>
     <Switch
+      className='mb-1'
       checked={props.sett.enableBiometricAuth}
       description={t('auth_by_biometric_desc')}
       name='enableBiometricAuth'

@@ -59,3 +59,7 @@ export async function loadCredential(descriptor: PublicKeyCredentialDescriptor) 
 
   return credential
 }
+
+export async function isAuthenticatorAvailable() {
+  return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
+}

@@ -9,7 +9,7 @@ import { PinAuth } from './PinAuth'
 import { SettingsContext } from './SettingsProvider'
 import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
-
+import * as webauthn from '../../lib/webauthn'
 import './Settings.css'
 
 type ViewProps = {
@@ -20,6 +20,17 @@ type ViewProps = {
 }
 
 function View(props: ViewProps) {
+  const [isAutheticatorAvailable, setAutheticator] = React.useState<boolean>()
+
+  React.useEffect(() => {
+    (async () => {
+      const test = await webauthn.isAuthenticatorAvailable()
+      if (isAutheticatorAvailable == null) {
+        setAutheticator(() => test)
+      }
+    })()
+  })
+
   return <>
     <Header />
     <main className='Settings'>
@@ -28,9 +39,11 @@ function View(props: ViewProps) {
         <li className='gluey'>
           <PinAuth onChange={props.onChange} sett={props.sett} />
         </li>
-        <li className='gluey'>
-          <BiometricAuth onChange={props.onChange} sett={props.sett} />
-        </li>
+        {isAutheticatorAvailable && <>
+          <li className='gluey'>
+            <BiometricAuth onChange={props.onChange} sett={props.sett} />
+          </li>
+        </>}
       </ul>
 
       <ul>

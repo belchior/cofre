@@ -45,7 +45,6 @@ export function PinAuth(props: PinAuthProps) {
 
     {props.sett.enablePinAuth && <>
       <InputPin
-        className='Pin'
         label={t('enter_your_pin')}
         onSubmit={handlePinChange}
         pin={props.sett.pin}
@@ -53,7 +52,7 @@ export function PinAuth(props: PinAuthProps) {
       />
       {state.pin != '' && (
         <InputPin
-          className='ConfirmationPin'
+          className='mt-1'
           label={t('confirm_your_pin')}
           message={state.confirmationMessage}
           onSubmit={handlePinConfirmation}

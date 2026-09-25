@@ -1,143 +1,22 @@
 import React from 'react'
 import { useNavigate } from 'react-router'
+import { BiometricAuth } from '../Settings/BiometricAuth'
 import { Footer } from '../../component/App/Footer'
-import { InputPin, Switch } from '../../component/Input'
 import { Logo } from '../../component/Logo/Logo'
+import { PinAuth } from '../Settings/PinAuth'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
-import * as webAuthn from '../../lib/webauthn'
+import * as webauthn from '../../lib/webauthn'
 import './GetStarted.css'
-
-type ViewProps = {
-  message?: React.ReactNode,
-  onChange: (sett: Partial<storage.ISettings>) => void,
-  onSubmit: () => void,
-}
-function View(props: ViewProps) {
-  const [state, setState] = React.useState<{
-    authMethods: Set<string>,
-    confirmationMessage: string,
-    credential?: storage.CredentialDescriptor,
-    isPinConfirmed: boolean,
-    pin: string,
-  }>({
-    authMethods: new Set(),
-    confirmationMessage: '',
-    credential: undefined,
-    isPinConfirmed: false,
-    pin: '',
-  })
-
-  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const authOptions = ['enablePinAuth', 'enableBiometricAuth']
-    const elem = event.currentTarget
-    const authName = elem.name
-    const isChecked = elem.checked
-
-    if (authOptions.includes(authName) === false) return
-
-    setState(prev => {
-      if (isChecked) {
-        prev.authMethods.add(authName)
-      } else {
-        prev.authMethods.delete(authName)
-      }
-      return { ...prev, authMethods: new Set(prev.authMethods) }
-    })
-
-    props.onChange({
-      [authName]: isChecked,
-    })
-  }
-
-  const handlePinChange = (pin: string) => {
-    setState(prev => ({ ...prev, pin: pin }))
-  }
-
-  const handleConfirmationPin = (confirmationPin: string) => {
-    if (confirmationPin !== state.pin) {
-      setState(prev => ({ ...prev, confirmationMessage: t('pin_confirmation_error') }))
-      return
-    }
-
-    const sett: Partial<storage.ISettings> = {
-      enablePinAuth: true,
-      pin: state.pin,
-    }
-    props.onChange(sett)
-  }
-
-  const handleWebAuthnCreation = async () => {
-    const credential = await webAuthn.createCredential()
-    const sett: Partial<storage.ISettings> = {
-      enableBiometricAuth: true,
-      credential: webAuthn.credentialDescritor(credential),
-    }
-
-    props.onChange(sett)
-  }
-
-  return <>
-    <main className='GetStarted'>
-      <Logo />
-      <h1>{t('choose_auth_method')}</h1>
-      <ul>
-        <li className='gluey'>
-          <Switch
-            checked={state.authMethods.has('enablePinAuth')}
-            className='mb-1'
-            description={t('auth_by_pin_desc')}
-            name='enablePinAuth'
-            onChange={handleSwitchChange}
-            title={t('auth_by_pin')}
-          />
-          {state.authMethods.has('enablePinAuth') && <>
-            <InputPin
-              className='mb-1'
-              label={t('enter_your_pin')}
-              onSubmit={handlePinChange}
-              pin={state.pin}
-            />
-            {state.pin !== '' && (
-              <InputPin
-                className='ConfirmationPin'
-                label={t('confirm_your_pin')}
-                onSubmit={handleConfirmationPin}
-                message={state.confirmationMessage}
-              />
-            )}
-          </>}
-        </li>
-        <li className='gluey'>
-          <Switch
-            checked={state.authMethods.has('enableBiometricAuth')}
-            className='mb-1'
-            description={t('auth_by_biometric_desc')}
-            name='enableBiometricAuth'
-            onChange={handleSwitchChange}
-            title={t('auth_by_biometric')}
-          />
-          {state.authMethods.has('enableBiometricAuth') && <>
-            <p className='webAuthn mb-0'>
-              <button type='button' onClick={handleWebAuthnCreation}>{t('create_access_key')}</button>
-            </p>
-          </>}
-        </li>
-      </ul>
-      {props.message && <p className='message'>{props.message}</p>}
-      <button type='button' className='saveSettings' onClick={props.onSubmit}>{t('save')}</button>
-    </main>
-    <Footer />
-  </>
-}
 
 export function GetStarted() {
   const context = React.use(SettingsContext)
   const navigate = useNavigate()
   const [sett, setSettings] = React.useState(context.settings)
   const [message, setMessage] = React.useState<string>()
+  const [isAutheticatorAvailable, setAutheticator] = React.useState<boolean>()
 
   const handleChange = async (partialSett: Partial<storage.ISettings>) => {
     setSettings(prevSett => {
@@ -191,8 +70,35 @@ export function GetStarted() {
         navigate('/cofre/login', { replace: true })
         return
       }
+
+      const test = await webauthn.isAuthenticatorAvailable()
+      if (isAutheticatorAvailable == null) {
+        setAutheticator(() => test)
+      }
     })()
   })
 
-  return <View onChange={handleChange} onSubmit={handleSubmit} message={message} />
+  if (sett == null) return null
+
+  return <>
+    <main className='GetStarted'>
+      <Logo />
+      <h1>{t('choose_auth_method')}</h1>
+      <ul>
+        <li className='gluey'>
+          <PinAuth onChange={handleChange} sett={sett} />
+        </li>
+        {isAutheticatorAvailable && <>
+          <li className='gluey'>
+            <BiometricAuth onChange={handleChange} sett={sett} />
+          </li>
+        </>}
+      </ul>
+
+      {message && <p className='message'>{message}</p>}
+
+      <button type='button' className='saveSettings' onClick={handleSubmit}>{t('save')}</button>
+    </main>
+    <Footer />
+  </>
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Outlet, useNavigate } from 'react-router'
-import { t } from '../../lib/translation'
 import * as auth from '../../lib/auth'
 
 export function ProtectRoute() {
@@ -20,7 +19,7 @@ export function ProtectRoute() {
   })
 
   if (isLoading) {
-    return `${t('loading')} ...`
+    return null
   }
 
   return <Outlet />
