@@ -58,7 +58,7 @@ type BiometricAuthProps = {
 function BiometricAuth(props: BiometricAuthProps) {
   const loadCredential = async () => {
     try {
-      const credential = await webAuthn.loadCredential(props.sett.credential!)
+      const credential = await webAuthn.loadCredential(props.sett.passKey!)
       const id = serde.serializeBuffer(credential!.rawId)
       props.onSubmit(id)
       return

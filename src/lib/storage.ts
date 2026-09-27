@@ -24,12 +24,16 @@ export type CredentialDescriptor = {
   transports?: AuthenticatorTransport[];
   type: PublicKeyCredentialType;
 }
+export type PassKey = CredentialDescriptor & {
+  name: string,
+  displayName: string,
+}
 export type ISettings = Readonly<{
   enablePinAuth: boolean,
   enableBiometricAuth: boolean,
   enableAutoUpdate: boolean,
   pin?: string,
-  credential?: CredentialDescriptor,
+  passKey?: PassKey,
 }>
 
 type Collection<T extends { id: string }> = Map<T['id'], T>
@@ -103,7 +107,7 @@ export async function loadSettings(): Promise<ISettings> {
       enableBiometricAuth: false,
       enableAutoUpdate: true,
       pin: undefined,
-      credential: undefined,
+      passKey: undefined,
     }
     await saveSettings(defaultSett)
     return defaultSett
@@ -112,20 +116,20 @@ export async function loadSettings(): Promise<ISettings> {
   const keyiv = await loadKeyIv()
   const text = await crypto.decrypt(keyiv, cipherText)
   const sett = JSON.parse(text)
-  if (sett.credential) {
-    sett.credential.id = serde.deserializeBuffer(sett.credential.id)
+  if (sett.passKey) {
+    sett.passKey.id = serde.deserializeBuffer(sett.passKey.id)
   }
 
   return deepFreeze(sett)
 }
 export async function saveSettings(sett: ISettings) {
   let text
-  if (sett.credential) {
+  if (sett.passKey) {
     text = JSON.stringify({
       ...sett,
-      credential: {
-        ...sett.credential,
-        id: serde.serializeBuffer(sett.credential.id),
+      passKey: {
+        ...sett.passKey,
+        id: serde.serializeBuffer(sett.passKey.id),
       },
     })
   } else {

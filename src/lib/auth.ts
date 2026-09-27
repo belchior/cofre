@@ -40,7 +40,7 @@ export async function isSessionValid() {
     const authMethods = ['enablePinAuth', 'enableBiometricAuth'] as const
     const dataMap = {
       enablePinAuth: sett.pin,
-      enableBiometricAuth: sett.credential ? serde.serializeBuffer(sett.credential.id) : undefined,
+      enableBiometricAuth: sett.passKey ? serde.serializeBuffer(sett.passKey.id) : undefined,
     }
 
     const promises = authMethods.map(async (authMethod) => {

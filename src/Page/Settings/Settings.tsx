@@ -88,8 +88,8 @@ export function Settings() {
       setMessage(() => t('choose_auth_method'))
       return
     }
-    if (sett.enableBiometricAuth && sett.credential == null) {
-      setMessage(() => t('access_key_is_required'))
+    if (sett.enableBiometricAuth && sett.passKey == null) {
+      setMessage(() => t('passkey_is_required'))
       return
     }
     if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {

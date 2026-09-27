@@ -1,7 +1,12 @@
 import * as crypto from './crypto'
 import type { CredentialDescriptor } from './storage'
 
-export async function createCredential() {
+export type User = {
+  name: string,
+  displayName: string,
+}
+
+export async function createCredential(user: User) {
   try {
     const options: CredentialCreationOptions = {
       publicKey: {
@@ -11,8 +16,13 @@ export async function createCredential() {
         user: {
           // TODO should be refined, should be stored?
           id: crypto.randomByteArray(16),
-          name: 'user@cofre.com',
-          displayName: 'User Cofre',
+          displayName: user.displayName,
+          name: user.name,
+        },
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+          residentKey: 'required',
+          userVerification: 'required',
         },
         pubKeyCredParams: [
           { type: 'public-key', alg: -7 },
@@ -20,6 +30,7 @@ export async function createCredential() {
         ],
         attestation: 'direct',
         timeout: 60000,
+        // TODO should be refined
         challenge: crypto.randomByteArray(16),
       },
     }
@@ -53,6 +64,7 @@ export async function loadCredential(descriptor: PublicKeyCredentialDescriptor) 
       allowCredentials: [descriptor],
       // TODO should be related with creation and verified after load
       challenge: crypto.randomByteArray(16),
+      userVerification: 'required',
     },
   }
   const credential = await navigator.credentials.get(options) as PublicKeyCredential | null

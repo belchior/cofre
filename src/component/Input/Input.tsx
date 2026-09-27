@@ -28,11 +28,12 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   icon?: ReactNode,
   label?: string,
   message?: string,
+  description?: string,
   viewMode?: boolean,
   ref?: React.RefObject<null>,
 }
 export function Input(props: InputProps) {
-  const { label, icon, message, className, viewMode = false, ...inputProps } = props
+  const { label, icon, message, className, description, viewMode = false, ...inputProps } = props
   const isPassword = props.type === 'password'
 
   const classes = cls('Input', className)
@@ -55,6 +56,7 @@ export function Input(props: InputProps) {
             : <input {...inputProps} />
         }
       </div>
+      {description && <p className='input-desc'>{description}</p>}
     </div>
   )
 }

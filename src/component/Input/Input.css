@@ -1,7 +1,7 @@
 .Input {
   display: grid;
-  grid-template-areas: "label message" "inputBox inputBox";
-  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "label message" "inputBox inputBox" "desc desc";
+  grid-template-columns: 1fr auto;
   grid-template-rows: auto;
 
   label {
@@ -16,6 +16,14 @@
     grid-area: message;
     justify-self: flex-end;
     margin-bottom: 0.25rem;
+  }
+
+  .input-desc {
+    font-size: small;
+    font-style: italic;
+    grid-area: desc;
+    margin-top: 0.25rem;
+    margin-bottom: 0;
   }
 
   .inputBox {
