@@ -117,11 +117,6 @@ export async function loadSettings(): Promise<ISettings> {
   const text = await crypto.decrypt(keyiv, cipherText)
   const sett = JSON.parse(text)
 
-  // TODO should be removed in the next app version
-  if (sett.credential != null && sett.passKey == null) {
-    sett.passKey = sett.credential
-    delete sett.credential
-  }
   if (sett.passKey) {
     sett.passKey.id = serde.deserializeBuffer(sett.passKey.id)
   }
@@ -131,13 +126,6 @@ export async function loadSettings(): Promise<ISettings> {
 export async function saveSettings(sett: ISettings) {
   let text
 
-  // @ts-expect-error TODO should be removed in the next app version
-  if (sett.credential != null && sett.passKey == null) {
-    // @ts-expect-error TODO
-    sett.passKey = sett.credential
-    // @ts-expect-error TODO
-    delete sett.credential
-  }
   if (sett.passKey) {
     text = JSON.stringify({
       ...sett,

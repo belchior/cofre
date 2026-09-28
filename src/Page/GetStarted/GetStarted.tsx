@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 import { BiometricAuth } from '../Settings/BiometricAuth'
 import { Footer } from '../../component/App/Footer'
-import { Logo } from '../../component/Logo/Logo'
+import { IconLogo } from '../../component/Icon/Icon'
 import { PinAuth } from '../Settings/PinAuth'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
@@ -82,7 +82,7 @@ export function GetStarted() {
 
   return <>
     <main className='GetStarted'>
-      <Logo />
+      <IconLogo />
       <h1>{t('choose_auth_method')}</h1>
       <ul>
         <li className='gluey'>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Footer } from '../../component/App/Footer'
+import { IconLogo } from '../../component/Icon/Icon'
 import { InputPin } from '../../component/Input'
-import { Logo } from '../../component/Logo/Logo'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
 import { updateAppVersionIfNeed } from '../Settings/AppUpdate'
@@ -118,7 +118,7 @@ export function Login() {
 
   return <>
     <main className='Login'>
-      <Logo />
+      <IconLogo />
       <h1>{t('login')}</h1>
       <div className="container">
         {context.settings?.enableBiometricAuth &&

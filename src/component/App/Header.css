@@ -7,4 +7,8 @@
   justify-content: space-between;
   margin: 0 1rem;
   padding: 0.5rem 0;
+
+  .homeLink {
+    display: grid;
+  }
 }
