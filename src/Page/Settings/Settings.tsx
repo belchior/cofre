@@ -9,7 +9,7 @@ import { PinAuth } from './PinAuth'
 import { SettingsContext } from './SettingsProvider'
 import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
-import * as webauthn from '../../lib/webauthn'
+import * as webauthn from '../../lib/webAuthn'
 import './Settings.css'
 
 type ViewProps = {

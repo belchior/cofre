@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router'
 import * as auth from '../../lib/auth'
 import * as serde from '../../lib/serde'
 import * as storage from '../../lib/storage'
-import * as webAuthn from '../../lib/webauthn'
+import * as webAuthn from '../../lib/webAuthn'
 import './Login.css'
 
 function usedAuthMethods(sett?: storage.ISettings) {

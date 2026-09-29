@@ -8,7 +8,7 @@ import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
-import * as webauthn from '../../lib/webauthn'
+import * as webAuthn from '../../lib/webAuthn'
 import './GetStarted.css'
 
 export function GetStarted() {
@@ -71,7 +71,7 @@ export function GetStarted() {
         return
       }
 
-      const test = await webauthn.isAuthenticatorAvailable()
+      const test = await webAuthn.isAuthenticatorAvailable()
       if (isAutheticatorAvailable == null) {
         setAutheticator(() => test)
       }

@@ -3,7 +3,7 @@ import { aboutBrowser } from '../../lib/aboutBrowser'
 import { Input, Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
 import * as storage from '../../lib/storage'
-import * as webAuthn from '../../lib/webauthn'
+import * as webAuthn from '../../lib/webAuthn'
 
 type CredentialFormProps = {
   onSubmit: (data: webAuthn.User) => void,
