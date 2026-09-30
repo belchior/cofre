@@ -98,6 +98,16 @@ export function saveSession(session: string) {
   return sessionStorage.setItem('session', session)
 }
 
+export function loadSessionCounter() {
+  return Number(window.localStorage.getItem('sc'))
+}
+export function incrementSessionCounter(): number {
+  const sc = window.localStorage.getItem('sc')
+  const value = sc == null ? 1 : Number(sc) + 1
+  window.localStorage.setItem('sc', String(value))
+  return value
+}
+
 export async function loadSettings(): Promise<ISettings> {
   const cipherText = localStorage.getItem('settings')
 

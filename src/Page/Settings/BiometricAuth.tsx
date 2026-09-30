@@ -27,7 +27,7 @@ function CredentialForm(props: CredentialFormProps) {
     props.onSubmit(user)
   }
 
-  return <>
+  return (
     <form onSubmit={handleSubmit}>
       <Input
         className='mb-1'
@@ -51,7 +51,7 @@ function CredentialForm(props: CredentialFormProps) {
 
       <button type='submit'>{t('create_passkey')}</button>
     </form>
-  </>
+  )
 }
 
 type CredentialViewProps = {
@@ -88,11 +88,8 @@ export function BiometricAuth(props: BiometricAuthProps) {
   }
 
   const handleSubmit = async (user: webAuthn.User) => {
-    const credential = await webAuthn.createCredential(user)
-    const passKey = {
-      ...webAuthn.credentialDescritor(credential),
-      ...user,
-    }
+    const passKey = await webAuthn.createPassKey(user)
+
     const sett: Partial<storage.ISettings> = {
       enableBiometricAuth: true,
       passKey,
@@ -103,7 +100,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
   // TODO the use case of recreating a passKey needs more refinament.
   // Maybe it's a bad idea to remove the passKey only in the app
   // because there is no way to remove a passKey from the user authenticator
-  // this can cause duplication of passkeys at user authenticator
+  // this can cause useless passkeys at user authenticator
   const handlePasskeyExclusion = () => {
     const sett: Partial<storage.ISettings> = {
       passKey: undefined,
@@ -121,11 +118,11 @@ export function BiometricAuth(props: BiometricAuthProps) {
       title={t('auth_by_biometric')}
     />
 
-    {props.sett.enableBiometricAuth && props.sett.passKey == null && <>
+    {props.sett.enableBiometricAuth && props.sett.passKey == null && (
       <CredentialForm onSubmit={handleSubmit} />
-    </>}
-    {props.sett.enableBiometricAuth && props.sett.passKey != null && <>
+    )}
+    {props.sett.enableBiometricAuth && props.sett.passKey != null && (
       <CredentialView passKey={props.sett.passKey} onDelete={handlePasskeyExclusion} />
-    </>}
+    )}
   </>
 }

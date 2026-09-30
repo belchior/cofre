@@ -1,6 +1,7 @@
 import React from 'react'
 import { InputPin, Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
+import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 
 type PinAuthProps = {
@@ -24,13 +25,14 @@ export function PinAuth(props: PinAuthProps) {
     setState(prev => ({ ...prev, pin, confirmationMessage: '' }))
   }
 
-  const handlePinConfirmation = (pinConfirmation: string) => {
+  const handlePinConfirmation = async (pinConfirmation: string) => {
     if (pinConfirmation !== state.pin) {
       setState(prev => ({ ...prev, confirmationMessage: t('pin_confirmation_error') }))
       return
     }
     setState(prev => ({ ...prev, confirmationMessage: '' }))
-    props.onChange({ pin: state.pin })
+    const pinHash = await auth.createPinHash(state.pin)
+    props.onChange({ pin: pinHash })
   }
 
   return <>

@@ -25,10 +25,10 @@ function onlyPinAuth(sett?: storage.ISettings) {
   return authMethods[0] === 'enablePinAuth'
 }
 
-type PinAuthProps = {
+type PinAuthLoginProps = {
   onSubmit: (pin: string) => void,
 }
-function PinAuth(props: PinAuthProps) {
+function PinAuthLogin(props: PinAuthLoginProps) {
   const [message, setMessage] = React.useState<string>('')
 
   const handleSubmit = async (pin: string) => {
@@ -40,7 +40,8 @@ function PinAuth(props: PinAuthProps) {
     }
 
     setMessage(() => '')
-    props.onSubmit(pin)
+    const pinHash = await auth.createPinHash(pin)
+    props.onSubmit(pinHash)
   }
 
   return <>
@@ -51,24 +52,32 @@ function PinAuth(props: PinAuthProps) {
   </>
 }
 
-type BiometricAuthProps = {
+type BiometricAuthLoginProps = {
   onSubmit: (pin: string) => void,
   sett: storage.ISettings,
 }
-function BiometricAuth(props: BiometricAuthProps) {
-  const loadCredential = async () => {
+function BiometricAuthLogin(props: BiometricAuthLoginProps) {
+  const HandleAuthentication = async () => {
     try {
-      const credential = await webAuthn.loadCredential(props.sett.passKey!)
-      const id = serde.serializeBuffer(credential!.rawId)
+      if (props.sett.passKey == null) {
+        throw new Error('passkey_not_found')
+      }
+
+      await webAuthn.authenticatePassKey(props.sett.passKey)
+      const id = serde.serializeBuffer(props.sett.passKey.id)
       props.onSubmit(id)
       return
     } catch (error) {
-      console.error('error credential:', (error as Error).message)
+      console.error('Passkey authentication error:', (error as Error).message)
     }
   }
 
   return <>
-    <button type="button" className="BiometricAuth gluey" onClick={loadCredential}>{t('auth_using_biometric')}</button>
+    <button
+      className="BiometricAuth gluey"
+      onClick={HandleAuthentication}
+      type="button"
+    >{t('auth_using_biometric')}</button>
   </>
 }
 
@@ -122,11 +131,11 @@ export function Login() {
       <h1>{t('login')}</h1>
       <div className="container">
         {context.settings?.enableBiometricAuth &&
-          <BiometricAuth onSubmit={handleSubmit} sett={context.settings} />
+          <BiometricAuthLogin onSubmit={handleSubmit} sett={context.settings} />
         }
         {context.settings?.enablePinAuth && (
           onlyPinAuth(context.settings) || state.chosePinAuth
-            ? <PinAuth onSubmit={handleSubmit} />
+            ? <PinAuthLogin onSubmit={handleSubmit} />
             : <button type="button" className='gluey' onClick={handleClick}>{t('auth_using_pin')}</button>
         )}
       </div>
