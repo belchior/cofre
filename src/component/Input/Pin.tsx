@@ -1,24 +1,26 @@
 import React from 'react'
+import { cls } from '../../lib/classNames'
 import { Input } from './Input'
 import './Pin.css'
-import { cls } from '../../lib/classNames'
 
 type InputPinProps = {
-  onSubmit: (pin: string) => void,
   autoFocus?: boolean,
   circularFocus?: boolean,
   className?: string,
   label?: string,
   message?: string,
+  name: string,
+  onSubmit: (pin: string) => void,
   pin?: string,
   tabIndex?: number,
 }
 export function InputPin(props: InputPinProps) {
   const {
-    onSubmit,
     className,
     label,
     message,
+    name,
+    onSubmit,
     tabIndex,
     autoFocus = false,
     circularFocus = false,
@@ -66,19 +68,20 @@ export function InputPin(props: InputPinProps) {
 
   return <>
     <div className={classes}>
-      {label && <label htmlFor='digit-0'>{label}</label>}
+      {label && <label htmlFor={`${name}-0`}>{label}</label>}
+      {message && <span className="message">{message}</span>}
       {inputRefs.map((ref, index) => {
-        const name = `digit-${index}`
+        const inputName = `${name}-${index}`
         const defaultValue = pin.at(index)
         return (
           <Input
             autoFocus={autoFocus && index === 0}
-            id={name}
+            id={inputName}
             defaultValue={defaultValue}
             inputMode='numeric'
             key={index}
             maxLength={1}
-            name={name}
+            name={inputName}
             onKeyUp={handleChange}
             // @ts-expect-error ignore
             ref={ref}
@@ -87,7 +90,6 @@ export function InputPin(props: InputPinProps) {
           />
         )
       })}
-      {message && <span className="message">{message}</span>}
     </div>
   </>
 }

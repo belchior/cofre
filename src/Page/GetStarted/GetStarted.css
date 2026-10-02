@@ -14,14 +14,6 @@
     margin-bottom: 2rem;
   }
 
-  ul {
-    margin-bottom: 2rem;
-  }
-
-  li {
-    padding: 1rem;
-  }
-
   .message {
     color: var(--color-4);
     margin-bottom: 2rem;

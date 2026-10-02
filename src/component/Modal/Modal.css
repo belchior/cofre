@@ -12,6 +12,15 @@
   top: 0;
   width: 100vw;
   z-index: 300;
+
+  .content {
+    background-color: var(--bg-1);
+    border-radius: var(--border-radius);
+    max-width: var(--root-width);
+    min-width: 23rem;
+    padding: 2rem;
+    width: 100vw;
+  }
 }
 
 body:has(dialog[open]) {

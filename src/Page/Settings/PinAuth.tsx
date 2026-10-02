@@ -1,18 +1,22 @@
 import React from 'react'
 import { InputPin, Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
+import { type Notify } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 
 type PinAuthProps = {
-  sett: storage.ISettings
-  onChange: (data: Partial<storage.ISettings>) => void
+  notify: Notify,
+  sett: storage.ISettings,
+  onChange: (data: Partial<storage.ISettings>) => void,
 }
 
 export function PinAuth(props: PinAuthProps) {
+  const { notify } = props
+
   const [state, setState] = React.useState({
     pin: '',
-    confirmationMessage: '',
+    pinConfirmation: '',
   })
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,45 +25,83 @@ export function PinAuth(props: PinAuthProps) {
     props.onChange({ enablePinAuth })
   }
 
-  const handlePinChange = (pin: string) => {
-    setState(prev => ({ ...prev, pin, confirmationMessage: '' }))
+  const handlePinChange = async (pin: string) => {
+    if (state.pinConfirmation !== '' && state.pinConfirmation !== pin) {
+      notify.setNotification(prev => ({
+        ...prev,
+        isOpen: true,
+        message: t('pin_confirmation_error'),
+        type: 'error',
+      }))
+    }
+
+    if (state.pinConfirmation !== '' && state.pinConfirmation === pin) {
+      notify.setNotification(prev => ({
+        ...prev,
+        isOpen: true,
+        message: t('pin_saved'),
+        type: 'success',
+      }))
+
+      const pinHash = await auth.createPinHash(state.pin)
+      props.onChange({ pin: pinHash })
+    }
+
+    setState(prev => ({ ...prev, pin }))
   }
 
   const handlePinConfirmation = async (pinConfirmation: string) => {
-    if (pinConfirmation !== state.pin) {
-      setState(prev => ({ ...prev, confirmationMessage: t('pin_confirmation_error') }))
-      return
+    if (pinConfirmation !== '' && pinConfirmation !== state.pin) {
+      notify.setNotification(prev => ({
+        ...prev,
+        isOpen: true,
+        message: t('pin_confirmation_error'),
+        type: 'error',
+      }))
     }
-    setState(prev => ({ ...prev, confirmationMessage: '' }))
-    const pinHash = await auth.createPinHash(state.pin)
-    props.onChange({ pin: pinHash })
+
+    if (pinConfirmation !== '' && pinConfirmation === state.pin) {
+      notify.setNotification(prev => ({
+        ...prev,
+        isOpen: true,
+        message: t('pin_saved'),
+        type: 'success',
+      }))
+
+      const pinHash = await auth.createPinHash(state.pin)
+      props.onChange({ pin: pinHash })
+    }
+
+    setState(prev => ({ ...prev, pinConfirmation }))
   }
+
+  const [pinLabel, pinConfirmationLabel] = props.sett.pin
+    ? [t('change_your_pin'), t('confirm_your_new_pin')]
+    : [t('enter_your_pin'), t('confirm_your_pin')]
 
   return <>
     <Switch
-      className='mb-1'
-      defaultChecked={props.sett.enablePinAuth}
+      checked={props.sett.enablePinAuth}
       description={t('auth_by_pin_desc')}
       name='enablePinAuth'
       onChange={handleSwitchChange}
       title={t('auth_by_pin')}
     />
 
-    {props.sett.enablePinAuth && <>
+    <InputPin
+      className='mt-1'
+      label={pinLabel}
+      name='pin'
+      onSubmit={handlePinChange}
+      tabIndex={0}
+    />
+    {state.pin != '' && (
       <InputPin
-        label={t('enter_your_pin')}
-        onSubmit={handlePinChange}
-        pin={props.sett.pin}
-        tabIndex={0}
+        className='mt-1'
+        label={pinConfirmationLabel}
+        name='pinConfirmation'
+        onSubmit={handlePinConfirmation}
       />
-      {state.pin != '' && (
-        <InputPin
-          className='mt-1'
-          label={t('confirm_your_pin')}
-          message={state.confirmationMessage}
-          onSubmit={handlePinConfirmation}
-        />
-      )}
-    </>}
+    )}
   </>
 }

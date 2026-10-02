@@ -3,9 +3,12 @@ import { useNavigate } from 'react-router'
 import { BiometricAuth } from '../Settings/BiometricAuth'
 import { Footer } from '../../component/App/Footer'
 import { IconLogo } from '../../component/Icon/Icon'
+import { isSettingsValid } from '../Settings/Settings'
+import { Notification } from '../../component/Notification/Notification'
 import { PinAuth } from '../Settings/PinAuth'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
+import { useNotification } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
@@ -14,8 +17,8 @@ import './GetStarted.css'
 export function GetStarted() {
   const context = React.use(SettingsContext)
   const navigate = useNavigate()
+  const notify = useNotification()
   const [sett, setSettings] = React.useState(context.settings)
-  const [message, setMessage] = React.useState<string>()
   const [isAutheticatorAvailable, setAutheticator] = React.useState<boolean>()
 
   const handleChange = async (partialSett: Partial<storage.ISettings>) => {
@@ -25,19 +28,14 @@ export function GetStarted() {
   }
 
   const handleSubmit = () => {
-    const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
-    if (sett == null || selectedAuthMethod === false) {
-      setMessage(() => t('choose_auth_method'))
+    if (sett == null) return
+    const [isValid, message] = isSettingsValid(sett)
+
+    if (isValid === false) {
+      notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message }))
       return
     }
-    if (sett.enableBiometricAuth && sett.passKey == null) {
-      setMessage(() => t('passkey_is_required'))
-      return
-    }
-    if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
-      setMessage(() => t('pin_is_required'))
-      return
-    }
+
     context.saveSettings(sett)
   }
 
@@ -84,21 +82,32 @@ export function GetStarted() {
     <main className='GetStarted'>
       <IconLogo />
       <h1>{t('choose_auth_method')}</h1>
-      <ul>
-        <li className='gluey'>
-          <PinAuth onChange={handleChange} sett={sett} />
+      <ul className='box'>
+        <li className='gluey pd'>
+          <PinAuth
+            notify={notify}
+            onChange={handleChange}
+            sett={sett}
+          />
         </li>
         {isAutheticatorAvailable && <>
-          <li className='gluey'>
-            <BiometricAuth onChange={handleChange} sett={sett} />
+          <li className='gluey pd'>
+            <BiometricAuth
+              notify={notify}
+              onChange={handleChange}
+              sett={sett}
+            />
           </li>
         </>}
       </ul>
-
-      {message && <p className='message'>{message}</p>}
-
-      <button type='button' className='saveSettings' onClick={handleSubmit}>{t('save')}</button>
+      <button type='button' className='saveSettings' onClick={handleSubmit}>{t('next')}</button>
     </main>
     <Footer />
+    <Notification
+      message={notify.message}
+      onClose={notify.closeNotification}
+      open={notify.isOpen}
+      type={notify.type}
+    />
   </>
 }

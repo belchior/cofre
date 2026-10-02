@@ -19,7 +19,8 @@
     max-width: 70%;
   }
 
-  button.gluey {
+  button {
+    background-color: var(--bg-2);
     padding: 1.5rem;
     text-align: center;
   }

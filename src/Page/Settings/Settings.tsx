@@ -1,26 +1,47 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { AppBackup } from './AppBackup'
 import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
+import { Notification } from '../../component/Notification/Notification'
 import { PinAuth } from './PinAuth'
 import { SettingsContext } from './SettingsProvider'
 import { t } from '../../lib/translation'
+import { useNotification } from '../../component/Notification/Notification.hook'
 import * as storage from '../../lib/storage'
 import * as webauthn from '../../lib/webAuthn'
 import './Settings.css'
 
-type ViewProps = {
-  message?: React.ReactNode,
-  onChange: (data: Partial<storage.ISettings>) => void,
-  onSubmit: () => void,
-  sett: storage.ISettings,
+// eslint-disable-next-line react-refresh/only-export-components
+export function isSettingsValid(sett: Partial<storage.ISettings>): [boolean, string] {
+  const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
+
+  if (selectedAuthMethod === false) return [false, t('must_choose_auth_method')]
+  if (sett.enableBiometricAuth && sett.passKey == null) return [false, t('passkey_is_required')]
+  if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) return [false, t('pin_is_required')]
+
+  return [true, 'settings valid']
 }
 
-function View(props: ViewProps) {
+export function Settings() {
+  const context = React.use(SettingsContext)
+  const notify = useNotification()
   const [isAutheticatorAvailable, setAutheticator] = React.useState<boolean>()
+
+  const handleChange = (partialSett: Partial<storage.ISettings>) => {
+    const mergedSett = { ...context.settings, ...partialSett }
+    const [isValid, message] = isSettingsValid(mergedSett)
+
+    if (isValid === false) {
+      notify.setNotification(prev => ({ ...prev, message, isOpen: true, type: 'error' }))
+      return
+    }
+
+    notify.setNotification(prev => ({ ...prev, message: t('config_updated'), isOpen: true, type: 'success' }))
+    context.saveSettings(mergedSett as storage.ISettings)
+  }
 
   React.useEffect(() => {
     (async () => {
@@ -31,85 +52,42 @@ function View(props: ViewProps) {
     })()
   })
 
+  if (context.settings == null) return null
+
   return <>
     <Header />
     <main className='Settings'>
       <h2>{t('configurations')}</h2>
-      <ul>
-        <li className='gluey'>
-          <PinAuth onChange={props.onChange} sett={props.sett} />
+      <ul className='box'>
+        <li className='gluey pd'>
+          <PinAuth onChange={handleChange} sett={context.settings} notify={notify} />
         </li>
         {isAutheticatorAvailable && <>
-          <li className='gluey'>
-            <BiometricAuth onChange={props.onChange} sett={props.sett} />
+          <li className='gluey pd'>
+            <BiometricAuth onChange={handleChange} sett={context.settings} notify={notify} />
           </li>
         </>}
       </ul>
-
-      <ul>
-        <li className='gluey'>
-          <AppUpdate onChange={props.onChange} sett={props.sett} />
+      <ul className='box'>
+        <li>
+          <AppUpdate onChange={handleChange} sett={context.settings} />
         </li>
       </ul>
-
-      <ul>
-        <li className='gluey'>
+      <ul className='box'>
+        <li className='gluey pd'>
           <AppBackup />
         </li>
       </ul>
-
-      {props.message && <p className='message'>{props.message}</p>}
-
       <div className='actions'>
         <Link to='/cofre' className='button'>{t('go_back')}</Link>
-        <button type='button' onClick={props.onSubmit}>{t('save')}</button>
       </div>
     </main>
     <Footer />
+    <Notification
+      message={notify.message}
+      onClose={notify.closeNotification}
+      open={notify.isOpen}
+      type={notify.type}
+    />
   </>
-}
-
-export function Settings() {
-  const context = React.use(SettingsContext)
-  const [sett, setSettings] = React.useState(context.settings)
-  const [message, setMessage] = React.useState<string>()
-  const navigate = useNavigate()
-
-  const handleChange = (newSett: Partial<storage.ISettings>) => {
-    setSettings(prevSett => {
-      if (prevSett == null) return
-      return { ...prevSett, ...newSett }
-    })
-  }
-
-  const handleSubmit = () => {
-    const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
-    if (sett == null || selectedAuthMethod === false) {
-      setMessage(() => t('choose_auth_method'))
-      return
-    }
-    if (sett.enableBiometricAuth && sett.passKey == null) {
-      setMessage(() => t('passkey_is_required'))
-      return
-    }
-    if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) {
-      setMessage(() => t('pin_is_required'))
-      return
-    }
-    context.saveSettings(sett)
-    navigate('/cofre', { replace: true })
-  }
-
-  React.useEffect(() => {
-    setSettings(context.settings)
-  }, [context.settings])
-
-  if (sett == null) return null
-
-  return <View
-    message={message}
-    onChange={handleChange}
-    onSubmit={handleSubmit}
-    sett={sett}
-  />
 }

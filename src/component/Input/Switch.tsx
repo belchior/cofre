@@ -1,5 +1,6 @@
 import type { InputHTMLAttributes } from 'react'
 import { cls } from '../../lib/classNames'
+import { t } from '../../lib/translation'
 import './Switch.css'
 
 type SwitchProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -17,7 +18,7 @@ export function Switch(props: SwitchProps) {
       {title && <h3 className='title'>{title}</h3>}
       {description && <p className='description'>{description}</p>}
       <input id={id} type="checkbox" hidden {...inputProps} />
-      <label htmlFor={id} />
+      <label htmlFor={id} title={`${t('enable')} ${title}`} />
     </div>
   </>
 }

@@ -11,7 +11,7 @@ function hasUpdate(arg?: storage.AppVersions) {
 }
 
 /**
- * Should be use in a React.useEffect context
+ * Must be use in a React.useEffect context
 */
 // eslint-disable-next-line react-refresh/only-export-components
 export function updateAppVersionIfNeed(sett: storage.ISettings) {
@@ -56,7 +56,7 @@ export function AppUpdate(props: AppUpdateProps) {
   const showLastUpdate = props.sett.enableAutoUpdate === false && hasUpdate(state)
 
   return <>
-    <div className='gluey'>
+    <div className='gluey pd'>
       <Switch
         defaultChecked={props.sett.enableAutoUpdate}
         description={t('receive_updates_auto')}
@@ -67,13 +67,13 @@ export function AppUpdate(props: AppUpdateProps) {
     </div>
 
     {state?.version && <>
-      <div className='gluey'>
+      <div className='gluey pd'>
         <p>{t('current_version')} <span className='marked'>{state.version}</span></p>
       </div>
     </>}
 
     {showLastUpdate && <>
-      <div className='gluey'>
+      <div className='gluey pd'>
         <p>{t('new_version_available')}</p>
         <button type='button' onClick={handleClickUpdate}>{t('yes_update')}</button>
       </div>

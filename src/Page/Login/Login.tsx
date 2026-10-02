@@ -1,11 +1,14 @@
 import React from 'react'
+import { cls } from '../../lib/classNames'
 import { Footer } from '../../component/App/Footer'
 import { IconLogo } from '../../component/Icon/Icon'
 import { InputPin } from '../../component/Input'
+import { Notification } from '../../component/Notification/Notification'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
 import { updateAppVersionIfNeed } from '../Settings/AppUpdate'
 import { useNavigate } from 'react-router'
+import { useNotification, type Notify } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
 import * as serde from '../../lib/serde'
 import * as storage from '../../lib/storage'
@@ -26,33 +29,38 @@ function onlyPinAuth(sett?: storage.ISettings) {
 }
 
 type PinAuthLoginProps = {
+  className?: string,
+  notify: Notify,
   onSubmit: (pin: string) => void,
 }
 function PinAuthLogin(props: PinAuthLoginProps) {
-  const [message, setMessage] = React.useState<string>('')
-
   const handleSubmit = async (pin: string) => {
     const isValid = await auth.isPinValid(pin)
 
     if (isValid === false) {
-      setMessage(() => t('invalid_pin'))
+      props.notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message: t('invalid_pin') }))
       return
     }
 
-    setMessage(() => '')
     const pinHash = await auth.createPinHash(pin)
     props.onSubmit(pinHash)
   }
 
   return <>
-    <p>
-      {t('enter_your')} <abbr title='Personal Identification Number'>PIN</abbr>
-    </p>
-    <InputPin message={message} onSubmit={handleSubmit} autoFocus circularFocus />
+    <p>{t('enter_your')} <abbr title='Personal Identification Number'>PIN</abbr></p>
+    <InputPin
+      autoFocus
+      circularFocus
+      className={props.className}
+      name='login'
+      onSubmit={handleSubmit}
+    />
   </>
 }
 
 type BiometricAuthLoginProps = {
+  className?: string,
+  notify: Notify,
   onSubmit: (pin: string) => void,
   sett: storage.ISettings,
 }
@@ -68,13 +76,21 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
       props.onSubmit(id)
       return
     } catch (error) {
-      console.error('Passkey authentication error:', (error as Error).message)
+      const errorMessage = (error as Error).message
+      let message = t('authentication_fail')
+
+      if (errorMessage.includes('The operation either timed out or was not allowed')) {
+        message = t('operation_not_allowed')
+      }
+
+      props.notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message }))
+      console.error('Passkey authentication error:', errorMessage)
     }
   }
 
   return <>
     <button
-      className="BiometricAuth gluey"
+      className={cls('gluey', props.className)}
       onClick={HandleAuthentication}
       type="button"
     >{t('auth_using_biometric')}</button>
@@ -83,12 +99,9 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
 
 export function Login() {
   const navigate = useNavigate()
+  const notify = useNotification()
   const context = React.use(SettingsContext)
-  const [state, setState] = React.useState<{
-    chosePinAuth: boolean
-  }>({
-    chosePinAuth: false,
-  })
+  const [chosePinAuth, setChosePinAuth] = React.useState(false)
 
   const handleSubmit = async (additionalData: string) => {
     await auth.addSession(additionalData)
@@ -97,7 +110,7 @@ export function Login() {
   }
 
   const handleClick = () => {
-    setState(prev => ({ ...prev, chosePinAuth: true }))
+    setChosePinAuth(() => true)
   }
 
   React.useEffect(() => {
@@ -130,16 +143,26 @@ export function Login() {
       <IconLogo />
       <h1>{t('login')}</h1>
       <div className="container">
-        {context.settings?.enableBiometricAuth &&
-          <BiometricAuthLogin onSubmit={handleSubmit} sett={context.settings} />
-        }
         {context.settings?.enablePinAuth && (
-          onlyPinAuth(context.settings) || state.chosePinAuth
-            ? <PinAuthLogin onSubmit={handleSubmit} />
+          onlyPinAuth(context.settings) || chosePinAuth
+            ? <PinAuthLogin className='mb-1' onSubmit={handleSubmit} notify={notify} />
             : <button type="button" className='gluey' onClick={handleClick}>{t('auth_using_pin')}</button>
+        )}
+        {context.settings?.enableBiometricAuth && (
+          <BiometricAuthLogin
+            notify={notify}
+            onSubmit={handleSubmit}
+            sett={context.settings}
+          />
         )}
       </div>
     </main>
     <Footer />
+    <Notification
+      message={notify.message}
+      onClose={notify.closeNotification}
+      open={notify.isOpen}
+      type={notify.type}
+    />
   </>
 }

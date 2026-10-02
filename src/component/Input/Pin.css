@@ -13,7 +13,7 @@
 
   .message {
     color: var(--color-4);
-    font-size: medium;
+    font-size: small;
     grid-area: c;
     margin-top: 0.5rem;
   }
