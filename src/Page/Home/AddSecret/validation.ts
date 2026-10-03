@@ -1,6 +1,6 @@
 import * as z from 'zod'
-import { isNameBeenUsed, type Content } from '../../lib/storage'
-import { t } from '../../lib/translation'
+import { isNameBeenUsed, type Content } from '../../../lib/storage'
+import { t } from '../../../lib/translation'
 
 export const customFieldSchema = {
   name: z.string(),

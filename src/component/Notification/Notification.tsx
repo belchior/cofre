@@ -7,23 +7,21 @@ import './Notification.css'
 export type NotificationProps = {
   message?: string,
   onClose: () => void,
-  open?: boolean,
   timeout?: number,
-  type?: 'info' | 'error' | 'success',
+  type: 'info' | 'error' | 'success',
 }
 export function Notification(props: NotificationProps) {
-  const { onClose, message = '', open = false, timeout = 30000, type = 'info' } = props
+  const { onClose, message = '', timeout = 30000, type = 'info' } = props
 
   const classes = cls('Notification', type)
 
   React.useEffect(() => {
-    if (open === false || message == null) return
+    if (message === '') return
     const timeoutId = setTimeout(onClose, timeout)
     return () => { clearTimeout(timeoutId) }
   })
 
-  console.log('Notification', open, message)
-  if (open === false || message === '') return null
+  if (message === '') return null
 
   return createPortal(
     <div className={classes}>

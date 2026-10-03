@@ -1,12 +1,12 @@
 import React from 'react'
 import type { ZodSafeParseError } from 'zod'
-import { Checkbox, Input } from '../Input'
-import { IconCopy, IconMinus, IconStar } from '../Icon/Icon'
-import { t } from '../../lib/translation'
-import { uniqueId } from '../../lib/crypto'
+import { Checkbox, Input } from '../../../component/Input'
+import { IconCopy, IconMinus, IconStar } from '../../../component/Icon/Icon'
+import { t } from '../../../lib/translation'
+import { uniqueId } from '../../../lib/crypto'
 import { validateContent, validateContentProp, validateField, type Field } from './validation'
-import * as clipboard from '../../lib/clipboard'
-import type { Content, CustomField } from '../../lib/storage'
+import * as clipboard from '../../../lib/clipboard'
+import type { Content, CustomField } from '../../../lib/storage'
 import './AddSecret.css'
 
 type CustomFieldProps = {

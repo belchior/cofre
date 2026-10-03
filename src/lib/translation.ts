@@ -8,7 +8,7 @@ const dict = {
   'at_most_255_char': ['at most 255 character', 'no máxino 255 caracteres'],
   'auth_by_biometric_desc': ['By enabling biometric authentication for logins, you will be prompted to confirm your identity via your device\'s passkey manager.', 'Habilitando autenticação por Biometria ao iniciar uma sessão, será  solicitado confirmar sua identidade através do gerenciador de chaves de acesso do seu dispositivo.'],
   'auth_by_biometric': ['Authentication by Biometric', 'Autenticação via Biometria'],
-  'auth_by_pin_desc': ['Enabling PIN authentication when starting a session will prompt you for a 4-digit identifier.', 'Habilitando autenticação por PIN ao iniciar uma sessão será solicitado um identificador de 4 dígitos.'],
+  'auth_by_pin_desc': ['By enabling PIN authentication when starting a session will prompt you for a 4-digit identifier.', 'Habilitando autenticação por PIN ao iniciar uma sessão será solicitado um identificador de 4 dígitos.'],
   'auth_by_pin': ['Authentication by PIN', 'Autenticação via PIN'],
   'auth_using_biometric': ['Authenticate using biometrics', 'Autenticar usando biometria'],
   'auth_using_pin': ['Authenticate using PIN', 'Autenticar usando PIN'],

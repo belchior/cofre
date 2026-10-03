@@ -14,10 +14,23 @@
     margin-bottom: 2rem;
   }
 
-  .message {
-    color: var(--color-4);
-    margin-bottom: 2rem;
+  ul {
+    margin-bottom: 1rem;
   }
+
+  li {
+    background-color: var(--bg-2);
+    padding: 1rem;
+
+    &:first-of-type {
+      padding-top: 1.5rem;
+    }
+    
+    &:last-of-type {
+      padding-bottom: 1.5rem;
+    }
+  }
+
   .saveSettings {
     justify-self: end;
   }

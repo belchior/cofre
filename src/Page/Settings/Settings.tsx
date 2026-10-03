@@ -35,11 +35,11 @@ export function Settings() {
     const [isValid, message] = isSettingsValid(mergedSett)
 
     if (isValid === false) {
-      notify.setNotification(prev => ({ ...prev, message, isOpen: true, type: 'error' }))
+      notify.setNotification('error', message)
       return
     }
 
-    notify.setNotification(prev => ({ ...prev, message: t('config_updated'), isOpen: true, type: 'success' }))
+    notify.setNotification('success', t('config_updated'))
     context.saveSettings(mergedSett as storage.ISettings)
   }
 
@@ -86,7 +86,6 @@ export function Settings() {
     <Notification
       message={notify.message}
       onClose={notify.closeNotification}
-      open={notify.isOpen}
       type={notify.type}
     />
   </>

@@ -2,30 +2,27 @@ import React from 'react'
 import type { NotificationProps } from './Notification'
 
 export type NotifyState = {
-  isOpen: boolean,
   message: string,
   type: NotificationProps['type'],
 }
 export type Notify = NotifyState & {
   closeNotification: () => void
-  setNotification: React.Dispatch<React.SetStateAction<NotifyState>>
+  setNotification: (type: NotifyState['type'], message: NotifyState['message']) => void
 }
 
 export function useNotification(): Notify {
-  const [state, setNotification] = React.useState<NotifyState>({
-    isOpen: false,
+  const [state, setState] = React.useState<NotifyState>({
     message: '',
     type: 'info',
   })
 
-  const closeNotification = () => setNotification(prev => ({
-    ...prev,
-    message: '',
-    isOpen: false,
-  }))
+  const closeNotification = () => setState(prev => ({ ...prev, message: '' }))
+
+  const setNotification = (type: NotifyState['type'], message: NotifyState['message']) => {
+    setState(prev => ({ ...prev, type, message }))
+  }
 
   return {
-    isOpen: state?.isOpen,
     message: state?.message,
     type: state?.type,
     setNotification,

@@ -38,7 +38,7 @@ function PinAuthLogin(props: PinAuthLoginProps) {
     const isValid = await auth.isPinValid(pin)
 
     if (isValid === false) {
-      props.notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message: t('invalid_pin') }))
+      props.notify.setNotification('error', t('invalid_pin'))
       return
     }
 
@@ -83,7 +83,7 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
         message = t('operation_not_allowed')
       }
 
-      props.notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message }))
+      props.notify.setNotification('error', message)
       console.error('Passkey authentication error:', errorMessage)
     }
   }
@@ -161,7 +161,6 @@ export function Login() {
     <Notification
       message={notify.message}
       onClose={notify.closeNotification}
-      open={notify.isOpen}
       type={notify.type}
     />
   </>

@@ -32,7 +32,7 @@ export function GetStarted() {
     const [isValid, message] = isSettingsValid(sett)
 
     if (isValid === false) {
-      notify.setNotification(prev => ({ ...prev, type: 'error', isOpen: true, message }))
+      notify.setNotification('error', message)
       return
     }
 
@@ -82,8 +82,8 @@ export function GetStarted() {
     <main className='GetStarted'>
       <IconLogo />
       <h1>{t('choose_auth_method')}</h1>
-      <ul className='box'>
-        <li className='gluey pd'>
+      <ul>
+        <li className='gluey'>
           <PinAuth
             notify={notify}
             onChange={handleChange}
@@ -91,7 +91,7 @@ export function GetStarted() {
           />
         </li>
         {isAutheticatorAvailable && <>
-          <li className='gluey pd'>
+          <li className='gluey'>
             <BiometricAuth
               notify={notify}
               onChange={handleChange}
@@ -106,7 +106,6 @@ export function GetStarted() {
     <Notification
       message={notify.message}
       onClose={notify.closeNotification}
-      open={notify.isOpen}
       type={notify.type}
     />
   </>

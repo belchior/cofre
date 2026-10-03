@@ -86,7 +86,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
     }
     props.onChange(sett)
     closeModal()
-    props.notify.setNotification(prev => ({ ...prev, type: 'success', isOpen: true, message: t('passkey_created') }))
+    props.notify.setNotification('success', t('passkey_created'))
   }
 
   return <>

@@ -1,10 +1,14 @@
 #!/bin/bash
 
+if [[ "$(git status -s)" != "" ]]; then
+  echo "Error: You must commit your changes before deploying" 1>&2
+  exit 1
+fi
+
 version="$(grep 'version' package.json | sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/')"
 pages="$(ls --directory src/Page/* | sed 's|src/Page/||' | sed -r 's/([A-Z])/-\L\1/g' | sed 's/^-//' | grep -v 'home')"
 
 git checkout -q page
-
 
 # set the last version in a meta tag at index.html
 sed -i "s/0.0.0/$version/" dist/index.html
