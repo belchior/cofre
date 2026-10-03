@@ -46,6 +46,7 @@
 
     &.view {
       border-color: transparent;
+      padding: 0.5rem;
 
       span {
         overflow: hidden;

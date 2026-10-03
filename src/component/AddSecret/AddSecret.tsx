@@ -262,7 +262,7 @@ function Edit(props: EditProps) {
   return <>
     <form className='AddSecret' onSubmit={handleSubmit}>
       <header>
-        <label>{label}</label>
+        <h2>{label}</h2>
         {hasContent === true && <>
           <button type='button' className='btn-remove' onClick={props.onRemove}>
             {t('delete')}
