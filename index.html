@@ -7,23 +7,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#222222" />
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="last-version" content="0.6.22" />
+  <meta name="last-version" content="0.6.23" />
 
   <link rel="icon" type="image/svg+xml" sizes="any" href="/cofre/assets/logoIcon-B1RC4Jge.svg" />
   <link rel="icon" type="image/svg+xml" sizes="128x128" href="/cofre/assets/logoIcon-B1RC4Jge.svg" />
   <link rel="icon" type="image/svg+xml" sizes="512x512" href="/cofre/assets/logoIcon-B1RC4Jge.svg" />
   <link rel="apple-touch-icon" sizes="128x128" href="/cofre/assets/logoIcon-B1RC4Jge.svg" />
-  <link rel="manifest" href="/cofre/assets/manifest-Na4nG-G-.json" />
+  <link rel="manifest" href="/cofre/assets/manifest-BvFqFJQ3.json" />
 
   <script type="module" >
+    (async () => {
+      if ('serviceWorker' in navigator === false) return
+      const pt = window.location.hostname === 'localhost' ? '/cofre/sw.js' : '/cofre/sw.js'
+      try {
+        navigator.serviceWorker.register(pt, { type: 'module' })
+      } catch (error) {
+        console.error(`Registration failed with ${error}`)
+      }
+    })();
+
     (() => {
+      const { hostname: hn, pathname: pn } = window.location
+      if (pn.replace(/\/+$/, '') === '/cofre') window.location.assign('/cofre/home')
+
+      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
+
       let vs = window.localStorage.getItem('version')
       if (vs == null) {
         vs = document.querySelector('meta[name="last-version"]').content
         window.localStorage.setItem('version', vs)
       }
-      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
-      if (location.hostname === 'localhost') return
+      if (hn === 'localhost') return
       const s = document.createElement('script')
       s.type = 'module'
       s.crossOrigin = true
@@ -34,7 +48,7 @@
       st.crossOrigin = true
       st.href = `/cofre/assets/index-${vs}.css`
       document.head.appendChild(st)
-    })()
+    })();
   </script>
   
   
