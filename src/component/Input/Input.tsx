@@ -19,7 +19,7 @@ function InputPassword(props: InputPasswordProps) {
 
   return <>
     {viewMode === true && <span className={classesShow}>{show ? props.value : String(props.value)?.replace(/./g, '*')}</span>}
-    {viewMode === false && <input {...inputProps} type={inputType} />}
+    {viewMode === false && <input {...inputProps} type={inputType} autoComplete='false' />}
     <button type='button' className='show-password' onClick={toggleShow}>{text}</button>
   </>
 }
@@ -28,19 +28,20 @@ export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   icon?: ReactNode,
   label?: string,
   message?: string,
+  name: string,
   description?: string,
   viewMode?: boolean,
   ref?: React.RefObject<null>,
 }
 export function Input(props: InputProps) {
-  const { label, icon, message, className, description, viewMode = false, ...inputProps } = props
+  const { label, icon, message, name, className, description, viewMode = false, ...inputProps } = props
   const isPassword = props.type === 'password'
 
   const classes = cls('Input', className)
   const classesInputBox = cls('inputBox', [icon, ' with-icon'], [isPassword, ' password'], [viewMode, 'view'])
 
   if (props.hidden) {
-    return <input {...inputProps} />
+    return <input name={name} {...inputProps} />
   }
 
   return (
@@ -50,10 +51,10 @@ export function Input(props: InputProps) {
       <div className={classesInputBox}>
         {icon}
         {isPassword
-          ? <InputPassword {...inputProps} viewMode={viewMode} />
+          ? <InputPassword name={name} {...inputProps} viewMode={viewMode} />
           : viewMode
             ? <span>{props.value}</span>
-            : <input {...inputProps} />
+            : <input name={name} {...inputProps} />
         }
       </div>
       {description && <p className='input-desc'>{description}</p>}

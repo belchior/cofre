@@ -1,7 +1,6 @@
 .CredentialForm {
   .actions {
     display: grid;
-    grid-area: "modal-footer";
     grid-auto-flow: column;
     justify-content: space-between;
   }

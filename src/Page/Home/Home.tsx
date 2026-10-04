@@ -48,6 +48,7 @@ export function Home() {
       <menu className='Menu'>
         <li>
           <Input
+            name='search'
             autoComplete='off'
             autoFocus
             icon={<IconSearch />}

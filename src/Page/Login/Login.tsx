@@ -122,9 +122,13 @@ export function Login() {
         return
       }
 
+      if (context.settings == null) {
+        return
+      }
+
       const hasValidSettings = [
-        context.settings?.enableBiometricAuth,
-        context.settings?.enablePinAuth,
+        context.settings.enableBiometricAuth,
+        context.settings.enablePinAuth,
       ].includes(true)
 
       if (hasValidSettings === false) {
@@ -132,9 +136,7 @@ export function Login() {
         return
       }
 
-      if (context.settings) {
-        updateAppVersionIfNeed(context.settings)
-      }
+      updateAppVersionIfNeed(context.settings)
     })()
   })
 
