@@ -16,14 +16,28 @@
   <link rel="manifest" href="src/manifest.json" />
 
   <script type="module" vite-ignore>
+    (async () => {
+      if ('serviceWorker' in navigator === false) return
+      const pt = window.location.hostname === 'localhost' ? '/cofre/sw.js' : '/cofre/sw.js'
+      try {
+        navigator.serviceWorker.register(pt, { type: 'module' })
+      } catch (error) {
+        console.error(`Registration failed with ${error}`)
+      }
+    })();
+
     (() => {
+      const { hostname: hn, pathname: pn } = window.location
+      if (pn.replace(/\/+$/, '') === '/cofre') window.location.assign('/cofre/home')
+
+      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
+
       let vs = window.localStorage.getItem('version')
       if (vs == null) {
         vs = document.querySelector('meta[name="last-version"]').content
         window.localStorage.setItem('version', vs)
       }
-      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
-      if (location.hostname === 'localhost') return
+      if (hn === 'localhost') return
       const s = document.createElement('script')
       s.type = 'module'
       s.crossOrigin = true
@@ -34,7 +48,7 @@
       st.crossOrigin = true
       st.href = `/cofre/assets/index-${vs}.css`
       document.head.appendChild(st)
-    })()
+    })();
   </script>
 </head>
 

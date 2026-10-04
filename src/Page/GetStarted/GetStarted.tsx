@@ -55,7 +55,7 @@ export function GetStarted() {
       const hasSession = await auth.isSessionValid()
 
       if (hasSession) {
-        navigate('/cofre', { replace: true })
+        navigate('/cofre/home', { replace: true })
         return
       }
 

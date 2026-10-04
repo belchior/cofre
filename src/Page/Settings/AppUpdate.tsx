@@ -20,7 +20,7 @@ export function updateAppVersionIfNeed(sett: storage.ISettings) {
   if (hasUpdate(versions) === false) return
   console.debug(`The App will be updated from ${versions.version} to ${versions.lastVersion}`)
   storage.updateVersions(versions)
-  window.location.assign('/cofre')
+  window.location.assign('/cofre/home')
 }
 
 type AppUpdateProps = {
@@ -43,7 +43,7 @@ export function AppUpdate(props: AppUpdateProps) {
   const handleClickUpdate = () => {
     if (state == null) return
     window.localStorage.setItem('version', state.lastVersion)
-    window.location.assign('/cofre')
+    window.location.assign('/cofre/home')
   }
 
   React.useEffect(() => {

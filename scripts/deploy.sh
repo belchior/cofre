@@ -5,36 +5,9 @@ if [[ "$(git status -s)" != "" ]]; then
   exit 1
 fi
 
-version="$(grep 'version' package.json | sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/')"
-pages="$(ls --directory src/Page/* | sed 's|src/Page/||' | sed -r 's/([A-Z])/-\L\1/g' | sed 's/^-//' | grep -v 'home')"
-
 git checkout -q page
 
-# set the last version in a meta tag at index.html
-sed -i "s/0.0.0/$version/" dist/index.html
-# remove script and link introduced by vite build
-sed -i -E 's/<(script|link).*index-.*//' dist/index.html
-
-# rename builded files to include the last version of the app
-for oldPath in dist/assets/*.{css,js}; do
-  newPath="$(echo $oldPath | sed -E "s/-.*\./-$version./")"
-  if [[ "$oldPath" != "$newPath" ]]; then
-    mv $oldPath $newPath
-  fi
-done
-
-# move files from dist directory to root 
-cp dist/assets/* assets/
-cp dist/index.html ./
-
-# recreate all pages based on home page to fix the bug that the router gets lost 
-# when the user reloads a page different from home page
-for page in $pages; do
-  cp index.html "$page.html"
-done
-
-echo "Version $version builded"
-
+version="$(grep 'version' dist/package.json | sed -E 's/[^0-9.]*([0-9.]*)[^0-9.]*/\1/')"
 versionInUse="$(git log --pretty=format:%s | grep -w $version)"
 
 if [[ "$versionInUse" != "" ]]; then 
@@ -42,6 +15,11 @@ if [[ "$versionInUse" != "" ]]; then
   git checkout -q main
   exit 1
 fi
+
+# move files from dist directory to root 
+cp dist/assets/* assets/
+cp dist/*.html ./
+cp dist/sw.js ./
 
 git add .
 git commit -q -m "$version"

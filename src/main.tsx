@@ -30,7 +30,7 @@ createRoot(document.getElementById('root')!).render(
 
           {/* protected pages */}
           <Route element={<ProtectRoute />}>
-            <Route path="/cofre" element={
+            <Route path="/cofre/home" element={
               <SettingsProvider>
                 <ContentProvider>
                   <Home />

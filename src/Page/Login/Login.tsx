@@ -105,7 +105,7 @@ export function Login() {
 
   const handleSubmit = async (additionalData: string) => {
     await auth.addSession(additionalData)
-    navigate('/cofre', { replace: true })
+    navigate('/cofre/home', { replace: true })
     return
   }
 
@@ -118,7 +118,7 @@ export function Login() {
       const hasSession = await auth.isSessionValid()
 
       if (hasSession) {
-        navigate('/cofre', { replace: true })
+        navigate('/cofre/home', { replace: true })
         return
       }
 

@@ -79,7 +79,7 @@ export function Settings() {
         </li>
       </ul>
       <div className='actions'>
-        <Link to='/cofre' className='button'>{t('go_back')}</Link>
+        <Link to='/cofre/home' className='button'>{t('go_back')}</Link>
       </div>
     </main>
     <Footer />

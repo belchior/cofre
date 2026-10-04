@@ -21,8 +21,8 @@
       "purpose": "maskable"
     }
   ],
-  "start_url": "/cofre",
+  "start_url": "/cofre/home",
   "display": "standalone",
-  "theme_color": "black",
-  "background_color": "black"
+  "theme_color": "#222222",
+  "background_color": "#222222"
 }
