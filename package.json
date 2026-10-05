@@ -1,8 +1,7 @@
 {
   "name": "cofre",
-  "version": "0.6.25",
+  "version": "0.6.27",
   "description": "Guardas as coisas importantes",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/belchior/cofre.git"

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { AppBackup } from './AppBackup'
-import { AppCleaner } from './AppCleaner'
+import { DangerZone } from './DangerZone'
 import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
@@ -80,7 +80,7 @@ export function Settings() {
       </ul>
       <ul className='box danger'>
         <li className='gluey pd'>
-          <AppCleaner notify={notify} />
+          <DangerZone notify={notify} />
         </li>
       </ul>
       <div className='actionGroup'>

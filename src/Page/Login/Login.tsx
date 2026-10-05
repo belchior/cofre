@@ -6,10 +6,10 @@ import { InputPin } from '../../component/Input'
 import { Notification } from '../../component/Notification/Notification'
 import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
-import { updateAppVersionIfNeed } from '../Settings/AppUpdate'
 import { useNavigate } from 'react-router'
 import { useNotification, type Notify } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
+import * as appManager from '../../lib/appManager'
 import * as serde from '../../lib/serde'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
@@ -136,7 +136,7 @@ export function Login() {
         return
       }
 
-      updateAppVersionIfNeed(context.settings)
+      await appManager.updateAppVersionIfNeed(context.settings)
     })()
   })
 

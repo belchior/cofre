@@ -1,27 +1,8 @@
 import React from 'react'
 import { Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
+import * as appManager from '../../lib/appManager'
 import * as storage from '../../lib/storage'
-
-function hasUpdate(arg?: storage.AppVersions) {
-  if (arg == null) return false
-  const v = Number(arg.version.replaceAll('.', ''))
-  const lv = Number(arg.lastVersion.replaceAll('.', ''))
-  return lv > v
-}
-
-/**
- * Must be use in a React.useEffect context
-*/
-// eslint-disable-next-line react-refresh/only-export-components
-export function updateAppVersionIfNeed(sett: storage.ISettings) {
-  if (sett.enableAutoUpdate === false) return
-  const versions = storage.loadVersions()
-  if (hasUpdate(versions) === false) return
-  console.debug(`The App will be updated from ${versions.version} to ${versions.lastVersion}`)
-  storage.updateVersions(versions)
-  window.location.assign('/cofre/home')
-}
 
 type AppUpdateProps = {
   sett: storage.ISettings
@@ -40,10 +21,10 @@ export function AppUpdate(props: AppUpdateProps) {
     props.onChange(sett)
   }
 
-  const handleClickUpdate = () => {
+  const handleClickUpdate = async () => {
     if (state == null) return
-    window.localStorage.setItem('version', state.lastVersion)
-    window.location.assign('/cofre/home')
+    await appManager.updateAppVersion(state)
+    window.location.assign('/cofre/login')
   }
 
   React.useEffect(() => {
@@ -53,7 +34,7 @@ export function AppUpdate(props: AppUpdateProps) {
     })
   }, [setState])
 
-  const showLastUpdate = props.sett.enableAutoUpdate === false && hasUpdate(state)
+  const showLastUpdate = props.sett.enableAutoUpdate === false && appManager.hasUpdate(state)
 
   return <>
     <div className='gluey pd'>

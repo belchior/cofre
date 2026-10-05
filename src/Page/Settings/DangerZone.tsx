@@ -1,15 +1,15 @@
 import { Modal } from '../../component/Modal/Modal'
 import { useModal } from '../../component/Modal/Modal.hook'
-import * as backup from '../../lib/backup'
+import * as backup from '../../lib/appManager'
 import type { Notify } from '../../component/Notification/Notification.hook'
 import { t } from '../../lib/translation'
 import { Switch } from '../../component/Input'
 import React from 'react'
 
-type AppCleanerProps = {
+type DangerZoneProps = {
   notify: Notify
 }
-export function AppCleaner(props: AppCleanerProps) {
+export function DangerZone(props: DangerZoneProps) {
   const { isOpen, openModal, closeModal } = useModal()
 
   const handleSubmit = async () => {
@@ -21,7 +21,7 @@ export function AppCleaner(props: AppCleanerProps) {
   return <>
     <h3>{t('danger_zone')}</h3>
     <p className='mb-1'>{t('use_with_caution')}</p>
-    <button type='button' onClick={openModal}>{t('delete_all_app_data')}</button>
+    <button type='button' onClick={openModal}>{t('delete_app_data')}</button>
     <Modal open={isOpen} onClose={closeModal}>
       <ClearDataForm onSubmit={handleSubmit} onCancel={closeModal} notify={props.notify} />
     </Modal>
@@ -57,7 +57,7 @@ function ClearDataForm(props: ClearDataFormProps) {
       className='mb-1'
       name='agree'
       title={t('i_agree_to_delete_my_data')}
-      description={t('delete_all_app_data_desc')}
+      description={t('delete_app_data_desc')}
     />
     <div className='actionGroup'>
       <button type="button" onClick={props.onCancel}>{t('cancel')}</button>

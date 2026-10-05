@@ -152,7 +152,7 @@ ul, menu {
   padding: 1.5rem 1rem;
 
   &.danger {
-    border: var(--border-width) solid color-mix(in srgb, transparent, var(--color-4) 70%)
+    border: var(--border-width) solid color-mix(in srgb, transparent, var(--color-4) 50%)
   }
 }
 

@@ -166,7 +166,7 @@ export function loadVersions(): AppVersions {
     version,
   }
 }
-export function updateVersions(versions: AppVersions): AppVersions {
+export function saveVersion(versions: AppVersions): AppVersions {
   window.localStorage.setItem('version', versions.lastVersion)!
 
   return {

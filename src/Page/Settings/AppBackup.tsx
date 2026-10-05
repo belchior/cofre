@@ -3,8 +3,8 @@ import { Modal } from '../../component/Modal/Modal'
 import { Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
+import * as appManager from '../../lib/appManager'
 import * as auth from '../../lib/auth'
-import * as backup from '../../lib/backup'
 import type { Notify } from '../../component/Notification/Notification.hook'
 import './AppBackup.css'
 
@@ -44,7 +44,7 @@ function ImportBackup(props: ImportBackupProps) {
     }
 
     try {
-      await backup.restore(backupFile)
+      await appManager.restore(backupFile)
       await auth.removeSession()
       window.location.assign('/cofre/login')
       return
@@ -85,7 +85,7 @@ export function AppBackup(props: AppBackupProps) {
   const { isOpen, openModal, closeModal } = useModal()
 
   const handleClickExport = () => {
-    const backupFile = backup.createBackup()
+    const backupFile = appManager.createBackup()
     const link = document.createElement('a')
     link.href = URL.createObjectURL(backupFile)
     link.download = backupFile.name

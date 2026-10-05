@@ -1,4 +1,6 @@
 
+import * as storage from './storage'
+
 function createFile(content: Record<string, unknown>) {
   const fileName = `cofre_backup_${Date.now()}.json`
   const blob = new Blob([JSON.stringify(content)], {
@@ -59,6 +61,33 @@ export async function clearAppData() {
   // clear sessionStorage
   window.sessionStorage.removeItem('session')
 
-  // clear offline cache
+  // deletes cached files from old app version
   await caches.delete('v1')
+}
+
+export function hasUpdate(arg?: storage.AppVersions) {
+  if (arg == null) return false
+  const v = Number(arg.version.replaceAll('.', ''))
+  const lv = Number(arg.lastVersion.replaceAll('.', ''))
+  return lv > v
+}
+
+export async function updateAppVersion(versions: storage.AppVersions) {
+  if (hasUpdate(versions) === false) return false
+  console.debug(`The App will be updated from ${versions.version} to ${versions.lastVersion}`)
+  storage.saveVersion(versions)
+
+  // deletes cached files from old app version
+  await caches.delete('v1')
+  return true
+}
+
+/**
+ * Must be used in a React.useEffect context
+*/
+export async function updateAppVersionIfNeed(sett: storage.ISettings) {
+  if (sett.enableAutoUpdate === false) return
+  const versions = storage.loadVersions()
+  const updated = await updateAppVersion(versions)
+  if (updated) window.location.assign('/cofre/login')
 }
