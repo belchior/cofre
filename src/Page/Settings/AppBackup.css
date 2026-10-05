@@ -12,10 +12,4 @@
   .message {
     color: var(--color-4);
   }
-
-  .actions {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: space-between;
-  }
 }

@@ -47,3 +47,18 @@ export async function restore(file: File) {
 
   return true
 }
+
+export async function clearAppData() {
+  // clear localStorage
+  window.localStorage.removeItem('contents')
+  window.localStorage.removeItem('keyiv')
+  window.localStorage.removeItem('sc')
+  window.localStorage.removeItem('settings')
+  window.localStorage.removeItem('version')
+
+  // clear sessionStorage
+  window.sessionStorage.removeItem('session')
+
+  // clear offline cache
+  await caches.delete('v1')
+}

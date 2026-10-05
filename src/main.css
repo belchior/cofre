@@ -139,11 +139,21 @@ ul, menu {
   padding: 0;
 }
 
+.actionGroup {
+  display: grid;
+  justify-content: space-between;
+  grid-auto-flow: column;
+}
+
 .box {
   background-color: var(--bg-2);
   border-radius: var(--border-radius);
   margin-bottom: 1rem;
   padding: 1.5rem 1rem;
+
+  &.danger {
+    border: var(--border-width) solid color-mix(in srgb, transparent, var(--color-4) 70%)
+  }
 }
 
 .c-link {

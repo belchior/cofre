@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { AppBackup } from './AppBackup'
+import { AppCleaner } from './AppCleaner'
 import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
 import { Footer } from '../../component/App/Footer'
@@ -12,7 +13,6 @@ import { t } from '../../lib/translation'
 import { useNotification } from '../../component/Notification/Notification.hook'
 import * as storage from '../../lib/storage'
 import * as webauthn from '../../lib/webAuthn'
-import './Settings.css'
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function isSettingsValid(sett: Partial<storage.ISettings>): [boolean, string] {
@@ -78,7 +78,12 @@ export function Settings() {
           <AppBackup notify={notify} />
         </li>
       </ul>
-      <div className='actions'>
+      <ul className='box danger'>
+        <li className='gluey pd'>
+          <AppCleaner notify={notify} />
+        </li>
+      </ul>
+      <div className='actionGroup'>
         <Link to='/cofre/home' className='button'>{t('go_back')}</Link>
       </div>
     </main>

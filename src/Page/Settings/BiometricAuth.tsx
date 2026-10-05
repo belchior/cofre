@@ -7,7 +7,6 @@ import { useModal } from '../../component/Modal/Modal.hook'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import type { Notify } from '../../component/Notification/Notification.hook'
-import './BiometricAuth.css'
 
 type CredentialFormProps = {
   onCancel: () => void,
@@ -53,7 +52,7 @@ function CredentialForm(props: CredentialFormProps) {
         name='displayName'
         onChange={handleChangeUser('displayName')}
       />
-      <div className='actions'>
+      <div className='actionGroup'>
         <button type='button' onClick={props.onCancel}>{t('cancel')}</button>
         <button type='submit'>{t('create_passkey')}</button>
       </div>
