@@ -6,6 +6,7 @@ import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
 import * as auth from '../../lib/auth'
 import * as backup from '../../lib/backup'
+import type { Notify } from '../../component/Notification/Notification.hook'
 import './AppBackup.css'
 
 type ImportBackupForm = HTMLFormElement & {
@@ -81,7 +82,10 @@ function ImportBackup(props: ImportBackupProps) {
   </>
 }
 
-export function AppBackup() {
+type AppBackupProps = {
+  notify: Notify,
+}
+export function AppBackup(props: AppBackupProps) {
   const { isOpen, openModal, closeModal } = useModal()
 
   const handleClickExport = () => {
@@ -92,6 +96,13 @@ export function AppBackup() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+
+    const message = <span>
+      {t('download_completed')}.<br />
+      {t('download_completed_desc')}<br />
+      <span className='marked'>{backupFile.name}</span>
+    </span>
+    props.notify.setNotification('success', message)
   }
 
   return <>

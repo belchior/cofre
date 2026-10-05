@@ -2,7 +2,7 @@ import React from 'react'
 import type { NotificationProps } from './Notification'
 
 export type NotifyState = {
-  message: string,
+  message: NotificationProps['message'],
   type: NotificationProps['type'],
 }
 export type Notify = NotifyState & {

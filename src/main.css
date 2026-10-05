@@ -182,11 +182,13 @@ ul, menu {
 }
 
 .marked {
-  border: 1px solid var(--color-2);
+  background-color: color-mix(in srgb, transparent, var(--color-1) 10%);
+  border: var(--border-width) solid var(--color-2);
   border-radius: var(--border-radius);
   display: inline-block;
   font-family: monospace;
-  padding: 0 0.5rem;
+  padding: 0.2rem 0.5rem;
+  word-break: break-word;
 }
 
 .mb-0 {

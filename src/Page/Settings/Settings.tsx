@@ -75,7 +75,7 @@ export function Settings() {
       </ul>
       <ul className='box'>
         <li className='gluey pd'>
-          <AppBackup />
+          <AppBackup notify={notify} />
         </li>
       </ul>
       <div className='actions'>

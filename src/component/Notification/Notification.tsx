@@ -5,7 +5,7 @@ import { t } from '../../lib/translation'
 import './Notification.css'
 
 export type NotificationProps = {
-  message?: string,
+  message?: React.ReactNode,
   onClose: () => void,
   timeout?: number,
   type: 'info' | 'error' | 'success',

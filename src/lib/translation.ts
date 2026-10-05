@@ -81,6 +81,8 @@ const dict = {
   'update_secret': ['Atualizar segredo', 'Atualizar segredo'],
   'update': ['atualizar', 'atualizar'],
   'yes_update': ['yes, update', 'sim, quero atualizar'],
+  'download_completed': ['Download completed', 'Download concluído'],
+  'download_completed_desc': ['Check your download manager for the file', 'Verifique seu gerenciador de downloads pelo arquivo'],
 }
 
 const defaultLang = 'en-US'

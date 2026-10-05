@@ -10,6 +10,7 @@
     align-items: center;
     display: grid;
     grid-auto-flow: column;
+    grid-template-areas: "message action";
     margin: auto;
     width: 100%;
     max-width: calc(var(--root-width) - 2rem);
@@ -39,10 +40,12 @@
 
   p {
     margin: 0;
+    grid-area: message;
   }
 
   button {
     justify-self: end;
+    grid-area: action;
   }
 }
 
