@@ -1,7 +1,7 @@
 import React from 'react'
 import { AddSecret } from '../AddSecret/AddSecret'
+import { AppContext } from '../../../component/App/AppProvider'
 import { cls } from '../../../lib/classNames'
-import { ContentContext } from '../../../component/Provider/ContentProvider'
 import { IconMenu } from '../../../component/Icon/Icon'
 import { Modal } from '../../../component/Modal/Modal'
 import { t } from '../../../lib/translation'
@@ -19,20 +19,20 @@ type ItemProps = {
 function Item(props: ItemProps) {
   const { copied, content, onCopy } = props
 
+  const context = React.use(AppContext)
   const [show, setShow] = React.useState(false)
   const { isOpen, openModal, closeModal } = useModal()
-  const { removeContent, updateContent } = React.use(ContentContext)
 
   const handleContent = () => {
     clipboard.writeText(content.secret)
     onCopy()
   }
   const handleSubmit = (newContent: Content) => {
-    updateContent(content.id, newContent)
+    context.updateContent(content.id, newContent)
     closeModal()
   }
   const handleRemove = (newContent: Content) => {
-    removeContent(newContent.id)
+    context.removeContent(newContent.id)
   }
   const toggleShow = () => setShow(!show)
 

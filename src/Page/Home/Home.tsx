@@ -1,7 +1,6 @@
 import React from 'react'
-import type { Content } from '../../lib/storage'
 import { AddSecret } from './AddSecret/AddSecret'
-import { ContentContext } from '../../component/Provider/ContentProvider'
+import { AppContext } from '../../component/App/AppProvider'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
 import { IconAdd, IconSearch } from '../../component/Icon/Icon'
@@ -10,10 +9,11 @@ import { List } from './List/List'
 import { Modal } from '../../component/Modal/Modal'
 import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
+import type { Content } from '../../lib/storage'
 import './Home.css'
 
 export function Home() {
-  const { contents, addContent } = React.use(ContentContext)
+  const context = React.use(AppContext)
   const [textSearch, changeTextSearch] = React.useState('')
   const { isOpen, openModal, closeModal } = useModal()
 
@@ -23,13 +23,17 @@ export function Home() {
   }
 
   const handleSubmit = (content: Content) => {
-    addContent(content)
+    context.addContent(content)
     closeModal()
   }
 
+  if (context.ud == null) {
+    return
+  }
+
   const filteredContent = textSearch !== ''
-    ? contents.filter((item) => item.name.toLowerCase().includes(textSearch.toLowerCase()))
-    : contents
+    ? context.ud.contents.filter((item) => item.name.toLowerCase().includes(textSearch.toLowerCase()))
+    : [...context.ud.contents]
 
   filteredContent.sort((a, b) => {
     if (a.starred !== b.starred) {
@@ -44,7 +48,6 @@ export function Home() {
   return (
     <>
       <Header />
-
       <menu className='Menu'>
         <li>
           <Input
@@ -62,15 +65,12 @@ export function Home() {
           </button>
         </li>
       </menu>
-
       <main className='Home'>
         <List items={filteredContent} />
       </main>
-
       <Modal open={isOpen} onClose={closeModal}>
         <AddSecret onSubmit={handleSubmit} onCancel={closeModal} />
       </Modal>
-
       <Footer />
     </>
   )

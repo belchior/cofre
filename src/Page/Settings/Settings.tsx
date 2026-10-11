@@ -1,46 +1,48 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { AppBackup } from './AppBackup'
-import { DangerZone } from './DangerZone'
+import { AppContext } from '../../component/App/AppProvider'
 import { AppUpdate } from './AppUpdate'
 import { BiometricAuth } from './BiometricAuth'
+import { DangerZone } from './DangerZone'
 import { Footer } from '../../component/App/Footer'
 import { Header } from '../../component/App/Header'
 import { Notification } from '../../component/Notification/Notification'
 import { PinAuth } from './PinAuth'
-import { SettingsContext } from './SettingsProvider'
 import { t } from '../../lib/translation'
 import { useNotification } from '../../component/Notification/Notification.hook'
+import * as auth from '../../lib/auth'
+import * as cryptoKey from '../../lib/cryptoKey'
 import * as storage from '../../lib/storage'
 import * as webauthn from '../../lib/webAuthn'
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function isSettingsValid(sett: Partial<storage.ISettings>): [boolean, string] {
-  const selectedAuthMethod = [sett?.enableBiometricAuth, sett?.enablePinAuth].includes(true)
-
-  if (selectedAuthMethod === false) return [false, t('must_choose_auth_method')]
-  if (sett.enableBiometricAuth && sett.passKey == null) return [false, t('passkey_is_required')]
-  if (sett.enablePinAuth && (sett.pin == null || sett.pin === '')) return [false, t('pin_is_required')]
-
-  return [true, 'settings valid']
-}
-
-export function Settings() {
-  const context = React.use(SettingsContext)
+export function PageSettings() {
+  const context = React.use(AppContext)
   const notify = useNotification()
   const [isAutheticatorAvailable, setAutheticator] = React.useState<boolean>()
 
-  const handleChange = (partialSett: Partial<storage.ISettings>) => {
-    const mergedSett = { ...context.settings, ...partialSett }
-    const [isValid, message] = isSettingsValid(mergedSett)
+  const handleChange = async (partSett: Partial<storage.Settings>, partUd: Partial<storage.UserData>) => {
+    if (context.sett == null) return
+    const enabled = auth.enabledAuthMethod(partSett)
+    const mergedSett = {
+      ...(enabled !== '' ? auth.disableAuthMethod(context.sett) : context.sett),
+      ...partSett,
+    }
+    const mergedUd = { ...context.ud, ...partUd }
 
+    const [isValid, message] = storage.isSettingsValid(mergedSett)
     if (isValid === false) {
       notify.setNotification('error', message)
       return
     }
 
+    if (cryptoKey.hasChange(mergedSett, mergedUd, context)) {
+      await cryptoKey.override(mergedSett as storage.Settings, mergedUd as storage.UserData)
+      await auth.addSession()
+    }
+    context.saveSettings(mergedSett as storage.Settings)
+    context.saveUserData(mergedUd as storage.UserData)
     notify.setNotification('success', t('config_updated'))
-    context.saveSettings(mergedSett as storage.ISettings)
   }
 
   React.useEffect(() => {
@@ -52,7 +54,7 @@ export function Settings() {
     })()
   })
 
-  if (context.settings == null) return null
+  if (context.sett == null || context.ud == null) return null
 
   return <>
     <Header />
@@ -60,17 +62,31 @@ export function Settings() {
       <h2>{t('configurations')}</h2>
       <ul className='box'>
         <li className='gluey pd'>
-          <PinAuth onChange={handleChange} sett={context.settings} notify={notify} />
+          <PinAuth
+            notify={notify}
+            onChange={handleChange}
+            sett={context.sett}
+            ud={context.ud}
+          />
         </li>
         {isAutheticatorAvailable && <>
           <li className='gluey pd'>
-            <BiometricAuth onChange={handleChange} sett={context.settings} notify={notify} />
+            <BiometricAuth
+              notify={notify}
+              onChange={handleChange}
+              sett={context.sett}
+              ud={context.ud}
+            />
           </li>
         </>}
       </ul>
       <ul className='box'>
         <li>
-          <AppUpdate onChange={handleChange} sett={context.settings} />
+          <AppUpdate
+            onChange={handleChange}
+            sett={context.sett}
+            ud={context.ud}
+          />
         </li>
       </ul>
       <ul className='box'>
@@ -95,3 +111,4 @@ export function Settings() {
     />
   </>
 }
+

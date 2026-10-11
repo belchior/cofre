@@ -8,6 +8,59 @@ import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import type { Notify } from '../../component/Notification/Notification.hook'
 
+type BiometricAuthProps = {
+  notify: Notify,
+  sett: storage.Settings,
+  ud: storage.UserData,
+  onChange: (sett: Partial<storage.Settings>, ud: Partial<storage.UserData>) => void,
+}
+export function BiometricAuth(props: BiometricAuthProps) {
+  const { isOpen, openModal, closeModal } = useModal()
+
+  const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const elem = event.currentTarget
+    if (elem.name !== 'enableBiometricAuth') return
+    const sett: Partial<storage.Settings> = {
+      enableBiometricAuth: elem.checked,
+    }
+    props.onChange(sett, props.ud)
+  }
+
+  const handleSubmit = async (user: webAuthn.User) => {
+    const passKey = await webAuthn.createPassKey(user)
+    const sett: Partial<storage.Settings> = {
+      enableBiometricAuth: true,
+      passKey,
+    }
+    props.onChange(sett, props.ud)
+    closeModal()
+    props.notify.setNotification('success', t('passkey_created'))
+  }
+
+  return <>
+    <Switch
+      checked={props.sett.enableBiometricAuth}
+      description={t('auth_by_biometric_desc')}
+      name='enableBiometricAuth'
+      onChange={handleChangeSwitch}
+      title={t('auth_by_biometric')}
+    />
+    {props.sett.passKey != null && (
+      <fieldset className='mt-1'>
+        <legend>{t('passkey')}</legend>
+        <p className='small'>{t('name')}</p>
+        <p className='mb-1'>{props.sett.passKey?.name}</p>
+        <p className='small'>{t('display_name')}</p>
+        <p className='mb-0'>{props.sett.passKey?.displayName}</p>
+      </fieldset>
+    )}
+    <button type='button' className='mt-1' onClick={openModal}>{t('create_new_passkey')}</button>
+    <Modal open={isOpen} onClose={closeModal}>
+      <CredentialForm onCancel={closeModal} onSubmit={handleSubmit} />
+    </Modal>
+  </>
+}
+
 type CredentialFormProps = {
   onCancel: () => void,
   onSubmit: (data: webAuthn.User) => void,
@@ -58,56 +111,4 @@ function CredentialForm(props: CredentialFormProps) {
       </div>
     </form>
   )
-}
-
-type BiometricAuthProps = {
-  notify: Notify,
-  sett: storage.ISettings,
-  onChange: (data: Partial<storage.ISettings>) => void,
-}
-export function BiometricAuth(props: BiometricAuthProps) {
-  const { isOpen, openModal, closeModal } = useModal()
-
-  const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const elem = event.currentTarget
-    if (elem.name !== 'enableBiometricAuth') return
-    const sett: Partial<storage.ISettings> = {
-      enableBiometricAuth: elem.checked,
-    }
-    props.onChange(sett)
-  }
-
-  const handleSubmit = async (user: webAuthn.User) => {
-    const passKey = await webAuthn.createPassKey(user)
-    const sett: Partial<storage.ISettings> = {
-      enableBiometricAuth: true,
-      passKey,
-    }
-    props.onChange(sett)
-    closeModal()
-    props.notify.setNotification('success', t('passkey_created'))
-  }
-
-  return <>
-    <Switch
-      checked={props.sett.enableBiometricAuth}
-      description={t('auth_by_biometric_desc')}
-      name='enableBiometricAuth'
-      onChange={handleChangeSwitch}
-      title={t('auth_by_biometric')}
-    />
-    {props.sett.passKey != null && (
-      <fieldset className='mt-1'>
-        <legend>{t('passkey')}</legend>
-        <p className='small'>{t('name')}</p>
-        <p className='mb-1'>{props.sett.passKey?.name}</p>
-        <p className='small'>{t('display_name')}</p>
-        <p className='mb-0'>{props.sett.passKey?.displayName}</p>
-      </fieldset>
-    )}
-    <button type='button' className='mt-1' onClick={openModal}>{t('create_new_passkey')}</button>
-    <Modal open={isOpen} onClose={closeModal}>
-      <CredentialForm onCancel={closeModal} onSubmit={handleSubmit} />
-    </Modal>
-  </>
 }

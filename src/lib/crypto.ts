@@ -95,6 +95,6 @@ export async function decrypt(keyiv: KeyIv, secretAsText: string, additionalData
 export async function createHash(text: string): Promise<string> {
   const bytes = new TextEncoder().encode(text)
   const hash = await crypto.subtle.digest('SHA-256', bytes)
-  // @ts-expect-error TODO fix type
+  // @ts-expect-error TypeScript limitation
   return new Uint8Array(hash).toBase64({ alphabet: 'base64url', omitPadding: true })
 }

@@ -13,9 +13,9 @@ function createFile(content: Record<string, unknown>) {
 
 export function createBackup() {
   const data = {
-    contents: window.localStorage.getItem('contents'),
     keyiv: window.localStorage.getItem('keyiv'),
-    settings: window.localStorage.getItem('settings'),
+    sett: window.localStorage.getItem('sett'),
+    ud: window.localStorage.getItem('ud'),
     version: window.localStorage.getItem('version'),
   }
   const file = createFile(data)
@@ -23,7 +23,7 @@ export function createBackup() {
 }
 
 function isBackupValid(data: Record<string, unknown>) {
-  const requiredAttributes = ['contents', 'keyiv', 'settings', 'version']
+  const requiredAttributes = ['keyiv', 'sett', 'ud', 'version']
 
   if (data == null || typeof data !== 'object') return false
 
@@ -42,9 +42,9 @@ export async function restore(file: File) {
 
   if (isBackupValid(data) === false) return false
 
-  window.localStorage.setItem('contents', data.contents)
   window.localStorage.setItem('keyiv', data.keyiv)
-  window.localStorage.setItem('settings', data.settings)
+  window.localStorage.setItem('sett', data.sett)
+  window.localStorage.setItem('ud', data.ud)
   window.localStorage.setItem('version', data.version)
 
   return true
@@ -52,16 +52,16 @@ export async function restore(file: File) {
 
 export async function clearAppData() {
   // clear localStorage
-  window.localStorage.removeItem('contents')
+  window.localStorage.removeItem('ud')
   window.localStorage.removeItem('keyiv')
   window.localStorage.removeItem('sc')
-  window.localStorage.removeItem('settings')
+  window.localStorage.removeItem('sett')
   window.localStorage.removeItem('version')
 
   // clear sessionStorage
   window.sessionStorage.removeItem('session')
 
-  // deletes cached files from old app version
+  // deletes offline files from old app version
   await caches.delete('v1')
 }
 
@@ -77,7 +77,7 @@ export async function updateAppVersion(versions: storage.AppVersions) {
   console.debug(`The App will be updated from ${versions.version} to ${versions.lastVersion}`)
   storage.saveVersion(versions)
 
-  // deletes cached files from old app version
+  // deletes offline files from old app version
   await caches.delete('v1')
   return true
 }
@@ -85,7 +85,7 @@ export async function updateAppVersion(versions: storage.AppVersions) {
 /**
  * Must be used in a React.useEffect context
 */
-export async function updateAppVersionIfNeed(sett: storage.ISettings) {
+export async function updateAppVersionIfNeed(sett: storage.Settings) {
   if (sett.enableAutoUpdate === false) return
   const versions = storage.loadVersions()
   const updated = await updateAppVersion(versions)

@@ -132,7 +132,7 @@ export async function authenticatePassKey(passKey: storage.PassKey) {
     crossOrigin: boolean,
   }
   const clientData: ClientData = JSON.parse(new TextDecoder().decode(credential.response.clientDataJSON))
-  // @ts-expect-error TODO fix type
+  // @ts-expect-error TypeScript limitation
   if (clientData.challenge !== challenge.toBase64({ alphabet: 'base64url', omitPadding: true })) throw new Error('invalid_challenge')
   if (clientData.type !== 'webauthn.get') throw new Error('invalid_webauthn_method')
   if (clientData.origin !== window.location.origin) throw new Error('invalid_origin')

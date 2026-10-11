@@ -13,7 +13,14 @@ export function ProtectRoute() {
       if (hasSession) {
         setLoading(() => false)
       } else {
-        navigate('/cofre/login', { replace: true })
+        navigate('/cofre/login', { replace: false })
+      }
+
+      // Prevents the user refresh the page and lost the session
+      const callback = (event: BeforeUnloadEvent) => event.preventDefault()
+      window.addEventListener('beforeunload', callback)
+      return () => {
+        window.removeEventListener('beforeunload', callback)
       }
     })()
   })

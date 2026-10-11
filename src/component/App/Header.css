@@ -6,7 +6,7 @@
   grid-template-columns: min-content min-content;
   justify-content: space-between;
   margin: 0 1rem;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
 
   .homeLink {
     display: grid;

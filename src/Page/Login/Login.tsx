@@ -1,16 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router'
 import { cls } from '../../lib/classNames'
 import { Footer } from '../../component/App/Footer'
 import { IconLogo } from '../../component/Icon/Icon'
 import { InputPin } from '../../component/Input'
 import { Notification } from '../../component/Notification/Notification'
-import { SettingsContext } from '../Settings/SettingsProvider'
 import { t } from '../../lib/translation'
-import { useNavigate } from 'react-router'
 import { useNotification, type Notify } from '../../component/Notification/Notification.hook'
 import * as appManager from '../../lib/appManager'
 import * as auth from '../../lib/auth'
-import * as serde from '../../lib/serde'
+import * as cryptoKey from '../../lib/cryptoKey'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import './Login.css'
@@ -18,45 +17,61 @@ import './Login.css'
 export function Login() {
   const navigate = useNavigate()
   const notify = useNotification()
-  const context = React.use(SettingsContext)
-  const [chosenAuth, setAuth] = useChosenAuth(context.settings)
+  const [sett, setSettings] = React.useState<storage.Settings>()
+  const [chosenAuth, setAuth] = useChosenAuth(sett)
 
-  const handleSubmit = async (additionalData: string) => {
-    await auth.addSession(additionalData)
-    navigate('/cofre/home', { replace: true })
-    return
+  const handleSubmit = async () => {
+    try {
+      await auth.addSession()
+      navigate('/cofre/home', { replace: false })
+      return
+    } catch (error) {
+      console.error('Authentication error:', (error as Error).message)
+      notify.setNotification('error', (error as Error).message)
+    }
   }
 
   const choose = (key: keyof ChosenAuthState) => () => setAuth(key)
+
+  // Load Settings
+  React.useEffect(() => {
+    (async () => {
+      if (sett != null) return
+      const newSett = await storage.loadSettings()
+      setSettings(() => newSett)
+    })()
+  }, [sett, setSettings])
 
   React.useEffect(() => {
     (async () => {
       const hasSession = await auth.isSessionValid()
 
       if (hasSession) {
-        navigate('/cofre/home', { replace: true })
+        navigate('/cofre/home', { replace: false })
         return
       }
 
-      if (context.settings == null) {
+      if (storage.hasSettings() === false) {
+        navigate('/cofre/get-started', { replace: false })
         return
       }
 
-      const hasValidSettings = [
-        context.settings.enableBiometricAuth,
-        context.settings.enablePinAuth,
-      ].includes(true)
+      if (sett == null) {
+        return
+      }
+
+      const hasValidSettings = [sett.enableBiometricAuth, sett.enablePinAuth].includes(true)
 
       if (hasValidSettings === false) {
-        navigate('/cofre/get-started', { replace: true })
+        navigate('/cofre/get-started', { replace: false })
         return
       }
 
-      await appManager.updateAppVersionIfNeed(context.settings)
+      await appManager.updateAppVersionIfNeed(sett)
     })()
   })
 
-  if (context.settings == null) return null
+  if (sett == null || chosenAuth.isLoading === true) return null
 
   return <>
     <main className='Login'>
@@ -70,6 +85,7 @@ export function Login() {
           onChoose={choose('enablePinAuth')}
           onlyEnabled={chosenAuth.onlyPinAuth}
           onSubmit={handleSubmit}
+          sett={sett}
         />
         <BiometricAuthLogin
           enabled={chosenAuth.enableBiometricAuth}
@@ -77,9 +93,13 @@ export function Login() {
           onChoose={choose('enableBiometricAuth')}
           onlyEnabled={chosenAuth.onlyBiometricAuth}
           onSubmit={handleSubmit}
-          sett={context.settings}
+          sett={sett}
         />
       </div>
+      {chosenAuth.notAvailable && <>
+        <h3>{t('auth_method_not_available')}</h3>
+        <p>{t('auth_method_not_available_desc')}</p>
+      </>}
     </main>
     <Footer />
     <Notification
@@ -93,21 +113,34 @@ export function Login() {
 type ChosenAuthState = {
   enableBiometricAuth: boolean,
   enablePinAuth: boolean,
+  isLoading: boolean,
 }
-function useChosenAuth(sett?: storage.ISettings) {
+function useChosenAuth(sett?: storage.Settings) {
   const [state, setState] = React.useState<ChosenAuthState>({
-    enableBiometricAuth: sett?.enableBiometricAuth ?? false,
+    enableBiometricAuth: false,
     enablePinAuth: sett?.enablePinAuth ?? false,
+    isLoading: true,
   })
+
+  const setAuth = React.useCallback((key: keyof ChosenAuthState) => {
+    setState(prev => ({
+      ...prev,
+      enableBiometricAuth: false,
+      enablePinAuth: false,
+      [key]: true,
+    }))
+  }, [])
 
   React.useEffect(() => {
     (async () => {
-      const test = await webAuthn.isAuthenticatorAvailable()
+      if (sett == null) return
+      const isAvailable = await webAuthn.isAuthenticatorAvailable()
       setState(prev => {
         return {
           ...prev,
-          enablePinAuth: sett?.enablePinAuth ?? false,
-          enableBiometricAuth: test && (sett?.enableBiometricAuth ?? false),
+          isLoading: false,
+          enablePinAuth: sett.enablePinAuth,
+          enableBiometricAuth: isAvailable && sett.enableBiometricAuth,
         }
       })
     })()
@@ -117,15 +150,7 @@ function useChosenAuth(sett?: storage.ISettings) {
     ...state,
     onlyPinAuth: state.enablePinAuth === true && state.enableBiometricAuth === false,
     onlyBiometricAuth: state.enablePinAuth === false && state.enableBiometricAuth === true,
-  }
-
-  const setAuth = (key: keyof ChosenAuthState) => {
-    setState(prev => ({
-      ...prev,
-      enableBiometricAuth: false,
-      enablePinAuth: false,
-      [key]: true,
-    }))
+    notAvailable: [state.enableBiometricAuth, state.enablePinAuth].includes(true) === false,
   }
 
   return [data, setAuth] as const
@@ -137,19 +162,28 @@ type PinAuthLoginProps = {
   notify: Notify,
   onChoose: () => void,
   onlyEnabled: boolean,
-  onSubmit: (pin: string) => void,
+  onSubmit: () => void,
+  sett: storage.Settings,
 }
 function PinAuthLogin(props: PinAuthLoginProps) {
-  const handleSubmit = async (pin: string) => {
-    const isValid = await auth.isPinValid(pin)
+  const handleSubmit = async (rawPin: string) => {
+    try {
+      const pin = await auth.createPinHash(rawPin)
+      await cryptoKey.overrideUsingPinAuth(props.sett, pin)
 
-    if (isValid === false) {
+      const isValid = await auth.isPinValid(pin)
+
+      if (isValid === false) {
+        props.notify.setNotification('error', t('invalid_pin'))
+        return
+      }
+
+      props.onSubmit()
+    } catch (error) {
       props.notify.setNotification('error', t('invalid_pin'))
+      console.error(error)
       return
     }
-
-    const pinHash = await auth.createPinHash(pin)
-    props.onSubmit(pinHash)
   }
 
   if (props.enabled === false) return null
@@ -175,12 +209,10 @@ type BiometricAuthLoginProps = {
   notify: Notify,
   onChoose: () => void,
   onlyEnabled: boolean,
-  onSubmit: (pin: string) => void,
-  sett: storage.ISettings,
+  onSubmit: () => void,
+  sett: storage.Settings,
 }
 function BiometricAuthLogin(props: BiometricAuthLoginProps) {
-  const [state, setState] = React.useState(false)
-
   const handleAuthentication = async () => {
     try {
       if (props.sett.passKey == null) {
@@ -188,8 +220,9 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
       }
 
       await webAuthn.authenticatePassKey(props.sett.passKey)
-      const id = serde.serializeBuffer(props.sett.passKey.id)
-      props.onSubmit(id)
+      await cryptoKey.overrideUsingBiometricAuth(props.sett)
+
+      props.onSubmit()
       return
     } catch (error) {
       const errorMessage = (error as Error).message
@@ -203,13 +236,6 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
       console.error('Passkey authentication error:', errorMessage)
     }
   }
-
-  React.useEffect(() => {
-    if (state === false && props.onlyEnabled === true) {
-      setState(() => true)
-      document.querySelector<HTMLButtonElement>('.BiometricAuthButton')?.click()
-    }
-  }, [state, props.onlyEnabled])
 
   if (props.enabled === false) return null
 

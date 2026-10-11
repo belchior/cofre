@@ -7,13 +7,12 @@ import * as storage from '../../lib/storage'
 
 type PinAuthProps = {
   notify: Notify,
-  sett: storage.ISettings,
-  onChange: (data: Partial<storage.ISettings>) => void,
+  sett: storage.Settings,
+  ud: storage.UserData,
+  onChange: (sett: Partial<storage.Settings>, ud: Partial<storage.UserData>) => void,
 }
 
 export function PinAuth(props: PinAuthProps) {
-  const { notify } = props
-
   const [state, setState] = React.useState({
     pin: '',
     pinConfirmation: '',
@@ -21,45 +20,56 @@ export function PinAuth(props: PinAuthProps) {
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const elem = event.currentTarget
-    const enablePinAuth = elem.name === 'enablePinAuth' && elem.checked
-    props.onChange({ enablePinAuth })
+    const sett: Partial<storage.Settings> = {
+      enablePinAuth: elem.name === 'enablePinAuth' && elem.checked,
+    }
+    props.onChange(sett, props.ud)
   }
 
-  const handlePinChange = async (pin: string) => {
-    if (state.pinConfirmation !== '' && state.pinConfirmation !== pin) {
-      notify.setNotification('error', t('pin_confirmation_error'))
+  const handlePinChange = async (rawPin: string) => {
+    if (state.pinConfirmation === '') {
+      setState(prev => ({ ...prev, pin: rawPin }))
+      return
     }
 
-    if (state.pinConfirmation !== '' && state.pinConfirmation === pin) {
-      notify.setNotification('success', t('pin_saved'))
-
-      const pinHash = await auth.createPinHash(state.pin)
-      props.onChange({ pin: pinHash })
+    if (rawPin === state.pinConfirmation) {
+      const pin = await auth.createPinHash(rawPin)
+      const ud: Partial<storage.UserData> = {
+        pin,
+      }
+      props.onChange(props.sett, ud)
+      props.notify.setNotification('success', t('pin_saved'))
+    } else {
+      props.notify.setNotification('error', t('pin_confirmation_error'))
     }
 
-    setState(prev => ({ ...prev, pin }))
+    setState(prev => ({ ...prev, pin: rawPin }))
   }
 
   const handlePinConfirmation = async (pinConfirmation: string) => {
-    if (pinConfirmation !== '' && pinConfirmation !== state.pin) {
-      notify.setNotification('error', t('pin_confirmation_error'))
+    if (pinConfirmation === '') {
+      setState(prev => ({ ...prev, pinConfirmation }))
+      return
     }
 
-    if (pinConfirmation !== '' && pinConfirmation === state.pin) {
-      notify.setNotification('success', t('pin_saved'))
-
-      const pinHash = await auth.createPinHash(state.pin)
-      const sett: Partial<storage.ISettings> = {
+    if (pinConfirmation === state.pin) {
+      const pin = await auth.createPinHash(state.pin)
+      const sett: Partial<storage.Settings> = {
         enablePinAuth: true,
-        pin: pinHash,
       }
-      props.onChange(sett)
+      const ud: Partial<storage.UserData> = {
+        pin,
+      }
+      props.onChange(sett, ud)
+      props.notify.setNotification('success', t('pin_saved'))
+    } else {
+      props.notify.setNotification('error', t('pin_confirmation_error'))
     }
 
     setState(prev => ({ ...prev, pinConfirmation }))
   }
 
-  const [pinLabel, pinConfirmationLabel] = props.sett.pin
+  const [pinLabel, pinConfirmationLabel] = props.ud.pin
     ? [t('change_your_pin'), t('confirm_your_new_pin')]
     : [t('enter_your_pin'), t('confirm_your_pin')]
 

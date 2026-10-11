@@ -11,6 +11,8 @@ const dict = {
   'auth_by_biometric': ['Authentication by Biometric', 'Autenticação via Biometria'],
   'auth_by_pin_desc': ['By enabling PIN authentication when starting a session will prompt you for a 4-digit identifier.', 'Habilitando autenticação por PIN ao iniciar uma sessão será solicitado um identificador de 4 dígitos.'],
   'auth_by_pin': ['Authentication by PIN', 'Autenticação via PIN'],
+  'auth_method_not_available_desc': ['If you have recently restored a backup, the authentication method used on the device that created the backup might not be available on this device. Create the backup again with a different authentication method enabled', 'Caso você tenha restaurado um backup recentemente, talvez o método de autenticação usado no dispositivo que gerou o backup não esteja disponível neste dispositivo. Refaça o backup com outra forma de autenticação habilitada'],
+  'auth_method_not_available': ['Authentication method is not avaiable', 'Método de autenticação indisponível'],
   'auth_using_biometric': ['Authenticate using biometrics', 'Autenticar usando biometria'],
   'auth_using_pin': ['Authenticate using PIN', 'Autenticar usando PIN'],
   'authentication_fail': ['Authentication fail', 'Autenticação falhou'],

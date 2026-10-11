@@ -170,7 +170,7 @@ function Edit(props: EditProps) {
     setCustomField(prev => prev.filter(item => item.name !== fieldName))
   }
 
-  const handleInputBlur = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInputBlur = async (event: React.FormEvent<HTMLInputElement>) => {
     const name = event.currentTarget.name as keyof Content
     const value = event.currentTarget.value
     const id = event.currentTarget.id
@@ -180,7 +180,7 @@ function Edit(props: EditProps) {
       currentName: content?.name,
     }
 
-    const message = validateContentProp(name, value, ctx)
+    const message = await validateContentProp(name, value, ctx)
 
     setErrorMessage(prev => {
       if (name === 'customFields') {
@@ -195,7 +195,7 @@ function Edit(props: EditProps) {
     })
   }
 
-  const handleSubmit = (event: React.FormEvent<AddSecretForm>) => {
+  const handleSubmit = async (event: React.FormEvent<AddSecretForm>) => {
     event.preventDefault()
     const id = content?.id ?? uniqueId()
     const name = event.currentTarget.elements.name.value.trim()
@@ -238,7 +238,7 @@ function Edit(props: EditProps) {
       isContentNew: Boolean(content == null),
       currentName: content?.name,
     }
-    const result = validateContent(newContent, ctx)
+    const result = await validateContent(newContent, ctx)
 
     if (result.success === false) {
       setErrors(result)

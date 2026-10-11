@@ -5,8 +5,9 @@ import * as appManager from '../../lib/appManager'
 import * as storage from '../../lib/storage'
 
 type AppUpdateProps = {
-  sett: storage.ISettings
-  onChange: (data: Partial<storage.ISettings>) => void
+  sett: storage.Settings,
+  ud: storage.UserData,
+  onChange: (sett: Partial<storage.Settings>, ud: Partial<storage.UserData>) => void
 }
 export function AppUpdate(props: AppUpdateProps) {
   const [state, setState] = React.useState<storage.AppVersions>()
@@ -15,10 +16,10 @@ export function AppUpdate(props: AppUpdateProps) {
     const elem = event.currentTarget
     if (elem.name !== 'enableAutoUpdate') return
 
-    const sett: Partial<storage.ISettings> = {
+    const sett: Partial<storage.Settings> = {
       enableAutoUpdate: elem.checked,
     }
-    props.onChange(sett)
+    props.onChange(sett, props.ud)
   }
 
   const handleClickUpdate = async () => {
