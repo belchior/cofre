@@ -7,6 +7,7 @@ import { Home } from './Page/Home/Home'
 import { Login } from './Page/Login/Login'
 import { PageSettings } from './Page/Settings/Settings'
 import { ProtectRoute } from './component/App/ProtectRoute'
+import { Logout } from './Page/Logout/Logout'
 import './main.css'
 
 createRoot(document.getElementById('root')!).render(
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
         {/* public pages */}
         <Route path="/cofre/get-started" element={<GetStarted />} />
         <Route path="/cofre/login" element={<Login />} />
+        <Route path="/cofre/logout" element={<Logout />} />
 
         {/* protected pages */}
         <Route element={<ProtectRoute />}>

@@ -18,14 +18,14 @@ export function DangerZone(props: DangerZoneProps) {
     setTimeout(() => window.location.assign('/cofre/get-started'), 10000)
   }
 
-  return <>
+  return <div className='box danger'>
     <h3>{t('danger_zone')}</h3>
     <p className='mb-1'>{t('use_with_caution')}</p>
     <button type='button' onClick={openModal}>{t('delete_app_data')}</button>
     <Modal open={isOpen} onClose={closeModal}>
       <ClearDataForm onSubmit={handleSubmit} onCancel={closeModal} notify={props.notify} />
     </Modal>
-  </>
+  </div>
 }
 
 type ClearDataFormElement = HTMLFormElement & {

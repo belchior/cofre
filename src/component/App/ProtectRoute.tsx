@@ -17,6 +17,7 @@ export function ProtectRoute() {
       }
 
       // Prevents the user refresh the page and lost the session
+      if (window.location.hostname === 'localhost') return
       const callback = (event: BeforeUnloadEvent) => event.preventDefault()
       window.addEventListener('beforeunload', callback)
       return () => {

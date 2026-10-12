@@ -67,26 +67,22 @@ export function GetStarted() {
     <main className='GetStarted'>
       <IconLogo />
       <h1>{t('choose_auth_method')}</h1>
-      <ul>
-        <li className='gluey'>
-          <PinAuth
+      <div className='glueyBoxes'>
+        <PinAuth
+          notify={notify}
+          onChange={handleChange}
+          sett={state.sett}
+          ud={state.ud}
+        />
+        {authMethods.biometricAuth && <>
+          <BiometricAuth
             notify={notify}
             onChange={handleChange}
             sett={state.sett}
             ud={state.ud}
           />
-        </li>
-        {authMethods.biometricAuth && <>
-          <li className='gluey'>
-            <BiometricAuth
-              notify={notify}
-              onChange={handleChange}
-              sett={state.sett}
-              ud={state.ud}
-            />
-          </li>
         </>}
-      </ul>
+      </div>
       <button type='button' className='saveSettings' onClick={handleSubmit}>{t('next')}</button>
     </main>
     <Footer />

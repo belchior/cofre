@@ -188,7 +188,7 @@ function PinAuthLogin(props: PinAuthLoginProps) {
 
   if (props.enabled === false) return null
   if (props.onlyEnabled === false) return (
-    <button type="button" className='gluey' onClick={props.onChoose}>{t('auth_using_pin')}</button>
+    <button type="button" onClick={props.onChoose}>{t('auth_using_pin')}</button>
   )
 
   return <>
@@ -241,7 +241,7 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
 
   return <>
     <button
-      className={cls('BiometricAuthButton', 'gluey', props.className)}
+      className={cls('BiometricAuthButton', props.className)}
       onClick={handleAuthentication}
       type="button"
     >{t('auth_using_biometric')}</button>

@@ -73,7 +73,7 @@ export function PinAuth(props: PinAuthProps) {
     ? [t('change_your_pin'), t('confirm_your_new_pin')]
     : [t('enter_your_pin'), t('confirm_your_pin')]
 
-  return <>
+  return <div className='box'>
     <Switch
       checked={props.sett.enablePinAuth}
       description={t('auth_by_pin_desc')}
@@ -97,5 +97,5 @@ export function PinAuth(props: PinAuthProps) {
         onSubmit={handlePinConfirmation}
       />
     )}
-  </>
+  </div>
 }

@@ -37,8 +37,8 @@ export function AppUpdate(props: AppUpdateProps) {
 
   const showLastUpdate = props.sett.enableAutoUpdate === false && appManager.hasUpdate(state)
 
-  return <>
-    <div className='gluey pd'>
+  return <div className='glueyBoxes'>
+    <div className='box'>
       <Switch
         defaultChecked={props.sett.enableAutoUpdate}
         description={t('receive_updates_auto')}
@@ -48,17 +48,14 @@ export function AppUpdate(props: AppUpdateProps) {
       />
     </div>
 
-    {state?.version && <>
-      <div className='gluey pd'>
+    <div className='box'>
+      {state?.version && (
         <p>{t('current_version')} <span className='marked'>{state.version}</span></p>
-      </div>
-    </>}
-
-    {showLastUpdate && <>
-      <div className='gluey pd'>
+      )}
+      {showLastUpdate && <>
         <p>{t('new_version_available')}</p>
         <button type='button' onClick={handleClickUpdate}>{t('yes_update')}</button>
-      </div>
-    </>}
-  </>
+      </>}
+    </div>
+  </div>
 }

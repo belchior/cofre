@@ -60,45 +60,32 @@ export function PageSettings() {
     <Header />
     <main className='Settings'>
       <h2>{t('configurations')}</h2>
-      <ul className='box'>
-        <li className='gluey pd'>
-          <PinAuth
+      <div className='box'>
+        <Link to='/cofre/logout' className='button'>App logout</Link>
+      </div>
+      <div className='glueyBoxes'>
+        <PinAuth
+          notify={notify}
+          onChange={handleChange}
+          sett={context.sett}
+          ud={context.ud}
+        />
+        {isAutheticatorAvailable && <>
+          <BiometricAuth
             notify={notify}
             onChange={handleChange}
             sett={context.sett}
             ud={context.ud}
           />
-        </li>
-        {isAutheticatorAvailable && <>
-          <li className='gluey pd'>
-            <BiometricAuth
-              notify={notify}
-              onChange={handleChange}
-              sett={context.sett}
-              ud={context.ud}
-            />
-          </li>
         </>}
-      </ul>
-      <ul className='box'>
-        <li>
-          <AppUpdate
-            onChange={handleChange}
-            sett={context.sett}
-            ud={context.ud}
-          />
-        </li>
-      </ul>
-      <ul className='box'>
-        <li className='gluey pd'>
-          <AppBackup notify={notify} />
-        </li>
-      </ul>
-      <ul className='box danger'>
-        <li className='gluey pd'>
-          <DangerZone notify={notify} />
-        </li>
-      </ul>
+      </div>
+      <AppUpdate
+        onChange={handleChange}
+        sett={context.sett}
+        ud={context.ud}
+      />
+      <AppBackup notify={notify} />
+      <DangerZone notify={notify} />
       <div className='actionGroup'>
         <Link to='/cofre/home' className='button'>{t('go_back')}</Link>
       </div>

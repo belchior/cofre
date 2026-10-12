@@ -37,7 +37,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
     props.notify.setNotification('success', t('passkey_created'))
   }
 
-  return <>
+  return <div className='box'>
     <Switch
       checked={props.sett.enableBiometricAuth}
       description={t('auth_by_biometric_desc')}
@@ -58,7 +58,7 @@ export function BiometricAuth(props: BiometricAuthProps) {
     <Modal open={isOpen} onClose={closeModal}>
       <CredentialForm onCancel={closeModal} onSubmit={handleSubmit} />
     </Modal>
-  </>
+  </div>
 }
 
 type CredentialFormProps = {

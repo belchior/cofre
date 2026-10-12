@@ -101,7 +101,7 @@ export function AppBackup(props: AppBackupProps) {
     props.notify.setNotification('success', message)
   }
 
-  return <>
+  return <div className='box'>
     <h3>{t('backup')}</h3>
     <p>{t('backup_desc')}</p>
     <p className='mb-1'>{t('is_recommended_backup_your_data')}</p>
@@ -112,5 +112,5 @@ export function AppBackup(props: AppBackupProps) {
     <Modal open={isOpen} onClose={closeModal}>
       <ImportBackup onCancel={closeModal} notify={props.notify} />
     </Modal>
-  </>
+  </div>
 }

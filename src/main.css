@@ -59,6 +59,13 @@ body {
     .button, button {
       background-color: color-mix(in srgb, transparent, var(--color-0) 10%);
     }
+
+    li.Item {
+      border-left-color: color-mix(in srgb, transparent, var(--color-0) 10%);
+      &.starred {
+        border-left-color: var(--color-3);
+      }
+    }
   }
 }
 
@@ -141,8 +148,8 @@ ul, menu {
 
 .actionGroup {
   display: grid;
-  justify-content: space-between;
   grid-auto-flow: column;
+  justify-content: space-between;
 }
 
 .box {
@@ -159,7 +166,31 @@ ul, menu {
 .c-link {
   color: var(--color-6);
 }
+.glueyBoxes {
+  margin-bottom: 1rem;
+  
+  >.box {
+    border: 0 solid transparent;
+    border-bottom-color: var(--border-color);
+    border-bottom-width: var(--border-width);
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 1rem;
 
+    &:first-of-type {
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      padding-top: 1.5rem;
+    }
+    &:last-of-type {
+      border-bottom-width: 0;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      padding-bottom: 1.5rem;
+    }
+    &:only-of-type {
+      border-radius: var(--border-radius);
+    }
+  }
+}
 .gluey {
   border: 0 solid transparent;
   border-bottom-color: var(--border-color);
@@ -176,18 +207,6 @@ ul, menu {
   }
   &:only-of-type {
     border-radius: var(--border-radius);
-  }
-
-  &.pd {
-    padding: 1rem 0;
-    
-    &:first-of-type {
-      padding-top: 0;
-    }
-    
-    &:last-of-type {
-      padding-bottom: 0;
-    }
   }
 }
 
