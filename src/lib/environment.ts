@@ -1,6 +1,6 @@
 export function aboutBrowser() {
-  const ug = navigator.userAgent
-  const terms: string[] = ug.match(/\w+\//g) ?? []
+  const ua = navigator.userAgent
+  const terms: string[] = ua.match(/\w+\//g) ?? []
 
   const firefox = terms.includes('Firefox/')
   const chrome = terms.includes('Chrome/')
@@ -13,13 +13,21 @@ export function aboutBrowser() {
     case 'false|true|true|false': name = 'Chrome'; break
     case 'false|false|true|false': name = 'Safari'; break
     case 'false|true|true|true': name = 'Edge'; break
-    default: name = ''
+    default: name = 'unknown'
   }
 
-  const device = ug.includes('Mobile') ? 'mobile' : 'desktop'
+  const device = ua.includes('Mobile')
+    ? 'mobile'
+    : ua.includes('Tablet')
+      ? 'tablet'
+      : 'desktop'
 
   return {
     name,
     device,
   }
+}
+
+export function isDevelopment() {
+  return window.location.hostname === 'localhost'
 }

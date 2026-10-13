@@ -27,7 +27,7 @@ export function InputPin(props: InputPinProps) {
     pin = '',
   } = props
 
-  const [nextFocus, setFocus] = React.useState(0)
+  const [nextFocus, setFocus] = React.useState(-1)
   const inputRefs = [
     React.useRef<HTMLInputElement>(null),
     React.useRef<HTMLInputElement>(null),
@@ -62,7 +62,7 @@ export function InputPin(props: InputPinProps) {
   }
 
   React.useEffect(() => {
-    inputRefs.at(nextFocus)?.current?.focus()
+    if (nextFocus >= 0) inputRefs.at(nextFocus)?.current?.focus()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextFocus])
 

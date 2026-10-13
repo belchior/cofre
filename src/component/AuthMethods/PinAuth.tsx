@@ -87,7 +87,6 @@ export function PinAuth(props: PinAuthProps) {
       label={pinLabel}
       name='pin'
       onSubmit={handlePinChange}
-      tabIndex={0}
     />
     {state.pin != '' && (
       <InputPin

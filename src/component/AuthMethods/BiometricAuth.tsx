@@ -1,9 +1,9 @@
 import React from 'react'
-import { aboutBrowser } from '../../lib/aboutBrowser'
 import { Input, Switch } from '../../component/Input'
 import { Modal } from '../../component/Modal/Modal'
 import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
+import * as env from '../../lib/environment'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import type { Notify } from '../../component/Notification/Notification.hook'
@@ -66,7 +66,7 @@ type CredentialFormProps = {
   onSubmit: (data: webAuthn.User) => void,
 }
 function CredentialForm(props: CredentialFormProps) {
-  const browser = aboutBrowser()
+  const browser = env.aboutBrowser()
   const defaultUser = {
     name: `app_cofre_${browser.name}_${browser.device}`.toLowerCase(),
     displayName: `${t('app_cofre_at')} ${browser.name}`,

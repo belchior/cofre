@@ -53,7 +53,6 @@ export function Home() {
           <Input
             name='search'
             autoComplete='off'
-            autoFocus
             icon={<IconSearch />}
             onChange={handleTextSearch}
             title={t('search_secrets_by_name')}

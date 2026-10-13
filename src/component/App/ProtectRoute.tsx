@@ -1,6 +1,7 @@
 import React from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import * as auth from '../../lib/auth'
+import * as env from '../../lib/environment'
 
 export function ProtectRoute() {
   const navigate = useNavigate()
@@ -17,7 +18,7 @@ export function ProtectRoute() {
       }
 
       // Prevents the user refresh the page and lost the session
-      if (window.location.hostname === 'localhost') return
+      if (env.isDevelopment()) return
       const callback = (event: BeforeUnloadEvent) => event.preventDefault()
       window.addEventListener('beforeunload', callback)
       return () => {
