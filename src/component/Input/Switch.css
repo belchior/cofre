@@ -1,0 +1,83 @@
+.Switch {
+  --height: 1.5rem;
+  --pd: 2px;
+  --b-r: calc(var(--height) / 2);
+  --circle-width: calc(var(--height) - var(--pd) * 4);
+  --width: calc(var(--circle-width) * 2 + var(--pd) * 4);
+  
+  column-gap: 1rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-areas: 
+    ". input" 
+    ". input";
+  justify-content: space-between;
+  row-gap: 0.5rem;
+
+  .title {
+    margin: 0;
+  }
+
+  .description {
+    margin: 0;
+  }
+
+  label {
+    grid-area: input;
+  }
+
+  input {
+    visibility: hidden;
+  }
+
+  input + label {
+    background-color: var(--color-2);
+    border-radius: var(--b-r);
+    cursor: pointer;
+    display: block;
+    height: var(--height);
+    outline: none;
+    padding: var(--pd);
+    position: relative;
+    transition: background 0.3s;
+    user-select: none;
+    width: var(--width);
+  }
+
+  input + label:before,
+  input + label:after {
+    content: "";
+    display: block;
+    position: absolute;
+  }
+
+  input + label:before {
+    background-color: var(--color-0);
+    border-radius: var(--b-r);
+    bottom: var(--pd);
+    left: var(--pd);
+    right: var(--pd);
+    top: var(--pd);
+    transition: background 0.3s;
+  }
+
+  input + label:after {
+    background-color: var(--color-2);
+    border-radius: 50%;
+    bottom: calc(var(--pd) * 2);
+    left: calc(var(--pd) * 2);
+    top: calc(var(--pd) * 2);
+    transition: margin 0.3s, background 0.3s;
+    width: var(--circle-width);
+  }
+
+  input:checked + label {
+    background-color: var(--color-5);
+  }
+
+  input:checked + label:after {
+    background-color: var(--color-5);
+    margin-left: var(--circle-width);
+  }
+}
+

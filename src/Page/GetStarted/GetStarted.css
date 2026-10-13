@@ -1,0 +1,37 @@
+.GetStarted {
+  align-content: start;
+  align-items: center;
+  display: grid;
+  grid-auto-flow: row;
+  margin: 0 1rem;
+  padding-top: 3rem;
+
+  .Logo {
+    margin: 0 auto 2rem auto;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  ul {
+    margin-bottom: 1rem;
+  }
+
+  li {
+    background-color: var(--bg-2);
+    padding: 1rem;
+
+    &:first-of-type {
+      padding-top: 1.5rem;
+    }
+    
+    &:last-of-type {
+      padding-bottom: 1.5rem;
+    }
+  }
+
+  .saveSettings {
+    justify-self: end;
+  }
+}

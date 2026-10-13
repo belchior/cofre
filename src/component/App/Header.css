@@ -1,0 +1,14 @@
+.Header {
+  align-items: center;
+  display: grid;
+  grid-area: header;
+  grid-auto-flow: column;
+  grid-template-columns: min-content min-content;
+  justify-content: space-between;
+  margin: 0 1rem;
+  padding: 1rem 0;
+
+  .homeLink {
+    display: grid;
+  }
+}

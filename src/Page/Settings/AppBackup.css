@@ -1,0 +1,15 @@
+.ImportBackup {
+  display: grid;
+  row-gap: 1rem;
+  
+  .fileUpload {
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-overflow: clip;
+    width: 100%;
+  }
+
+  .message {
+    color: var(--color-4);
+  }
+}

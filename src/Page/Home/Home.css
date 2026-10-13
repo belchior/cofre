@@ -1,0 +1,18 @@
+.Menu {
+  background-color: var(--bg-1);
+  display: grid;
+  grid-area: menu;
+  margin: 0 1rem;
+  padding-top: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+
+  .actions {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: flex-end;
+    margin: 1rem 0;
+  }
+}
+

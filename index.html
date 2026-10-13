@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <title>Cofre</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#222222" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="icon" type="image/svg+xml" sizes="any" href="/cofre/icon.svg" />
+  <link rel="icon" type="image/svg+xml" sizes="128x128" href="/cofre/icon.svg" />
+  <link rel="icon" type="image/svg+xml" sizes="512x512" href="/cofre/icon.svg" />
+  <link rel="apple-touch-icon" sizes="128x128" href="/cofre/icon.svg" />
+  <link rel="manifest" href="/cofre/manifest.json" />
+
+  <script type="module" vite-ignore>
+    (() => {
+      const { hostname: hn, pathname: pn } = window.location
+      if (['', '/cofre'].includes(pn.replace(/\/+$/, ''))) window.location.assign('/cofre/home')
+
+      if (navigator.maxTouchPoints > 0) document.body.classList.add('touch')
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
