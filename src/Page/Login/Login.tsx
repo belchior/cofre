@@ -213,6 +213,8 @@ type BiometricAuthLoginProps = {
   sett: storage.Settings,
 }
 function BiometricAuthLogin(props: BiometricAuthLoginProps) {
+  const [state, setState] = React.useState(false)
+
   const handleAuthentication = async () => {
     try {
       if (props.sett.passKey == null) {
@@ -236,6 +238,13 @@ function BiometricAuthLogin(props: BiometricAuthLoginProps) {
       console.error('Passkey authentication error:', errorMessage)
     }
   }
+
+  React.useEffect(() => {
+    if (state === false && props.onlyEnabled === true) {
+      setState(() => true)
+      document.querySelector<HTMLButtonElement>('.BiometricAuthButton')?.click()
+    }
+  }, [state, props.onlyEnabled])
 
   if (props.enabled === false) return null
 
