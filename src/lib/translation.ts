@@ -42,7 +42,7 @@ const dict = {
   'details_from': ['Details from', 'Detalhes de'],
   'display_name_desc': ['An easily identifiable name to help remember the creation of this key', 'Um nome de fácil identificação para ajudar a lembrar da criação desta chave'],
   'display_name': ['Display name', 'Nome de apresentação'],
-  'download_completed_desc': ['Check your download manager for the file', 'Verifique seu gerenciador de downloads pelo arquivo'],
+  'download_completed_desc': ['Check into download manager for the file', 'Verifique seu gerenciador de downloads pelo arquivo'],
   'download_completed': ['Download completed', 'Download concluído'],
   'edit': ['edit', 'editar'],
   'enable': ['Enable', 'Habilite'],

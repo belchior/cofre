@@ -28,11 +28,11 @@ function Item(props: ItemProps) {
     onCopy()
   }
   const handleSubmit = (newContent: Content) => {
-    context.updateContent(content.id, newContent)
+    context.updateContentItem(content.id, newContent)
     closeModal()
   }
   const handleRemove = (newContent: Content) => {
-    context.removeContent(newContent.id)
+    context.removeContentItem(newContent.id)
   }
   const toggleShow = () => setShow(!show)
 

@@ -23,17 +23,17 @@ export function Home() {
   }
 
   const handleSubmit = (content: Content) => {
-    context.addContent(content)
+    context.addContentItem(content)
     closeModal()
   }
 
-  if (context.ud == null) {
+  if (context.content == null) {
     return
   }
 
   const filteredContent = textSearch !== ''
-    ? context.ud.contents.filter((item) => item.name.toLowerCase().includes(textSearch.toLowerCase()))
-    : [...context.ud.contents]
+    ? context.content.filter((item) => item.name.toLowerCase().includes(textSearch.toLowerCase()))
+    : [...context.content]
 
   filteredContent.sort((a, b) => {
     if (a.starred !== b.starred) {

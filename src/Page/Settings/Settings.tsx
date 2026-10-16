@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { invoke } from '@tauri-apps/api/core'
 import { AppBackup } from './AppBackup'
 import { AppContext } from '../../component/App/AppProvider'
 import { BiometricAuth } from '../../component/AuthMethods/BiometricAuth'
@@ -11,7 +12,6 @@ import { PinAuth } from '../../component/AuthMethods/PinAuth'
 import { t } from '../../lib/translation'
 import { useNotification } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
-import * as cryptoKey from '../../lib/cryptoKey'
 import * as storage from '../../lib/storage'
 import * as webauthn from '../../lib/webAuthn'
 
@@ -29,19 +29,16 @@ export function PageSettings() {
     }
     const mergedUd = { ...context.ud, ...partUd }
 
-    const [isValid, message] = storage.isSettingsValid(mergedSett)
-    if (isValid === false) {
+    try {
+      await invoke('update_sett_ud', { sett: mergedSett, ud: mergedUd })
+      notify.setNotification('success', t('config_updated'))
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === 'string' ? error : t('must_choose_auth_method')
       notify.setNotification('error', message)
-      return
+      console.log(error)
     }
-
-    if (cryptoKey.hasChange(mergedSett, mergedUd, context)) {
-      await cryptoKey.override(mergedSett as storage.Settings, mergedUd as storage.UserData)
-      await auth.addSession()
-    }
-    context.saveSettings(mergedSett as storage.Settings)
-    context.saveUserData(mergedUd as storage.UserData)
-    notify.setNotification('success', t('config_updated'))
   }
 
   React.useEffect(() => {
@@ -92,4 +89,3 @@ export function PageSettings() {
     />
   </>
 }
-

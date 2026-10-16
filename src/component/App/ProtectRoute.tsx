@@ -1,6 +1,6 @@
 import React from 'react'
+import { invoke } from '@tauri-apps/api/core'
 import { Outlet, useNavigate } from 'react-router'
-import * as auth from '../../lib/auth'
 import * as env from '../../lib/environment'
 
 export function ProtectRoute() {
@@ -9,7 +9,7 @@ export function ProtectRoute() {
 
   React.useEffect(() => {
     (async () => {
-      const hasSession = await auth.isSessionValid()
+      const hasSession = await invoke<boolean>('is_session_valid')
 
       if (hasSession) {
         setLoading(() => false)

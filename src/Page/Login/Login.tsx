@@ -1,4 +1,5 @@
 import React from 'react'
+import { invoke } from '@tauri-apps/api/core'
 import { useNavigate } from 'react-router'
 import { cls } from '../../lib/classNames'
 import { Footer } from '../../component/App/Footer'
@@ -7,8 +8,6 @@ import { InputPin } from '../../component/Input'
 import { Notification } from '../../component/Notification/Notification'
 import { t } from '../../lib/translation'
 import { useNotification, type Notify } from '../../component/Notification/Notification.hook'
-import * as auth from '../../lib/auth'
-import * as cryptoKey from '../../lib/cryptoKey'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import './Login.css'
@@ -21,12 +20,11 @@ export function Login() {
 
   const handleSubmit = async () => {
     try {
-      await auth.addSession()
       navigate('/cofre/home', { replace: false })
       return
     } catch (error) {
-      console.error('Authentication error:', (error as Error).message)
-      notify.setNotification('error', (error as Error).message)
+      console.error('Authentication error:', error)
+      notify.setNotification('error', error as string)
     }
   }
 
@@ -36,39 +34,33 @@ export function Login() {
   React.useEffect(() => {
     (async () => {
       if (sett != null) return
-      const newSett = await storage.loadSettings()
+      // TODO move the load to frontend storage file
+      const text = await invoke<string>('load_settings')
+      const newSett = JSON.parse(text) as storage.Settings
       setSettings(() => newSett)
     })()
   }, [sett, setSettings])
 
   React.useEffect(() => {
     (async () => {
-      const hasSession = await auth.isSessionValid()
+      try {
+        if (await invoke<boolean>('has_settings') === false) {
+          navigate('/cofre/get-started', { replace: false })
+          return
+        }
+      } catch (error) {
+        console.error(error)
+        navigate('/cofre/get-started', { replace: false })
+      }
 
-      if (hasSession) {
+      if (await invoke<boolean>('is_session_valid') === true) {
         navigate('/cofre/home', { replace: false })
-        return
-      }
-
-      if (await storage.hasSettings() === false) {
-        navigate('/cofre/get-started', { replace: false })
-        return
-      }
-
-      if (sett == null) {
-        return
-      }
-
-      const hasValidSettings = [sett.enableBiometricAuth, sett.enablePinAuth].includes(true)
-
-      if (hasValidSettings === false) {
-        navigate('/cofre/get-started', { replace: false })
         return
       }
     })()
   })
 
-  if (sett == null || chosenAuth.isLoading === true) return null
+  if (chosenAuth.isLoading === true) return null
 
   return <>
     <main className='Login'>
@@ -82,15 +74,6 @@ export function Login() {
           onChoose={choose('enablePinAuth')}
           onlyEnabled={chosenAuth.onlyPinAuth}
           onSubmit={handleSubmit}
-          sett={sett}
-        />
-        <BiometricAuthLogin
-          enabled={chosenAuth.enableBiometricAuth}
-          notify={notify}
-          onChoose={choose('enableBiometricAuth')}
-          onlyEnabled={chosenAuth.onlyBiometricAuth}
-          onSubmit={handleSubmit}
-          sett={sett}
         />
       </div>
       {chosenAuth.notAvailable && <>
@@ -160,21 +143,11 @@ type PinAuthLoginProps = {
   onChoose: () => void,
   onlyEnabled: boolean,
   onSubmit: () => void,
-  sett: storage.Settings,
 }
 function PinAuthLogin(props: PinAuthLoginProps) {
   const handleSubmit = async (rawPin: string) => {
     try {
-      const pin = await auth.createPinHash(rawPin)
-      await cryptoKey.overrideUsingPinAuth(props.sett, pin)
-
-      const isValid = await auth.isPinValid(pin)
-
-      if (isValid === false) {
-        props.notify.setNotification('error', t('invalid_pin'))
-        return
-      }
-
+      await invoke<boolean>('auth_pin_login', { rawPin })
       props.onSubmit()
     } catch (error) {
       props.notify.setNotification('error', t('invalid_pin'))
@@ -207,19 +180,18 @@ type BiometricAuthLoginProps = {
   onChoose: () => void,
   onlyEnabled: boolean,
   onSubmit: () => void,
-  sett: storage.Settings,
+  ud: storage.UserData,
 }
 function BiometricAuthLogin(props: BiometricAuthLoginProps) {
   const [state, setState] = React.useState(false)
 
   const handleAuthentication = async () => {
     try {
-      if (props.sett.passKey == null) {
+      if (props.ud.passKey == null) {
         throw new Error('passkey_not_found')
       }
 
-      await webAuthn.authenticatePassKey(props.sett.passKey)
-      await cryptoKey.overrideUsingBiometricAuth(props.sett)
+      await webAuthn.authenticatePassKey(props.ud.passKey)
 
       props.onSubmit()
       return

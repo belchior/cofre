@@ -88,8 +88,7 @@ export async function loadCredential(descriptor: storage.CredentialDescriptor, c
 export async function isAuthenticatorAvailable() {
   try {
     return await window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
-  } catch (error) {
-    console.error(error)
+  } catch (_error) {
     return false
   }
 }

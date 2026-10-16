@@ -1,4 +1,5 @@
 import React from 'react'
+import { invoke } from '@tauri-apps/api/core'
 import { useNavigate } from 'react-router'
 import { BiometricAuth } from '../../component/AuthMethods/BiometricAuth'
 import { Footer } from '../../component/App/Footer'
@@ -8,7 +9,6 @@ import { PinAuth } from '../../component/AuthMethods/PinAuth'
 import { t } from '../../lib/translation'
 import { useNotification } from '../../component/Notification/Notification.hook'
 import * as auth from '../../lib/auth'
-import * as cryptoKey from '../../lib/cryptoKey'
 import * as storage from '../../lib/storage'
 import * as webAuthn from '../../lib/webAuthn'
 import './GetStarted.css'
@@ -26,6 +26,7 @@ export function GetStarted() {
     setState(prev => {
       const enabled = auth.enabledAuthMethod(partSett)
       return {
+        ...prev,
         sett: {
           ...(enabled !== '' ? auth.disableAuthMethod(prev.sett) : prev.sett) as storage.Settings,
           ...partSett,
@@ -39,24 +40,19 @@ export function GetStarted() {
   }
 
   const handleSubmit = async () => {
-    const [isValid, message] = storage.isSettingsValid(state.sett)
-
-    if (isValid === false) {
-      notify.setNotification('error', message)
+    try {
+      await invoke('add_sett_ud', { sett: state.sett, ud: state.ud })
+      navigate('/cofre/login', { replace: false })
       return
+    } catch (error) {
+      notify.setNotification('error', t('must_choose_auth_method'))
+      console.error('error', error)
     }
-
-    await cryptoKey.add(state.sett, state.ud)
-    const ck = cryptoKey.load()
-    await storage.saveUserData(ck, state.ud)
-    await storage.saveSettings(state.sett)
-    navigate('/cofre/login', { replace: false })
-    return
   }
 
   React.useEffect(() => {
     (async () => {
-      if (await storage.hasSettings()) {
+      if (await invoke<boolean>('has_settings')) {
         navigate('/cofre/login', { replace: false })
         return
       }

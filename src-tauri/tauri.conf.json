@@ -4,7 +4,7 @@
   "identifier": "com.belchior.cofre",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:5173",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
@@ -12,7 +12,7 @@
     "windows": [
       {
         "title": "Cofre",
-        "width": 405,
+        "width": 380,
         "height": 720
       }
     ],
@@ -26,18 +26,12 @@
     "shortDescription": "Cofre - Uma Prova de Conceito",
     "longDescription": "App para guardar senhas",
     "publisher": "Belchior Oliveira",
-    "resources": {
-      "../dist/assets/*": "assets/",
-      "../dist/sw.js": "sw.js"
-    },
     "active": true,
     "targets": "deb",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
+      "icons/128x128@2x.png"
     ]
   }
 }

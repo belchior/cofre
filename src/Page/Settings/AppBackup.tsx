@@ -1,10 +1,10 @@
 import React from 'react'
+import { useNavigate } from 'react-router'
+import { invoke } from '@tauri-apps/api/core'
 import { Modal } from '../../component/Modal/Modal'
 import { Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
 import { useModal } from '../../component/Modal/Modal.hook'
-import * as appManager from '../../lib/appManager'
-import * as auth from '../../lib/auth'
 import type { Notify } from '../../component/Notification/Notification.hook'
 import './AppBackup.css'
 
@@ -21,6 +21,7 @@ type ImportBackupProps = {
 
 function ImportBackup(props: ImportBackupProps) {
   const [agree, setAgree] = React.useState(false)
+  const navigate = useNavigate()
 
   const handleChangeAgreement = () => {
     setAgree(prev => !prev)
@@ -44,12 +45,15 @@ function ImportBackup(props: ImportBackupProps) {
     }
 
     try {
-      await appManager.restore(backupFile)
-      await auth.removeSession()
-      window.location.assign('/cofre/login')
+      const data = await backupFile.text()
+      await invoke<boolean>('restore_backup', { data })
+      navigate('/cofre/logout', { replace: false })
       return
     } catch (error) {
-      props.notify.setNotification('error', (error as Error).message)
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === 'string' ? error : 'unknown_error'
+      props.notify.setNotification('error', message)
     }
   }
 
@@ -84,21 +88,32 @@ type AppBackupProps = {
 export function AppBackup(props: AppBackupProps) {
   const { isOpen, openModal, closeModal } = useModal()
 
-  const handleClickExport = () => {
-    const backupFile = appManager.createBackup()
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(backupFile)
-    link.download = backupFile.name
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-
-    const message = <span>
-      {t('download_completed')}.<br />
-      {t('download_completed_desc')}<br />
-      <span className='marked'>{backupFile.name}</span>
-    </span>
-    props.notify.setNotification('success', message)
+  const handleClickExport = async () => {
+    try {
+      const text = await invoke<string>('create_backup')
+      const fileName = `cofre_backup_${Date.now()}.json`
+      const file = new Blob([text], { type: 'application/json' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(file)
+      link.download = fileName
+      document.body.appendChild(link)
+      link.click()
+      URL.revokeObjectURL(link.href)
+      document.body.removeChild(link)
+      const message = (
+        <span>
+          {t('download_completed')}.<br />
+          {t('download_completed_desc')}<br />
+          <span className='marked'>{fileName}</span>
+        </span>
+      )
+      props.notify.setNotification('success', message)
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === 'string' ? error : 'unknown_error'
+      props.notify.setNotification('error', message)
+    }
   }
 
   return <div className='box'>

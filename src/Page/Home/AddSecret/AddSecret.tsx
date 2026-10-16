@@ -109,14 +109,14 @@ type AddSecretForm = HTMLFormElement & {
     name: HTMLInputElement,
     secret: HTMLInputElement,
     starred: HTMLInputElement,
-    customFields: HTMLInputElement[],
+    custom_fields: HTMLInputElement[],
   }
 }
 
 type FormError = {
   name: string,
   secret: string,
-  customFields: string[],
+  custom_fields: string[],
 }
 
 type EditProps = {
@@ -128,15 +128,15 @@ type EditProps = {
 
 function Edit(props: EditProps) {
   const { content } = props
-  const [errorMessage, setErrorMessage] = React.useState<FormError>({ name: '', secret: '', customFields: [] })
+  const [errorMessage, setErrorMessage] = React.useState<FormError>({ name: '', secret: '', custom_fields: [] })
   const [favorite, setFavorite] = React.useState(Boolean(content?.starred))
-  const [customFields, setCustomField] = React.useState(content?.customFields ?? [])
+  const [custom_fields, setCustomField] = React.useState(content?.custom_fields ?? [])
 
   const setErrors = (result: ZodSafeParseError<Content>) => {
     const initialValue: FormError = {
       name: '',
       secret: '',
-      customFields: [],
+      custom_fields: [],
     }
     const newError = result.error.issues.reduce((acc, item) => {
       const key = item.path[0] as keyof FormError
@@ -146,7 +146,7 @@ function Edit(props: EditProps) {
       }
       if (item.path.length === 3) {
         const index = item.path[1] as number
-        (acc[key] as FormError['customFields'])[index] = item.message
+        (acc[key] as FormError['custom_fields'])[index] = item.message
       }
       return acc
     }, initialValue)
@@ -159,7 +159,7 @@ function Edit(props: EditProps) {
       const newField: CustomField = {
         name: field.name,
         type: field.isSecret ? 'password' : 'text',
-        index: customFields.length,
+        index: custom_fields.length,
         value: '',
       }
       return [...prev, newField]
@@ -183,9 +183,9 @@ function Edit(props: EditProps) {
     const message = await validateContentProp(name, value, ctx)
 
     setErrorMessage(prev => {
-      if (name === 'customFields') {
-        const index = customFields.find(i => i.name === id)?.index ?? -1
-        const value = [...errorMessage.customFields]
+      if (name === 'custom_fields') {
+        const index = custom_fields.find(i => i.name === id)?.index ?? -1
+        const value = [...errorMessage.custom_fields]
         value[index] = message
 
         return { ...prev, [name]: value }
@@ -201,7 +201,7 @@ function Edit(props: EditProps) {
     const name = event.currentTarget.elements.name.value.trim()
     const secret = event.currentTarget.elements.secret.value
     const starred = Boolean(event.currentTarget.elements.starred.defaultChecked)
-    const customInputs = event.currentTarget.elements.customFields
+    const customInputs = event.currentTarget.elements.custom_fields
     const newCustomFields = []
 
     if (customInputs instanceof HTMLInputElement) {
@@ -225,8 +225,8 @@ function Edit(props: EditProps) {
     }
 
     const newContent: Content = {
-      createdAt: new Date().toISOString(),
-      customFields: newCustomFields,
+      created_at: new Date().toISOString(),
+      custom_fields: newCustomFields,
       id,
       length: secret.length,
       name,
@@ -307,15 +307,15 @@ function Edit(props: EditProps) {
           type='password'
         />
 
-        {customFields.map((field) => <div className='custom-field-line' key={field.index}>
+        {custom_fields.map((field) => <div className='custom-field-line' key={field.index}>
           <Input
             autoComplete='off'
             className='input-name'
             defaultValue={field.value}
             id={field.name}
             label={field.name}
-            message={errorMessage.customFields.at(field.index)}
-            name='customFields'
+            message={errorMessage.custom_fields.at(field.index)}
+            name='custom_fields'
             onBlur={handleInputBlur}
             type={field.type}
           />
@@ -330,7 +330,7 @@ function Edit(props: EditProps) {
         </div>)}
 
         <CustomFieldForm
-          notAllowed={['name', 'secret', ...customFields.map(i => i.name)]}
+          notAllowed={['name', 'secret', ...custom_fields.map(i => i.name)]}
           onSubmit={handleAddField}
         />
       </div>
@@ -365,8 +365,8 @@ function View(props: ViewProps) {
   }
 
   const handleCustomFieldCopy = (index: number) => () => {
-    if (typeof content.customFields[index]?.value === 'string') {
-      clipboard.writeText(content.customFields[index].value)
+    if (typeof content.custom_fields[index]?.value === 'string') {
+      clipboard.writeText(content.custom_fields[index].value)
     }
   }
 
@@ -424,7 +424,7 @@ function View(props: ViewProps) {
           </div>
         </div>
 
-        {content.customFields.map(field => (
+        {content.custom_fields.map(field => (
           <div className='view-line' key={field.index}>
             <Input
               className='custom-field'

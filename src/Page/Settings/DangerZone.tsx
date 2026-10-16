@@ -1,10 +1,10 @@
-import { Modal } from '../../component/Modal/Modal'
-import { useModal } from '../../component/Modal/Modal.hook'
-import * as backup from '../../lib/appManager'
-import type { Notify } from '../../component/Notification/Notification.hook'
-import { t } from '../../lib/translation'
-import { Switch } from '../../component/Input'
 import React from 'react'
+import { invoke } from '@tauri-apps/api/core'
+import { Modal } from '../../component/Modal/Modal'
+import { Switch } from '../../component/Input'
+import { t } from '../../lib/translation'
+import { useModal } from '../../component/Modal/Modal.hook'
+import type { Notify } from '../../component/Notification/Notification.hook'
 
 type DangerZoneProps = {
   notify: Notify
@@ -13,9 +13,16 @@ export function DangerZone(props: DangerZoneProps) {
   const { isOpen, openModal, closeModal } = useModal()
 
   const handleSubmit = async () => {
-    await backup.clearAppData()
-    props.notify.setNotification('success', t('all_data_was_deleted'))
-    setTimeout(() => window.location.assign('/cofre/get-started'), 10000)
+    try {
+      await invoke<boolean>('clear_storage')
+      props.notify.setNotification('success', t('all_data_was_deleted'))
+      setTimeout(() => window.location.assign('/cofre/get-started'), 10000)
+    } catch (error) {
+      const message = error instanceof Error
+        ? error.message
+        : typeof error === 'string' ? error : 'unknown error'
+      props.notify.setNotification('error', message)
+    }
   }
 
   return <div className='box danger'>

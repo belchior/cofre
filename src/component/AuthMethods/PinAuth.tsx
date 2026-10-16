@@ -2,7 +2,6 @@ import React from 'react'
 import { InputPin, Switch } from '../../component/Input'
 import { t } from '../../lib/translation'
 import { type Notify } from '../../component/Notification/Notification.hook'
-import * as auth from '../../lib/auth'
 import * as storage from '../../lib/storage'
 
 type PinAuthProps = {
@@ -33,7 +32,9 @@ export function PinAuth(props: PinAuthProps) {
     }
 
     if (rawPin === state.pinConfirmation) {
-      const pin = await auth.createPinHash(rawPin)
+      // TODO rollback
+      // const pin = await auth.createPinHash(rawPin)
+      const pin = rawPin as storage.Pin
       const ud: Partial<storage.UserData> = {
         pin,
       }
@@ -53,7 +54,9 @@ export function PinAuth(props: PinAuthProps) {
     }
 
     if (pinConfirmation === state.pin) {
-      const pin = await auth.createPinHash(state.pin)
+      // TODO rollback
+      // const pin = await auth.createPinHash(state.pin)
+      const pin = state.pin as storage.Pin
       const sett: Partial<storage.Settings> = {
         enablePinAuth: true,
       }

@@ -1,8 +1,8 @@
 import React from 'react'
+import { invoke } from '@tauri-apps/api/core'
 import { useNavigate } from 'react-router'
 import { Footer } from '../../component/App/Footer'
 import { IconLogo } from '../../component/Icon/Icon'
-import * as auth from '../../lib/auth'
 import './Logout.css'
 
 export function Logout() {
@@ -14,7 +14,7 @@ export function Logout() {
 
   React.useEffect(() => {
     (async () => {
-      await auth.removeSession()
+      await invoke<void>('remove_session')
     })()
   })
 
