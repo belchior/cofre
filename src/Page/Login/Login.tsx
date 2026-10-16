@@ -50,7 +50,7 @@ export function Login() {
         return
       }
 
-      if (storage.hasSettings() === false) {
+      if (await storage.hasSettings() === false) {
         navigate('/cofre/get-started', { replace: false })
         return
       }

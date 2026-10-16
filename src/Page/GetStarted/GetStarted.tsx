@@ -56,7 +56,7 @@ export function GetStarted() {
 
   React.useEffect(() => {
     (async () => {
-      if (storage.hasSettings()) {
+      if (await storage.hasSettings()) {
         navigate('/cofre/login', { replace: false })
         return
       }

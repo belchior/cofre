@@ -87,7 +87,7 @@ export type Settings = AuthOptions & {
   passKey?: PassKey,
 }
 export type AuthMethods = keyof AuthOptions
-export function hasSettings() {
+export async function hasSettings() {
   return window.localStorage.getItem('sett') != null
 }
 export function initialSettings() {
@@ -155,22 +155,22 @@ export async function saveKeyIv(keyiv: crypto.KeyIv) {
 }
 
 // Session
-export function incrementSessionCounter(): number {
+export async function incrementSessionCounter() {
   const sc = window.localStorage.getItem('sc')
   const value = sc == null ? 1 : Number(sc) + 1
   window.localStorage.setItem('sc', String(value))
   return value
 }
-export function loadSession() {
+export async function loadSession() {
   return window.sessionStorage.getItem('session')
 }
-export function loadSessionCounter() {
+export async function loadSessionCounter() {
   return Number(window.localStorage.getItem('sc'))
 }
-export function removeSession() {
+export async function removeSession() {
   return window.sessionStorage.removeItem('session')
 }
-export function saveSession(session: string) {
+export async function saveSession(session: string) {
   return window.sessionStorage.setItem('session', session)
 }
 

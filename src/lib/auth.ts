@@ -3,25 +3,25 @@ import * as cryptoKey from './cryptoKey'
 import * as storage from './storage'
 
 export async function addSession() {
-  storage.incrementSessionCounter()
+  await storage.incrementSessionCounter()
   const session = await createSession()
-  storage.saveSession(session)
+  await storage.saveSession(session)
 }
 
 export async function getSession() {
-  const session = storage.loadSession()
+  const session = await storage.loadSession()
   return session
 }
 
 export async function isSessionValid() {
   try {
-    const session = storage.loadSession()
+    const session = await storage.loadSession()
     if (session == null) return false
     const generatedSession = await createSession()
     return session === generatedSession
   } catch (error) {
     if ((error as Error).message === 'crypto_key_not_found') {
-      removeSession()
+      await removeSession()
       return false
     }
     console.error(error)
@@ -31,14 +31,14 @@ export async function isSessionValid() {
 
 async function createSession() {
   const ck = cryptoKey.load()
-  const sc = storage.loadSessionCounter()
+  const sc = await storage.loadSessionCounter()
   const data = `${ck}${sc}`
   const session = await crypto.createHash(data)
   return session
 }
 
 export async function removeSession() {
-  storage.removeSession()
+  await storage.removeSession()
 }
 
 // TODO hash composition needs refinament
